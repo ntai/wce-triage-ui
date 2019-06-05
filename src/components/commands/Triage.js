@@ -13,8 +13,8 @@ export default class Triage extends React.Component {
 
     this.state = { triageResult : [], loading : true}
     this.columns = [
-      { "Header" : "Component", "accessor" : "component", "width": "110"},
-      { "Header" : "Result", "accessor" : "result", "width": "80",
+      { "Header" : "Component", "accessor" : "component", "maxwidth": "120"},
+      { "Header" : "Result", "accessor" : "result", "maxwidth": "40",
         Cell: row => (
           <span>
                   <span style={{
@@ -32,7 +32,7 @@ export default class Triage extends React.Component {
           </span>
         )
       },
-      { "Header" : "Details", "accessor" : "details",  "width": "400", "align" : "left" },
+      { "Header" : "Details", "accessor" : "details",  align" : "left" },
       ];
 
     this.handleCheckClicked = this.handleCheckClicked.bind(this);

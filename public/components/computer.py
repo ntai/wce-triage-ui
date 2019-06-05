@@ -135,28 +135,28 @@ class Computer:
     if len(self.disks) == 0:
       self.decisions.append( ("Disk", False, "Hard Drive: NOT DETECTED -- INSTALL A DISK"))
     else:
-      msg = "Hard Drive:\n"
       good_disk = False
+      disk_msgs = []
       for disk in self.disks:
-        disk_gb = disk.get_byte_size() / 1000000000
-        disk_msg = "     Device %s: size = %dGbytes  %s" % (disk.device_name, disk_gb, disk.model_name)
-        if (disk_gb / 1000) >= 60:
+        disk_gb = disk.get_byte_size() / 1000000
+        disk_msg = "Device %s: %dGbytes %s" % (disk.device_name, disk_gb, disk.model_name)
+        if disk_gb >= 60:
           good_disk = True
-          disk_msg += " - Good size"
+          disk_msg += " - Good"
           pass
         else:
           disk_msg += " - TOO SMALL"
           pass
-        msg = msg + disk_msg + "\n"
+        disk_msgs.append(disk_msg)
         pass
-      self.decisions.append( ( "Disk", good_disk, msg ) )
+      self.decisions.append( ( "Disk", good_disk, ", ".join(disk_msgs) ) )
       pass
 
     optical_drives = components.optical_drive.detect_optical_drives()
     if len(optical_drives) == 0:
       self.decisions.append( ("Optical drive", False, "***** NO OPTICALS: INSTALL OPTICAL DRIVE *****"))
     else:
-      msg = "Optical drive:\n"
+      msg = ""
       index = 1
       for optical in optical_drives:
         msg = msg + "    %d: %s %s %s" % (index, optical.vendor, optical.model_name, optical.get_feature_string(", "))
@@ -172,20 +172,20 @@ class Computer:
     blacklisted_videos = videos['blacklist']
     msg = ""
     if n_nvidia > 0:
-      msg = msg + "Video:     nVidia video card = %d\n" % n_nvidia
+      msg = msg + "nVidia video card = %d\n" % n_nvidia
       pass
     if n_ati > 0:
-      msg = msg + "Video:     ATI video card = %d\n" % n_ati
+      msg = msg + "ATI video card = %d\n" % n_ati
       pass
     if n_vga > 0:
-      msg = msg + "Video:     Video card = %d\n" % n_vga
+      msg = msg + "Video card = %d\n" % n_vga
       pass
 
     if (n_nvidia + n_ati + n_vga) >= 0:
       if len(blacklisted_videos) > 0:
         msg = "Remove or disable following video(s) because known to not work\n"
         for video in blacklisted_videos:
-          msg = msg + "    " + video + "\n"
+          msg = msg + " " + video + "\n"
           pass
         self.decisions.append( ("Video", False, msg))
         pass
@@ -249,3 +249,11 @@ class Computer:
   pass
 
 
+if __name__ == "__main__":
+  computer = Computer()
+  decision = computer.triage()
+  print( "decision %s" % decision)
+  for detail in computer.decisions:
+    print(detail)
+    pass
+  pass

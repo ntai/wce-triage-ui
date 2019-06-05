@@ -13,21 +13,21 @@ export default class Commands extends React.Component {
   render() {
     return (
       <div>
-      <div>
-        <Tabs id="wce-ui-main"
-              activeKey={this.state.key}
-              onSelect={key => this.setState({ key })}>
-          <Tab key="triage" eventKey="triage" title="Triage">
-            <Triage />
-          </Tab>
-          <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
-            <LoadDiskImage />
-          </Tab>
-        </Tabs>
-      </div>
-      <div>
-      {this.state.message}
-      </div>
+        <div>
+          <Tabs id="wce-ui-main"
+                activeKey={this.state.key}
+                onSelect={key => this.setState({ key })}>
+            <Tab key="triage" eventKey="triage" title="Triage">
+              <Triage />
+            </Tab>
+            <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
+              <LoadDiskImage />
+            </Tab>
+          </Tabs>
+        </div>
+        <div>
+          {this.state.message}
+        </div>
       </div>
   );
   }
