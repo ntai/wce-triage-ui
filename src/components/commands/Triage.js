@@ -13,23 +13,23 @@ export default class Triage extends React.Component {
 
     this.state = { triageResult : [], loading : true}
     this.columns = [
-      { "Header" : "Component", "accessor" : "component", "maxwidth": "120"},
-      { "Header" : "Result", "accessor" : "result", "maxwidth": "40",
+      { "Header" : "Component", "accessor" : "component", "maxWidth": "120"},
+      { "Header" : "Result", "accessor" : "result", "maxWidth": "80",
         Cell: row => (
           <span>
-                  <span style={{
-                    color: row.value === 'Good' ? '#002eff'
-                      : row.value === 'Bad' ? '#ff2e00'
-                        : '#57d557',
-                    transition: 'all .3s ease'
-                  }}>
-              &#x25cf;
+            <span style={{
+		color: row.value === 'Good' ? '#002eff'
+		    : row.value === 'Bad' ? '#ff2e00'
+                    : '#57d557',
+                transition: 'all .3s ease'
+            }}>
+		&#x25cf;
             </span> {
-            row.value === 'Good' ? ' Pass'
-              : row.value === 'Bad' ? `Fail`
-              : '?'
-          }
-          </span>
+		row.value === 'Good' ? ' Pass'
+		    : row.value === 'Bad' ? 'Fail'
+		    : row.value
+            }
+            </span>
         )
       },
       { "Header" : "Details", "accessor" : "details",  align" : "left" },
