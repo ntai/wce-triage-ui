@@ -3,6 +3,7 @@ import React from "react";
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import "./commands.css";
 
 //
 import request from 'request-promise';
@@ -28,7 +29,12 @@ export default class LoadDiskImage extends React.Component {
       stepsLoading: true,
 
       loadingDisk: false,
-      targetDisk: 0
+      targetDisk: 0,
+
+      selected: {},
+      selectAll: 0,
+
+      mounted: {}
     };
 
     this.fetchSources = this.fetchSources.bind(this);
@@ -38,6 +44,36 @@ export default class LoadDiskImage extends React.Component {
 
   setSource = selectValues => this.setState({ "source": selectValues });
 
+  componentWillMount() {
+    this.fetchSources()
+    this.fetchDisks()
+  }
+
+  toggleSelectAll() {
+    let newSelected = {};
+
+    if (this.state.selectAll === 0) {
+      this.state.data.forEach(x => {
+        newSelected[x.deviceName] = true;
+      });
+    }
+
+    this.setState({
+      selected: newSelected,
+      selectAll: this.state.selectAll === 0 ? 1 : 0
+    });
+  }
+
+  toggleRow(deviceName) {
+    const newSelected = Object.assign({}, this.state.selected);
+    newSelected[deviceName] = !this.state.selected[deviceName];
+    this.setState({
+      selected: newSelected,
+      selectAll: 2
+    });
+  }
+
+
   onLoad() {
     // time to make donuts
     const loadingDisk = this.state.disks[this.state.targetDisk];
@@ -45,11 +81,9 @@ export default class LoadDiskImage extends React.Component {
 
     this.setState({ loadingDisk: true });
 
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
     request({
       "method":"POST",
-      "uri": sweetHome.baseUrl + "/dispatch/load?disk=sdc&source=wce-mate-18-2019-06-01.tar.gz",
+      "uri": sweetHome.backendUrl + "/dispatch/load?disk=" + loadingDisk + "&source=" + loadingSource,
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -62,7 +96,11 @@ export default class LoadDiskImage extends React.Component {
         sourcesLoading: false
       });
     });
+  }
 
+  onReset() {
+    this.fetchSources()
+    this.fetchDisks()
   }
 
   onSourceChange(src) {
@@ -75,7 +113,7 @@ export default class LoadDiskImage extends React.Component {
 
     request({
       "method":"GET",
-      "uri": sweetHome.baseUrl + "/dispatch/disk-images.json",
+      "uri": sweetHome.backendUrl + "/dispatch/disk-images.json",
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -103,7 +141,7 @@ export default class LoadDiskImage extends React.Component {
 
     request({
       "method":"GET",
-      "uri": sweetHome.baseUrl + "/dispatch/disks.json",
+      "uri": sweetHome.backendUrl + "/dispatch/disks.json",
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -113,7 +151,9 @@ export default class LoadDiskImage extends React.Component {
       this.setState({
         disks: res.disks,
         diskPages: res.pages,
-        disksLoading: false
+        disksLoading: false,
+        mounted: {}, // FIXME: filter disk by mounted === 1
+        selected: {} // FIXME: filter disk by selected === 1
       });
     });
   }
@@ -126,7 +166,7 @@ export default class LoadDiskImage extends React.Component {
 
     request({
       "method":"GET",
-      "uri": sweetHome.baseUrl + "/dispatch/disk-load-status.json",
+      "uri": sweetHome.backendUrl + "/dispatch/disk-load-status.json",
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -141,6 +181,25 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
+  requestUnmount(deviceName, mountState) {
+    // Request the data however you want.  Here, we'll use our mocked service we created earlier
+
+    request({
+      "method":"POST",
+      "uri": sweetHome.backendUrl + "/dispatch/unmount?deviceName=" + deviceName + "&mount=" + mountState,
+      "json": true,
+      "headers": {
+        "User-Agent": "WCE Triage"
+      }}
+    ).then(res => {
+      // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
+      this.setState({
+        mounted: {} // FIXME: do something from the reply
+      });
+    });
+  }
+
+
   render() {
     const { sources, source, sourcesLoading, disks, diskPages, steps, disksLoading, stepPages, stepsLoading } = this.state;
     return (
@@ -148,11 +207,12 @@ export default class LoadDiskImage extends React.Component {
         <Container>
           <Row>
             <Col sm={1}>
-              <button onClick={this.onLoad}>Load</button>
+              <button onClick={() => this.onLoad()}>Load</button>
             </Col>
             <Col sm={9}>
               <Select
                 placeholder="Select source"
+                style={{"aligh": "left"}}
                 loading={sourcesLoading}
                 multi={false}
                 options={sources}
@@ -164,21 +224,88 @@ export default class LoadDiskImage extends React.Component {
                 valueField={"name"}
               />
             </Col>
+            <Col sm={1}>
+              <button onClick={() => this.onReset()}>Reset</button>
+            </Col>
           </Row>
         </Container>
 
         <ReactTable
           columns={[
             {
-              Header: "Target",
-              accessor: "target"
+              id: "checkbox",
+              accessor: "",
+              Cell: ({ original }) => {
+                return (
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={this.state.selected[original.deviceName] === true}
+                    onChange={() => this.toggleRow(original.deviceName)}
+                  />
+                );
+              },
+              Header: x => {
+                return (
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={this.state.selectAll === 1}
+                    ref={input => {
+                      if (input) {
+                        input.indeterminate = this.state.selectAll === 2;
+                      }
+                    }}
+                    onChange={() => this.toggleSelectAll()}
+                  />
+                );
+              },
+              sortable: false,
+              width: 45
             },
             {
               Header: "Disk",
-              accessor: "deviceName"
+              accessor: "deviceName",
+              width: 100
+            },
+            {
+              Header: "Mounted",
+              width: 80,
+              accessor: "",
+              Cell: ({ original }) => {
+                return (
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={this.state.mounted[original.deviceName] === true}
+                    onChange={() => this.requestUnmount(original.deviceName, this.state.mounted[original.deviceName]) }
+                  />
+                );
+              },
+
+            },
+            {
+              Header: "Bus",
+              width: 45,
+              accessor: "bus"
+            },
+            {
+              Header: "Model",
+              width: 400,
+              accessor: "model"
+            },
+            {
+              Header: "Elapsed",
+              width: 100,
+              accessor: "elapseTime"
             },
             {
               Header: 'Progress',
+              width: 80,
+              accessor: 'progress',
+            },
+            {
+              Header: '-',
               accessor: 'progress',
               Cell: row => (
                 <div
@@ -204,18 +331,6 @@ export default class LoadDiskImage extends React.Component {
                 </div>
               )
             },
-            {
-              Header: "Elapsed",
-              accessor: "elapseTime"
-            },
-            {
-              Header: "Status",
-              accessor: "status"
-            },
-            {
-              Header: "Model",
-              accessor: "model"
-            },
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           data={disks}
@@ -230,33 +345,9 @@ export default class LoadDiskImage extends React.Component {
         <ReactTable
           columns={[
             {
-              Header: "Category",
+              Header: "Step",
+              width: 150,
               accessor: "category"
-            },
-            {
-              Header: 'Progress',
-              accessor: 'progress',
-              Cell: row => (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#dadada',
-                    borderRadius: '2px'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${row.value}%`,
-                      height: '100%',
-                      backgroundColor: row.value > 66 ? '#85cc00'
-                        : row.value > 33 ? '#ffbf00' : '#ff2e00',
-                      borderRadius: '2px',
-                      transition: 'all .2s ease-out'
-                    }}
-                  />
-                </div>
-              )
             },
             {
               Header: "Elapsed",
@@ -284,6 +375,32 @@ export default class LoadDiskImage extends React.Component {
                     : 'Bug'
                 }
           </span>
+              )
+            },
+            {
+              Header: 'Progress',
+              accessor: 'progress',
+              Cell: row => (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#dadada',
+                    borderRadius: '2px'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${row.value}%`,
+                      height: '100%',
+                      backgroundColor: row.value > 66 ? '#85cc00'
+                        : row.value > 33 ? '#ffbf00'
+                          : '#ff2e00',
+                      borderRadius: '2px',
+                      transition: 'all .2s ease-out'
+                    }}
+                  />
+                </div>
               )
             }
           ]}

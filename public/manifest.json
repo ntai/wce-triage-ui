@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "WCE Triage UI",
+  "name": "WCE Triage Kiosk user interface by React.js",
+  "version": "0.0.1",
   "icons": [
     {
       "src": "favicon.ico",

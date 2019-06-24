@@ -1,0 +1,12 @@
+{ "disks" :
+  [
+    {
+      "target" :  "yes",
+      "deviceName":  "/dev/sda",
+      "progress" :  "0",
+      "elapseTime" : "00:00:00",
+      "status" : "Detected"
+      "model" : "Fake disk"
+    }
+  ]
+}

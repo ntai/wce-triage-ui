@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import ReactTable from 'react-table';
 import "react-table/react-table.css";
 //
@@ -7,45 +7,56 @@ import {sweetHome} from './../../looseend/home'
 
 import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
+import "./commands.css";
+import { Container, Row, Col } from 'react-bootstrap'
+
+import Music from "./Music";
+
 export default class Triage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { triageResult : [], loading : true}
+    this.state = {triageResult: [], loading: true, soundPlaying: false}
     this.columns = [
-      { "Header" : "Component", "accessor" : "component", "maxWidth": "120"},
-      { "Header" : "Result", "accessor" : "result", "maxWidth": "80",
+      {"Header": "Component", "accessor": "component", "maxWidth": "120"},
+      {
+        "Header": "Result", "accessor": "result", "maxWidth": "80",
         Cell: row => (
           <span>
             <span style={{
-		color: row.value === 'Good' ? '#002eff'
-		    : row.value === 'Bad' ? '#ff2e00'
-                    : '#57d557',
-                transition: 'all .3s ease'
+              color: row.value === 'Good' ? '#1fff2e'
+                : row.value === 'Bad' ? '#ff2e00'
+                  : '#ffd557',
+              transition: 'all .3s ease'
             }}>
 		&#x25cf;
             </span> {
-		row.value === 'Good' ? ' Pass'
-		    : row.value === 'Bad' ? 'Fail'
-		    : row.value
-            }
+            row.value === 'Good' ? ' Pass'
+              : row.value === 'Bad' ? 'Fail'
+              : row.value
+          }
             </span>
         )
       },
-      { "Header" : "Details", "accessor" : "details",  align" : "left" },
-      ];
+      {
+        "Header": "Details", "accessor": "details", width: 800, maxWidth: "1000",
+        Cell: row => (<div align="left">{row.value}</div>)
+      },
+    ];
 
     this.handleCheckClicked = this.handleCheckClicked.bind(this);
-    this.fetchTriage = this.fetchTriage.bind(this)
+    this.fetchTriage = this.fetchTriage.bind(this);
+    this.reboot = this.reboot.bind(this);
+    this.shutdown = this.shutdown.bind(this);
   }
 
   fetchTriage(state, instance) {
     this.setState({ sourcesLoading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
+    console.log(sweetHome.backendUrl + '/dispatch/triage.json');
     request({
       "method":"GET",
-      'uri': sweetHome.baseUrl + '/dispatch/triage.json',
+      'uri': sweetHome.backendUrl + '/dispatch/triage.json',
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -60,6 +71,34 @@ export default class Triage extends React.Component {
     });
   }
 
+
+  shutdown(state, instance) {
+    request({
+      "method":"POST",
+      'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff',
+      "json": true,
+      "headers": {
+        "User-Agent": "WCE Triage"
+      }}
+    ).then(res => {
+      // Now just get the rows of triage results
+    });
+  }
+
+
+  reboot(state, instance) {
+    request({
+      "method":"POST",
+      'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot',
+      "json": true,
+      "headers": {
+        "User-Agent": "WCE Triage"
+      }}
+    ).then(res => {
+      // Now just get the rows of triage results
+    });
+  }
+
   handleCheckClicked(e) {
   }
 
@@ -67,14 +106,33 @@ export default class Triage extends React.Component {
     const data = this.state.triageResult;
 
       return <div>
-      <ReactTable
+
+        <Row>
+          <Col>
+            <button type="button" onClick={ this.fetchTriage }>
+              <span>Reload</span>
+            </button>
+          </Col>
+          <Col> <Music url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
+          <Col>
+            <button type="button" onClick={ this.reboot }>
+              <span>Reboot Computer</span>
+            </button>
+            <button type="button" onClick={ this.shtudwon }>
+              <span>Power off</span>
+            </button>
+          </Col>
+        </Row>
+
+        <ReactTable
           data={data}
+          defaultPageSize={10}
+          showPageSizeOptions={false}
           columns={this.columns}
           pages={1}
           loading={this.state.loading}
           onFetchData={this.fetchTriage}
           className="-striped"
-          defaultPageSize={10}
       />
       </div>
   }

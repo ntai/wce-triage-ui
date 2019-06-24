@@ -10,6 +10,8 @@ export default class Commands extends React.Component {
     this.state = { key: "triage", message: "No message" }
   }
 
+
+
   render() {
     return (
       <div>

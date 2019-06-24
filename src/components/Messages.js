@@ -8,7 +8,7 @@ export default class Messages extends Component {
   constructor() {
     super()
     this.state = {
-      messages: 'No Message'
+      messages: 'UI Version 0.1.0'
     }
   }
 
@@ -19,7 +19,7 @@ export default class Messages extends Component {
   render() {
     return (
       <View>
-        <Text>
+        <Text align={left}>
           {this.state.messages}
         </Text>
       </View>

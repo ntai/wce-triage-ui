@@ -26,6 +26,7 @@ function App() {
             World Computer Exchange
                 </a>
              </td>
+              <td>{0.1}</td>
             </tr>
           </tbody>
         </table>

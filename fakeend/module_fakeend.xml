@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_fakeend" default="compile.module.fakeend">
+  <dirname property="module.fakeend.basedir" file="${ant.file.module_fakeend}"/>
+  
+  <property name="module.jdk.home.fakeend" value=""/>
+  <property name="module.jdk.bin.fakeend" value=""/>
+  <property name="module.jdk.classpath.fakeend" value=""/>
+  
+  <property name="compiler.args.fakeend" value="-encoding UTF-8 -source 12 -target 12 ${compiler.args}"/>
+  
+  <property name="fakeend.output.dir" value="${module.fakeend.basedir}/../out/production/fakeend"/>
+  <property name="fakeend.testoutput.dir" value="${module.fakeend.basedir}/../out/test/fakeend"/>
+  
+  <path id="fakeend.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="fakeend.module.production.classpath"/>
+  
+  <path id="fakeend.runtime.production.module.classpath">
+    <pathelement location="${fakeend.output.dir}"/>
+  </path>
+  
+  <path id="fakeend.module.classpath">
+    <pathelement location="${fakeend.output.dir}"/>
+  </path>
+  
+  <path id="fakeend.runtime.module.classpath">
+    <pathelement location="${fakeend.testoutput.dir}"/>
+    <pathelement location="${fakeend.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.fakeend">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.fakeend">
+    <patternset refid="excluded.from.module.fakeend"/>
+  </patternset>
+  
+  
+  <target name="compile.module.fakeend" depends="compile.module.fakeend.production,compile.module.fakeend.tests" description="Compile module fakeend"/>
+  
+  <target name="compile.module.fakeend.production" depends="register.custom.compilers" description="Compile module fakeend; production classes"/>
+  
+  <target name="compile.module.fakeend.tests" depends="register.custom.compilers,compile.module.fakeend.production" description="compile module fakeend; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.fakeend" description="cleanup module">
+    <delete dir="${fakeend.output.dir}"/>
+    <delete dir="${fakeend.testoutput.dir}"/>
+  </target>
+</project>
