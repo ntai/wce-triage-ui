@@ -7,12 +7,13 @@ import "./commands.css";
 
 //
 import request from 'request-promise';
+import Websocket from 'react-websocket';
 
 // Dropdown menu
 import Select from 'react-dropdown-select';
 import { Container, Row, Col } from 'react-bootstrap'
 
-import {sweetHome} from './../../looseend/home'
+import {sweetHome} from './../../looseend/home';
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -75,15 +76,24 @@ export default class LoadDiskImage extends React.Component {
 
 
   onLoad() {
-    // time to make donuts
-    const loadingDisk = this.state.disks[this.state.targetDisk];
-    const loadingSource = this.state.source;
+    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    if (selectedDevices.length === 0)
+      return;
 
-    this.setState({ loadingDisk: true });
+    const loadingSource = this.state.source;
+    if (! loadingSource)
+      return;
+
+    // time to make donuts
+    const loadingDisk = selectedDevices[0];
+    var remainings = {}
+    Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
+
+    this.setState({ loadingDisk: true, selected: remainings, target: loadingDisk });
 
     request({
       "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/load?disk=" + loadingDisk + "&source=" + loadingSource,
+      "uri": sweetHome.backendUrl + "/dispatch/load?deviceName=" + loadingDisk + "&source=" + loadingSource[0].fullpath,
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -91,11 +101,12 @@ export default class LoadDiskImage extends React.Component {
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
-        sources: res.sources,
-        source: [],
+        target: null,
         sourcesLoading: false
       });
     });
+
+    // this.onLoad();
   }
 
   onReset() {
@@ -199,6 +210,11 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
+  handleWock(msg) {
+    const serverMessage = JSON.parse(msg);
+    const loadStatus = serverMessage.get('loadStatus');
+    if (loadStatus) { this.setStatus({ steps: loadStatus})}
+  }
 
   render() {
     const { sources, source, sourcesLoading, disks, diskPages, steps, disksLoading, stepPages, stepsLoading } = this.state;
@@ -412,7 +428,7 @@ export default class LoadDiskImage extends React.Component {
           defaultPageSize={10}
           className="-striped -highlight"
         />
-        <br />
+        <Websocket url={sweetHome.websocketUrl + "/dispatch/wock"} onMessage={this.handleWock.bind(this)}/>
       </div>
     );
   }

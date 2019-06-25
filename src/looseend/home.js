@@ -18,6 +18,9 @@ export const sweetHome = (function() {
 
     backendUrl: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
     'http://wcetriage:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+
+    websocketUrl: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
+      'ws://wcetriage:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
   };
 })();
 

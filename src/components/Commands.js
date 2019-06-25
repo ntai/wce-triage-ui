@@ -2,7 +2,7 @@ import React from 'react';
 import Triage from './commands/Triage';
 import LoadDiskImage from './commands/LoadDiskImage';
 import { Tab, Tabs } from 'react-bootstrap';
-
+import Messages from './Messages';
 
 export default class Commands extends React.Component {
   constructor(props) {
@@ -27,9 +27,7 @@ export default class Commands extends React.Component {
             </Tab>
           </Tabs>
         </div>
-        <div>
-          {this.state.message}
-        </div>
+        <Messages />
       </div>
   );
   }

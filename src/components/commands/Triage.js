@@ -46,12 +46,10 @@ export default class Triage extends React.Component {
 
     this.handleCheckClicked = this.handleCheckClicked.bind(this);
     this.fetchTriage = this.fetchTriage.bind(this);
-    this.reboot = this.reboot.bind(this);
-    this.shutdown = this.shutdown.bind(this);
   }
 
   fetchTriage(state, instance) {
-    this.setState({ sourcesLoading: true });
+    this.setState({ sourcesLoading: true, triageResult: [] });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
     console.log(sweetHome.backendUrl + '/dispatch/triage.json');
     request({
@@ -72,7 +70,7 @@ export default class Triage extends React.Component {
   }
 
 
-  shutdown(state, instance) {
+  onShutdown() {
     request({
       "method":"POST",
       'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff',
@@ -86,7 +84,7 @@ export default class Triage extends React.Component {
   }
 
 
-  reboot(state, instance) {
+  onReboot() {
     request({
       "method":"POST",
       'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot',
@@ -109,16 +107,16 @@ export default class Triage extends React.Component {
 
         <Row>
           <Col>
-            <button type="button" onClick={ this.fetchTriage }>
+            <button type="button" onClick={() => this.fetchTriage()}>
               <span>Reload</span>
             </button>
           </Col>
           <Col> <Music url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
           <Col>
-            <button type="button" onClick={ this.reboot }>
+            <button type="button" onClick={ () => this.onReboot() }>
               <span>Reboot Computer</span>
             </button>
-            <button type="button" onClick={ this.shtudwon }>
+            <button type="button" onClick={ () => this.onShutdown() }>
               <span>Power off</span>
             </button>
           </Col>
