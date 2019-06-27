@@ -10,8 +10,6 @@ export default class Commands extends React.Component {
     this.state = { key: "triage", message: "No message" }
   }
 
-
-
   render() {
     return (
       <div>
@@ -20,14 +18,14 @@ export default class Commands extends React.Component {
                 activeKey={this.state.key}
                 onSelect={key => this.setState({ key })}>
             <Tab key="triage" eventKey="triage" title="Triage">
-              <Triage />
+              <Triage wock={this.props.wock}/>
             </Tab>
             <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
-              <LoadDiskImage />
+              <LoadDiskImage wock={this.props.wock}/>
             </Tab>
           </Tabs>
         </div>
-        <Messages />
+        <Messages wock={this.props.wock}/>
       </div>
   );
   }

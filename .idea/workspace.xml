@@ -2,50 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/dispatch/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/dispatch/disk-images.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/dispatch/disk-load-status.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/dispatch/disks.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/dispatch/triage.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/fakeend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/fakeend.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/module_fakeend.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeend/start.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/commands/Music.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/commands/commands.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/computer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/cpu.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/disk.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/memory.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/optical_drive.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/pci.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/sensor.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/sound.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/components/video.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/http/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/http/httpserver.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/httpserver.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/lib/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/lib/util.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ops/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ops/diskop.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ops/diskop_create_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ops/diskop_restore.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ops/tasks.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Commands.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Commands.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Messages.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Messages.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/Triage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/Triage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/looseend/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/looseend/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/wockcontext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/wockcontext.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,12 +24,79 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="128" column="29" selection-start-line="128" selection-start-column="29" selection-end-line="128" selection-end-column="29" />
+            <state relative-caret-position="382">
+              <caret line="56" selection-start-line="56" selection-end-line="56" />
               <folding>
-                <element signature="e#106#144#0" expanded="true" />
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="159">
+              <caret line="76" selection-start-line="76" selection-end-line="76" />
+              <folding>
+                <element signature="e#50#87#0" expanded="true" />
+                <element signature="e#212#255#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="18" column="67" selection-start-line="18" selection-start-column="67" selection-end-line="18" selection-end-column="67" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/App.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -74,63 +105,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/Music.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
+            <state relative-caret-position="285">
               <caret line="20" selection-start-line="20" selection-end-line="20" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
+        <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="http://localhost:3000/static/js/main.chunk.js">
-          <provider selected="true" editor-type-id="httpFileEditor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="http://localhost:3000/Users/ntai/sand/wce-triage-ui/webpack/bootstrap">
-          <provider selected="true" editor-type-id="httpFileEditor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wce-triage-ui.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module_wce-triage-ui.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="780">
-              <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/manifest.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="600">
+              <caret line="50" selection-start-line="50" selection-end-line="70" />
+              <folding>
+                <element signature="e#106#144#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,16 +135,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>diska</find>
-      <find>diskpage</find>
-      <find>steppages</find>
-      <find>hasHeaderGroups =</find>
-      <find>stepPages</find>
-      <find>tabPanels</find>
-      <find>source</find>
-      <find>.js</find>
-      <find>scroll</find>
-      <find>cell</find>
       <find>diskPages</find>
       <find>steps</find>
       <find>elap</find>
@@ -171,12 +149,22 @@
       <find>PUBLIC_URL</find>
       <find>baseUrl</find>
       <find>fetchtriage</find>
-      <find>state</find>
       <find>fetchdisks</find>
       <find>disks</find>
       <find>firstName</find>
       <find>toggleSelectAll</find>
+      <find>POST</find>
       <find>fetch</find>
+      <find>fetchtri</find>
+      <find>onLoad</find>
+      <find>state</find>
+      <find>present</find>
+      <find>selected</find>
+      <find>json</find>
+      <find>keys</find>
+      <find>source</find>
+      <find>disk</find>
+      <find>Text</find>
     </findStrings>
     <replaceStrings>
       <replace>command</replace>
@@ -218,16 +206,20 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.es6" />
         <option value="$PROJECT_DIR$/src/App.css" />
         <option value="$PROJECT_DIR$/src/looseend/relatives.js" />
-        <option value="$PROJECT_DIR$/src/components/Commands.js" />
         <option value="$PROJECT_DIR$/src/components/commands/commands.css" />
-        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
-        <option value="$PROJECT_DIR$/src/App.js" />
-        <option value="$PROJECT_DIR$/src/components/Messages.js" />
         <option value="$PROJECT_DIR$/public/manifest.json" />
         <option value="$PROJECT_DIR$/src/components/commands/Music.js" />
-        <option value="$PROJECT_DIR$/src/looseend/home.js" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/src/components/commands/Triage.js" />
+        <option value="$PROJECT_DIR$/src/looseend/home.js" />
+        <option value="$PROJECT_DIR$/src/wock-context.js" />
+        <option value="$PROJECT_DIR$/src/wockcontext.js" />
+        <option value="$PROJECT_DIR$/src/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Logo.js" />
+        <option value="$PROJECT_DIR$/src/components/Commands.js" />
+        <option value="$PROJECT_DIR$/src/App.js" />
+        <option value="$PROJECT_DIR$/src/components/Messages.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
       </list>
     </option>
   </component>
@@ -238,10 +230,10 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="48" />
+    <option name="x" value="35" />
     <option name="y" value="23" />
-    <option name="width" value="1598" />
-    <option name="height" value="1001" />
+    <option name="width" value="1593" />
+    <option name="height" value="970" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -249,7 +241,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -291,6 +282,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -302,6 +294,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="ECMAScript 6" />
+    <property name="editor.config.ad.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="10.15.3" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
@@ -339,8 +332,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.Debug Application">
-    <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
+  <component name="RunManager" selected="npm.npm start">
+    <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000" useFirstLineBreakpoints="true">
       <method v="2" />
     </configuration>
     <configuration name="build" type="js.build_tools.npm" nameIsGenerated="true">
@@ -392,17 +385,21 @@
       <workItem from="1559436303752" duration="597000" />
       <workItem from="1559437609023" duration="29571000" />
       <workItem from="1561081775231" duration="57469000" />
-      <workItem from="1561342365397" duration="2827000" />
+      <workItem from="1561342365397" duration="16050000" />
+      <workItem from="1561509358193" duration="11422000" />
+      <workItem from="1561564813083" duration="206000" />
+      <workItem from="1561565043610" duration="4727000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142194000" />
+    <option name="totallyTimeSpent" value="171772000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="48" y="23" width="1598" height="1001" extended-state="0" />
+    <frame x="35" y="23" width="1593" height="970" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28534704" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2972276" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -412,15 +409,15 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32885087" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.23762377" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.27722773" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.43963555" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.4259681" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.44884488" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.20273349" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="bottom" id="Pylint" order="13" />
@@ -435,6 +432,40 @@
       <window_info anchor="right" id="Database" order="8" />
       <window_info anchor="right" id="SciView" order="9" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.28856042" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Designer" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32885087" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.23762377" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.5148515" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.16171618" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="12" />
+      <window_info anchor="bottom" id="Pylint" order="13" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="4" />
+      <window_info anchor="right" id="Maven" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Database" order="8" />
+      <window_info anchor="right" id="SciView" order="9" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -445,51 +476,25 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/commands/Music.js</url>
           <line>11</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Messages.js</url>
+          <line>54</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
-        <breakpoint enabled="true" type="javascript-exception">
-          <properties />
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/react-bootstrap/ModalDialog.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="38" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fakeend/wce-disk-images.json" />
-    <entry file="file://$PROJECT_DIR$/node_modules/react-bootstrap/ProgressBar.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-99">
-          <caret line="88" column="63" selection-start-line="88" selection-start-column="63" selection-end-line="88" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/codeStyles/Project.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -558,13 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/commands.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="695">
-          <caret line="206" column="3" selection-start-line="206" selection-start-column="3" selection-end-line="206" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -611,57 +609,10 @@
     <entry file="file://$PROJECT_DIR$/node_modules/react-table/react-table.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/commands.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="24" lean-forward="true" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="11" lean-forward="true" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#119#164#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -684,27 +635,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1140">
-          <caret line="81" column="41" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
-          <folding>
-            <element signature="e#50#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wce-triage-ui.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -722,35 +656,144 @@
         </state>
       </provider>
     </entry>
-    <entry file="http://localhost:3000/static/js/main.chunk.js">
+    <entry file="http://localhost:3000/Users/ntai/sand/wce-triage-ui/webpack/bootstrap">
       <provider selected="true" editor-type-id="httpFileEditor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/Music.js">
+    <entry file="file://$PROJECT_DIR$/src/wock-context.js" />
+    <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        <state relative-caret-position="315">
+          <caret line="21" column="16" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/react-error-overlay/lib/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="http://localhost:3000/static/js/main.chunk.js">
+      <provider selected="true" editor-type-id="httpFileEditor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-dom/cjs/react-dom.development.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="229770">
+          <caret line="15318" selection-start-line="15318" selection-end-line="15318" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wockcontext.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/serviceWorker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-350">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bootstrap.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3566">
+          <caret line="5" column="3765" selection-start-line="5" selection-start-column="3765" selection-end-line="5" selection-end-column="3765" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/commands.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3090">
+          <caret line="206" column="3" selection-start-line="206" selection-start-column="3" selection-end-line="206" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Logo.js" />
+    <entry file="file://$PROJECT_DIR$/node_modules/@expo/vector-icons/build/createIconSet.js" />
+    <entry file="file://$PROJECT_DIR$/node_modules/react-native-elements/src/text/Text.js" />
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="18" column="67" selection-start-line="18" selection-start-column="67" selection-end-line="18" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/Music.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="128" column="29" selection-start-line="128" selection-start-column="29" selection-end-line="128" selection-end-column="29" />
+        <state relative-caret-position="600">
+          <caret line="50" selection-start-line="50" selection-end-line="70" />
           <folding>
             <element signature="e#106#144#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="http://localhost:3000/Users/ntai/sand/wce-triage-ui/webpack/bootstrap">
-      <provider selected="true" editor-type-id="httpFileEditor" />
+    <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="56" selection-start-line="56" selection-end-line="56" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
+          <folding>
+            <element signature="e#50#87#0" expanded="true" />
+            <element signature="e#212#255#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">

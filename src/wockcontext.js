@@ -1,4 +1,4 @@
-mport React from 'react'
+import React from 'react'
 
 const WockContext = React.createContext()
 

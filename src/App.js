@@ -1,37 +1,36 @@
 import React from 'react';
-import logo from './wce_logo.svg';
-import './App.css';
-// import ReactDOM from 'react-dom';
 import Commands from './components/Commands';
+
 import './commands.less';
+import './App.css';
 import './bootstrap.min.css';
+
+import {Image, Linking, Text, View, StyleSheet} from 'react-native-web';
+
+const styles = StyleSheet.create({
+  WCE: {
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  Version: {
+    align: "right",
+    fontSize: 16,
+  },
+  Logo: {width: 300, height: 60, resizeMode: "contain", scale: 0.95}
+});
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <img src={logo} className="App-logo" alt="logo" />
-              </td>
-              <td>
-                <a
-                    className="App-link"
-                    href="https://www.worldcomputerexchange.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-            World Computer Exchange
-                </a>
-             </td>
-              <td>{0.1}</td>
-            </tr>
-          </tbody>
-        </table>
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <Image onPress={ ()=> Linking.openURL('https://www.worldcomputerexchange.org') }
+            source={require('./wce_logo.svg')} style={styles.Logo}/>
+          <Text style={styles.Version}> 0.1 </Text>
+        </View>
       </header>
-      <Commands />
+
+        <Commands/>
     </div>
   );
 }

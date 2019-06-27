@@ -1,24 +1,38 @@
-import React, { Component } from 'react'
-import {Text, View} from 'react-bootstrap'
+import React, { Component } from 'react';
+import {ScrollView, Text, StyleSheet} from 'react-native-web';
 
-import Websocket from 'react-websocket';
 import {sweetHome} from './../looseend/home'
 import request from "request-promise";
+
+import * as io from 'socket.io-client';
+
+
+const styles = StyleSheet.create({
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#34495e',
+  },
+});
+
 
 export default class Messages extends Component {
   constructor() {
     super()
     this.state = {
-      messages: ['', '', 'UI Version 0.1.0']
+      messages: []
     }
   }
 
-  handleMessage = (msg) => {
-    this.setState({messages: [ this.state.messages[1], this.state.messages[2], msg ]})
+  componentWillMount() {
+    this.fetchMessages();
   }
 
-  fetchMessages(state, instance) {
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
+  /* Initial message loading */
+  fetchMessages() {
+    // Request the data however you want.
     request({
       "method":"GET",
       'uri': sweetHome.backendUrl + '/dispatch/messages',
@@ -31,19 +45,28 @@ export default class Messages extends Component {
     });
   }
 
+  /* set up the wock for message */
   componentDidMount() {
-    this.timer = setInterval(()=> this.fetchMessages(), 1000);
+    const wock = io.connect(sweetHome.websocketUrl);
+    wock.on('connection', this.onConn.bind(this));
   }
 
-  componentWillUnmount() {
-    this.timer = null; // here...
+  onConn(wock) {
+    console("got connection.");
+    wock.join('message');
   }
 
+  handleMessage(msg) {
+    console("got message." + msg);
+    this.setState({messages: this.state.messages + [msg]})
+  }
   render() {
     return (
-      <div align={"left"}>
-          <p>{this.state.messages[0]}</p><p>{this.state.messages[1]}</p><p>{this.state.messages[2]}</p>
-      </div>
+      <ScrollView>
+        {this.state.messages.map((msg) => {
+          return <Text>{msg}</Text>
+        })}
+      </ScrollView>
     );
   }
 }

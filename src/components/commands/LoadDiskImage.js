@@ -7,34 +7,51 @@ import "./commands.css";
 
 //
 import request from 'request-promise';
-import Websocket from 'react-websocket';
 
 // Dropdown menu
 import Select from 'react-dropdown-select';
 import { Container, Row, Col } from 'react-bootstrap'
 
 import {sweetHome} from './../../looseend/home';
+import socketio from "socket.io-client";
+
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
     super();
     this.state = {
+      /* The disk images sources */
       sources: [],
+      /* Selected disk image source. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
       source: [],
+      /* Fetching the disk images */
       sourcesLoading: true,
+
+      /* Raw disks */
       disks: [],
+      /* Disk table - page 1 always */
       diskPages: null,
+      /* Fetching list of disks */
       disksLoading: true,
+
+      /* Disk operation steps (aka tasks) */
       steps: [],
+      /* Page number of the table */
       stepPages: 1,
+      /* Loading steps */
       stepsLoading: true,
 
+      /* Restroing a disk */
       loadingDisk: false,
+      /* Target disk for loadiing */
       targetDisk: 0,
 
+      /* Selected disks */
       selected: {},
+      /* Select all status */
       selectAll: 0,
 
+      /* Mounted disks */
       mounted: {}
     };
 
@@ -48,6 +65,15 @@ export default class LoadDiskImage extends React.Component {
   componentWillMount() {
     this.fetchSources()
     this.fetchDisks()
+  }
+
+  componentDidMount() {
+    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    loadWock.on('loadimage', this.onLoadingState.bind(this));
+  }
+
+  onLoadingState(loading) {
+    this.setState( {steps: loading.steps})
   }
 
   toggleSelectAll() {
@@ -73,7 +99,6 @@ export default class LoadDiskImage extends React.Component {
       selectAll: 2
     });
   }
-
 
   onLoad() {
     const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
@@ -208,12 +233,6 @@ export default class LoadDiskImage extends React.Component {
         mounted: {} // FIXME: do something from the reply
       });
     });
-  }
-
-  handleWock(msg) {
-    const serverMessage = JSON.parse(msg);
-    const loadStatus = serverMessage.get('loadStatus');
-    if (loadStatus) { this.setStatus({ steps: loadStatus})}
   }
 
   render() {
@@ -428,7 +447,6 @@ export default class LoadDiskImage extends React.Component {
           defaultPageSize={10}
           className="-striped -highlight"
         />
-        <Websocket url={sweetHome.websocketUrl + "/dispatch/wock"} onMessage={this.handleWock.bind(this)}/>
       </div>
     );
   }
