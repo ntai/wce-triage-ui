@@ -2,6 +2,7 @@ import React from "react";
 //
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
+import "./commands.css";
 
 class Music extends React.Component {
   state = {
@@ -18,7 +19,7 @@ class Music extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.togglePlay}>{this.state.play ? 'Pause' : 'Play'}</button>
+        <button class="CommandButton" onClick={this.togglePlay}>{this.state.play ? '\u25a0' : '\u25B6'}</button>
       </div>
     );
   }

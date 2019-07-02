@@ -6,3 +6,48 @@
 .react-resizable{
     max-width: 100%;
 }
+
+.CommandButton {
+    display: inline-block;
+    padding: 0.5vw 2vw;
+    border: 0;
+    font-size: 1.5vw;
+
+    background-color: #889DA3;
+    color: #f3f3f3;
+
+    cursor: pointer;
+    border-radius: 4px;
+    text-shadow: 0px 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0px 5px 25px -5px rgba(0,0,0,0.5);
+}
+
+
+.LoadButton {
+    display: inline-block;
+    padding: 0.5vw 2vw;
+    border: 0;
+    font-size: 1.5vw;
+
+    background-color: #ff9090;
+    color: #f3f3f3;
+
+    cursor: pointer;
+    border-radius: 4px;
+    text-shadow: 0px 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0px 5px 25px -5px rgba(0,0,0,0.5);
+}
+
+
+.react-dropdown-select-dropdown {
+    overflow: initial;
+}
+
+HtmlSelect {
+    padding: 0;
+    margin: 0 0 0 10px;
+    height: 23px !important;
+    color: #0071dc;
+    background: #fff;
+    border: 1px solid #0071dc;
+}

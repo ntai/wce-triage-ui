@@ -1,10 +1,10 @@
+import process from 'process';
 import url from 'url';
-const process = require('process');
-require('dotenv').config()
 
 export const sweetHome = (function() {
   const href = document.location.href;
   const urlObj = url.parse(href, true);
+  if (urlObj.port === "3000") process.env.NODE_ENV = "development";
 
   return {
     href,
@@ -16,10 +16,10 @@ export const sweetHome = (function() {
     baseUrl: urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
     // For deployment, backendUrl is same as baseUrl. Just a hack for now
 
-    backendUrl: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
+    backendUrl: (process.env.NODE_ENV === 'development') ?
     'http://wcetriage:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
 
-    websocketUrl: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
+    websocketUrl: (process.env.NODE_ENV === 'development') ?
       'ws://wcetriage:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
   };
 })();

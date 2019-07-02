@@ -48,22 +48,24 @@ export default class Messages extends Component {
   /* set up the wock for message */
   componentDidMount() {
     const wock = io.connect(sweetHome.websocketUrl);
-    wock.on('connection', this.onConn.bind(this));
-  }
-
-  onConn(wock) {
-    console("got connection.");
-    wock.join('message');
+    wock.on('message', this.handleMessage.bind(this));
   }
 
   handleMessage(msg) {
-    console("got message." + msg);
-    this.setState({messages: this.state.messages + [msg]})
+    const messages = this.state.messages.concat(msg.message);
+    console.log("got message." + messages);
+    this.setState({messages: messages});
   }
   render() {
+    const messages = this.state.messages;
+
+    messages.map((msg) => {
+      console.log(msg);
+    })
+
     return (
       <ScrollView>
-        {this.state.messages.map((msg) => {
+        {messages.map((msg) => {
           return <Text>{msg}</Text>
         })}
       </ScrollView>

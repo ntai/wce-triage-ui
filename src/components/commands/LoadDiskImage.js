@@ -1,4 +1,5 @@
 import React from "react";
+import cloneDeep from 'lodash/cloneDeep';
 
 // Import React Table
 import ReactTable from "react-table";
@@ -15,6 +16,13 @@ import { Container, Row, Col } from 'react-bootstrap'
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
 
+function value_to_color(value) {
+  return value > 100 ? '#FF1f1f'
+    : value === 100 ? '#00ef0f'
+      : value > 0 ? '#5f8fff'
+        : '#dadada';
+}
+
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -26,6 +34,11 @@ export default class LoadDiskImage extends React.Component {
       source: [],
       /* Fetching the disk images */
       sourcesLoading: true,
+
+      /* The restore types */
+      restoreTypes: [],
+      restoreType: [],
+      restoreTypesLoading: true,
 
       /* Raw disks */
       disks: [],
@@ -58,12 +71,32 @@ export default class LoadDiskImage extends React.Component {
     this.fetchSources = this.fetchSources.bind(this);
     this.fetchDisks = this.fetchDisks.bind(this);
     this.fetchSteps = this.fetchSteps.bind(this);
+
+    this.RTSelect = props =>
+      <select value={props.value} onChange={props.onChange} >
+        {props.options.map(rt => <option key={rt.id}>{rt.name}</option>)}
+      </select>;
+
+    this.restoreTypeSelect = this.restoreTypeSelect.bind(this);
   }
 
-  setSource = selectValues => this.setState({ "source": selectValues });
+  setSource(val) {
+    console.log(val);
+    this.setState({ "source": val });
+  }
+
+  setRestoreType(val) {
+    console.log(val);
+    this.setState( { restoreType: val })
+  }
+
+  restoreTypeSelect(event) {
+    this.setState({restoreType: event.target.value});
+  }
 
   componentWillMount() {
     this.fetchSources()
+    this.fetchRestoreTypes()
     this.fetchDisks()
   }
 
@@ -73,14 +106,59 @@ export default class LoadDiskImage extends React.Component {
   }
 
   onLoadingState(loading) {
-    this.setState( {steps: loading.steps})
+    var steps = loading.steps;
+
+    // if the browser reloaded, nothing I can do.
+    if (this.state.steps === undefined && steps === undefined)
+      return;
+
+    if (steps === undefined) {
+      steps = cloneDeep(this.state.steps)
+    }
+
+    const step_no = loading.step;
+    const progress = loading.progress;
+    const elapseTime = loading.elapseTime;
+    const message = loading.message;
+    const status = loading.status;
+
+    if (step_no) {
+      steps[step_no].progress = progress;
+      steps[step_no].elapseTime = elapseTime;
+      steps[step_no].message = message;
+      steps[step_no].status = status;
+    }
+
+    var disks = cloneDeep(this.state.disks);
+    console.log("disk status " + loading.device + " " + loading.runEstimate + " " + loading.runTime);
+
+    if (loading.device && loading.runEstimate && loading.runTime) {
+      const devname = loading.device;
+      var disk;
+
+      for (disk of disks) {
+        if (disk.deviceName === devname) {
+          disk.progress = Math.round(loading.runTime/loading.runEstimate * 100);
+          disk.runEstiamte = loading.runEstimate;
+          disk.runTime = loading.runTime;
+          break;
+        }
+      }
+    }
+
+
+    this.setState( {steps: steps,
+                          stepsLoading: false,
+                          disks: disks,
+                          disksLoading: false,
+    })
   }
 
   toggleSelectAll() {
     let newSelected = {};
 
     if (this.state.selectAll === 0) {
-      this.state.data.forEach(x => {
+      this.state.disks.forEach(x => {
         newSelected[x.deviceName] = true;
       });
     }
@@ -106,7 +184,8 @@ export default class LoadDiskImage extends React.Component {
       return;
 
     const loadingSource = this.state.source;
-    if (! loadingSource)
+    const restoreType = this.state.restoreType;
+    if (! loadingSource || !restoreType)
       return;
 
     // time to make donuts
@@ -118,7 +197,7 @@ export default class LoadDiskImage extends React.Component {
 
     request({
       "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/load?deviceName=" + loadingDisk + "&source=" + loadingSource[0].fullpath,
+      "uri": sweetHome.backendUrl + "/dispatch/load?deviceName=" + loadingDisk + "&source=" + loadingSource[0].fullpath + "&size=" + loadingSource[0].size + "&restoretype=" + restoreType,
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -136,12 +215,10 @@ export default class LoadDiskImage extends React.Component {
 
   onReset() {
     this.fetchSources()
+    this.fetchRestoreTypes()
     this.fetchDisks()
   }
 
-  onSourceChange(src) {
-    this.setState( { source: src } );
-  }
 
   fetchSources(state, instance) {
     this.setState({ sourcesLoading: true });
@@ -165,6 +242,33 @@ export default class LoadDiskImage extends React.Component {
         sources: res.sources,
         source: source,
         sourcesLoading: false
+      });
+    });
+  }
+
+  fetchRestoreTypes(state, instance) {
+    this.setState({ restoreTypesLoading: true });
+    // Request the data however you want.  Here, we'll use our mocked service we created earlier
+
+    request({
+      "method":"GET",
+      "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
+      "json": true,
+      "headers": {
+        "User-Agent": "WCE Triage"
+      }}
+    ).then(res => {
+      console.log(res.restoreTypes);
+
+      var restoreType;
+      if (res.restoreTypes.length > 0) {
+        restoreType = [res.restoreTypes[0]];
+      }
+      // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
+      this.setState({
+        restoreTypes: res.restoreTypes,
+        restoreType: restoreType,
+        restoreTypesLoading: false
       });
     });
   }
@@ -236,31 +340,37 @@ export default class LoadDiskImage extends React.Component {
   }
 
   render() {
-    const { sources, source, sourcesLoading, disks, diskPages, steps, disksLoading, stepPages, stepsLoading } = this.state;
+    const { sources, source, sourcesLoading, restoreTypes, restoreType, restoreTypesLoading, disks, diskPages, steps, disksLoading, stepPages, stepsLoading } = this.state;
     return (
       <div>
         <Container>
           <Row>
             <Col sm={1}>
-              <button onClick={() => this.onLoad()}>Load</button>
+              <button class="LoadButton" onClick={() => this.onLoad()}>Load</button>
             </Col>
-            <Col sm={9}>
+            <Col sm={6}>
               <Select
                 placeholder="Select source"
-                style={{"aligh": "left"}}
+                direction={"ltr"}
                 loading={sourcesLoading}
                 multi={false}
                 options={sources}
                 values={source}
-                dropdownGap={2}
+                dropdownGap={5}
                 onDropdownOpen={ () => this.fetchSources() }
-                onChange={source => this.setSource(source)}
+                onChange={ (values) => this.setSource(values)}
                 labelField={"name"}
                 valueField={"name"}
               />
             </Col>
+            <Col sm={3}>
+              <label>
+                Restore type:
+                <this.RTSelect options={this.state.restoreTypes} value={this.state.restoreType} onChange={this.restoreTypeSelect} />
+              </label>
+            </Col>
             <Col sm={1}>
-              <button onClick={() => this.onReset()}>Reset</button>
+              <button class="CommandButton" onClick={() => this.onReset()}>Reset</button>
             </Col>
           </Row>
         </Container>
@@ -330,14 +440,14 @@ export default class LoadDiskImage extends React.Component {
               accessor: "model"
             },
             {
-              Header: "Elapsed",
+              Header: "Estimate",
               width: 100,
-              accessor: "elapseTime"
+              accessor: "runEstiamte"
             },
             {
-              Header: 'Progress',
-              width: 80,
-              accessor: 'progress',
+              Header: "Elapsed",
+              width: 100,
+              accessor: "runTime"
             },
             {
               Header: '-',
@@ -355,10 +465,7 @@ export default class LoadDiskImage extends React.Component {
                     style={{
                       width: `${row.value}%`,
                       height: '100%',
-                      backgroundColor: row.value > 100 ? '#FF1f1f'
-                        : row.value > 99 ? '#00ef0f'
-                        : row.value > 0 ? '#5f8fff'
-                        : '#efefef',
+                      backgroundColor: value_to_color(row.value),
                       borderRadius: '2px',
                       transition: 'all .2s ease-out'
                     }}
@@ -381,23 +488,30 @@ export default class LoadDiskImage extends React.Component {
           columns={[
             {
               Header: "Step",
-              width: 150,
+              width: 300,
               accessor: "category"
             },
             {
+              Header: "Estimate",
+              width: 100,
+              accessor: "timeEstimate"
+            },
+            {
               Header: "Elapsed",
+              width: 100,
               accessor: "elapseTime"
             },
             {
               Header: 'Status',
+              width: 100,
               accessor: 'status',
               Cell: row => (
                 <span>
                   <span style={{
-                   color: row.value === 'waiting' ? '#808080'
-                     : row.value === 'running' ?  '#0000ff'
-                     : row.value === 'done' ? '#00ff00'
-                     : row.value === 'fail' ? '#ff0000'
+                   color: row.value === 'waiting' ? value_to_color(0)
+                     : row.value === 'running' ?  value_to_color(1)
+                     : row.value === 'done' ? value_to_color(100)
+                     : row.value === 'fail' ? value_to_color(999)
                      : '#404040',
                     transition: 'all .3s ease'
                 }}>
@@ -414,6 +528,7 @@ export default class LoadDiskImage extends React.Component {
             },
             {
               Header: 'Progress',
+              width: 100,
               accessor: 'progress',
               Cell: row => (
                 <div
@@ -428,16 +543,19 @@ export default class LoadDiskImage extends React.Component {
                     style={{
                       width: `${row.value}%`,
                       height: '100%',
-                      backgroundColor: row.value > 66 ? '#85cc00'
-                        : row.value > 33 ? '#ffbf00'
-                          : '#ff2e00',
+                      backgroundColor: value_to_color(row.value),
                       borderRadius: '2px',
                       transition: 'all .2s ease-out'
                     }}
                   />
                 </div>
               )
-            }
+            },
+            {
+              Header: "Description",
+              width: 200,
+              accessor: "message"
+            },
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           data={steps}

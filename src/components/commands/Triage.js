@@ -107,16 +107,16 @@ export default class Triage extends React.Component {
 
         <Row>
           <Col>
-            <button type="button" onClick={() => this.fetchTriage()}>
+            <button type="button" class="CommandButton" onClick={() => this.fetchTriage()}>
               <span>Reload</span>
             </button>
           </Col>
           <Col> <Music url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
           <Col>
-            <button type="button" onClick={ () => this.onReboot() }>
+            <button type="button" onClick={ () => this.onReboot()} class="CommandButton">
               <span>Reboot Computer</span>
             </button>
-            <button type="button" onClick={ () => this.onShutdown() }>
+            <button type="button" onClick={ () => this.onShutdown()} class="CommandButton">
               <span>Power off</span>
             </button>
           </Col>
