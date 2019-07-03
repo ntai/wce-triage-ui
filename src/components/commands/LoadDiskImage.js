@@ -10,7 +10,8 @@ import "./commands.css";
 import request from 'request-promise';
 
 // Dropdown menu
-import Select from 'react-dropdown-select';
+// import Select from 'react-dropdown-select';
+import Select from 'react-select';
 import { Container, Row, Col } from 'react-bootstrap'
 
 import {sweetHome} from './../../looseend/home';
@@ -72,26 +73,17 @@ export default class LoadDiskImage extends React.Component {
     this.fetchDisks = this.fetchDisks.bind(this);
     this.fetchSteps = this.fetchSteps.bind(this);
 
-    this.RTSelect = props =>
-      <select value={props.value} onChange={props.onChange} >
-        {props.options.map(rt => <option key={rt.id}>{rt.name}</option>)}
-      </select>;
-
-    this.restoreTypeSelect = this.restoreTypeSelect.bind(this);
+    this.setRestoreType = this.setRestoreType.bind(this);
   }
 
-  setSource(val) {
-    console.log(val);
-    this.setState({ "source": val });
+  setSource(selected) {
+    console.log(selected);
+    this.setState({ "source": selected.value });
   }
 
-  setRestoreType(val) {
-    console.log(val);
-    this.setState( { restoreType: val })
-  }
-
-  restoreTypeSelect(event) {
-    this.setState({restoreType: event.target.value});
+  setRestoreType(selected) {
+    console.log(selected);
+    this.setState( { restoreType: selected.value })
   }
 
   componentWillMount() {
@@ -232,11 +224,13 @@ export default class LoadDiskImage extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      var source = [];
+      var source = undefined;
       if (res.sources.length > 0) {
         // FIXME: should pick the latest depending on the mod time
-        source = [res.sources[0]];
+        source = res.sources[0];
       }
+
+
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
         sources: res.sources,
@@ -348,28 +342,22 @@ export default class LoadDiskImage extends React.Component {
             <Col sm={1}>
               <button class="LoadButton" onClick={() => this.onLoad()}>Load</button>
             </Col>
-            <Col sm={6}>
+            <Col sm={4}>
               <Select
+                style={{fontSize: 13, textAlign: "left"}}
                 placeholder="Select source"
-                direction={"ltr"}
-                loading={sourcesLoading}
-                multi={false}
-                options={sources}
-                values={source}
-                dropdownGap={5}
-                onDropdownOpen={ () => this.fetchSources() }
-                onChange={ (values) => this.setSource(values)}
-                labelField={"name"}
-                valueField={"name"}
+                options={sources.map( src => ({value: src.fullpath, label: src.name}))}
+                onChange={ (value) => this.setSource(value)}
               />
             </Col>
-            <Col sm={3}>
-              <label>
+
+            <label>
                 Restore type:
-                <this.RTSelect options={this.state.restoreTypes} value={this.state.restoreType} onChange={this.restoreTypeSelect} />
-              </label>
+            </label>
+            <Col sm={3}>
+              <Select options={this.state.restoreTypes.map( rt => ({label: rt.name, value: rt.id}))} onChange={this.setRestoreType} />
             </Col>
-            <Col sm={1}>
+            <Col sm={2}>
               <button class="CommandButton" onClick={() => this.onReset()}>Reset</button>
             </Col>
           </Row>
@@ -480,6 +468,7 @@ export default class LoadDiskImage extends React.Component {
           loading={disksLoading} // Display the loading overlay when we need it
           onFetchData={this.fetchDisks} // Request new data when things change
           defaultPageSize={4}
+          showPagination={false}
           className="-striped"
         />
         <br />
@@ -488,17 +477,18 @@ export default class LoadDiskImage extends React.Component {
           columns={[
             {
               Header: "Step",
-              width: 300,
-              accessor: "category"
+              width: 250,
+              accessor: "category",
+              style: {textAlign: "right"},
             },
             {
               Header: "Estimate",
-              width: 100,
+              width: 60,
               accessor: "timeEstimate"
             },
             {
               Header: "Elapsed",
-              width: 100,
+              width: 60,
               accessor: "elapseTime"
             },
             {
@@ -554,15 +544,19 @@ export default class LoadDiskImage extends React.Component {
             {
               Header: "Description",
               width: 200,
-              accessor: "message"
+              accessor: "message",
+              style: {textAlign: "left"},
             },
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          style={{fontSize: 12, borderRadius: 0, textAligh: "left"}}
           data={steps}
           pages={stepPages}      // Display the total number of pages
           loading={stepsLoading} // Display the loading overlay when we need it
           onFetchData={this.fetchSteps} // Request new data when things change
-          defaultPageSize={10}
+          defaultPageSize={15}
+          showPagination={false}
+          sortable={false}
           className="-striped -highlight"
         />
       </div>

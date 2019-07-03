@@ -9,9 +9,9 @@
 
 .CommandButton {
     display: inline-block;
-    padding: 0.5vw 2vw;
+    padding: 0.5vw 1.5vw;
     border: 0;
-    font-size: 1.5vw;
+    font-size: 1.25vw;
 
     background-color: #889DA3;
     color: #f3f3f3;
@@ -25,9 +25,9 @@
 
 .LoadButton {
     display: inline-block;
-    padding: 0.5vw 2vw;
+    padding: 0.5vw 1.5vw;
     border: 0;
-    font-size: 1.5vw;
+    font-size: 1.25vw;
 
     background-color: #ff9090;
     color: #f3f3f3;

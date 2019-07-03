@@ -18,7 +18,10 @@ export default class Triage extends React.Component {
 
     this.state = {triageResult: [], loading: true, soundPlaying: false}
     this.columns = [
-      {"Header": "Component", "accessor": "component", "maxWidth": "120"},
+      {"Header": "Component",
+        "accessor": "component",
+        "maxWidth": "120",
+        style: { textAlign: "right"}},
       {
         "Header": "Result", "accessor": "result", "maxWidth": "80",
         Cell: row => (
@@ -124,7 +127,9 @@ export default class Triage extends React.Component {
 
         <ReactTable
           data={data}
-          defaultPageSize={10}
+          style={{fontSize: 12, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
+          defaultPageSize={15}
+          showPagination={false}
           showPageSizeOptions={false}
           columns={this.columns}
           pages={1}
