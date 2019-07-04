@@ -5,13 +5,14 @@ import cloneDeep from 'lodash/cloneDeep';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import "./commands.css";
-
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 //
 import request from 'request-promise';
 
 // Dropdown menu
-// import Select from 'react-dropdown-select';
-import Select from 'react-select';
+// import ReactSelect from 'react-select';
+import ReactSelect from 'react-select';
 import { Container, Row, Col } from 'react-bootstrap'
 
 import {sweetHome} from './../../looseend/home';
@@ -24,6 +25,33 @@ function value_to_color(value) {
         : '#dadada';
 }
 
+class ErrorMessageModal extends React.Component {
+  render() {
+    return (
+      <Modal
+        {...this.props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Image loading
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>{this.props.errorTitle}</h4>
+          <p>
+            {this.props.errorMessage}
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+}
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -32,13 +60,13 @@ export default class LoadDiskImage extends React.Component {
       /* The disk images sources */
       sources: [],
       /* Selected disk image source. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
-      source: [],
+      source: undefined,
       /* Fetching the disk images */
       sourcesLoading: true,
 
       /* The restore types */
       restoreTypes: [],
-      restoreType: [],
+      restoreType: undefined,
       restoreTypesLoading: true,
 
       /* Raw disks */
@@ -56,17 +84,22 @@ export default class LoadDiskImage extends React.Component {
       stepsLoading: true,
 
       /* Restroing a disk */
-      loadingDisk: false,
+      diskRestoring: false,
       /* Target disk for loadiing */
       targetDisk: 0,
 
       /* Selected disks */
       selected: {},
-      /* Select all status */
+      /* ReactSelect all status */
       selectAll: 0,
 
       /* Mounted disks */
-      mounted: {}
+      mounted: {},
+
+      /* Error message modal dialog */
+      modaling: false,
+      errorMessage: "",
+      errorTitle: ""
     };
 
     this.fetchSources = this.fetchSources.bind(this);
@@ -74,16 +107,27 @@ export default class LoadDiskImage extends React.Component {
     this.fetchSteps = this.fetchSteps.bind(this);
 
     this.setRestoreType = this.setRestoreType.bind(this);
+
+    this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
   }
 
-  setSource(selected) {
-    console.log(selected);
-    this.setState({ "source": selected.value });
+  setSource(source) {
+    console.log(source);
+    this.setState({source: source,
+      restoreType: this.state.restoreTypes.filter( rt => rt.value == source.restoreType)[0]});
   }
 
   setRestoreType(selected) {
     console.log(selected);
-    this.setState( { restoreType: selected.value })
+    this.setState({restoreType: selected})
+  }
+
+  closeErrorMessageModal() {
+    this.setState({modaling: false});
+  }
+
+  showErrorMessageModal(title, msg) {
+    this.setState({modaling: true, errorTitle: title, errorMessage: msg});
   }
 
   componentWillMount() {
@@ -94,11 +138,11 @@ export default class LoadDiskImage extends React.Component {
 
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on('loadimage', this.onLoadingState.bind(this));
+    loadWock.on('loadimage', this.onResoringState.bind(this));
   }
 
-  onLoadingState(loading) {
-    var steps = loading.steps;
+  onResoringState(restoring) {
+    var steps = restoring.steps;
 
     // if the browser reloaded, nothing I can do.
     if (this.state.steps === undefined && steps === undefined)
@@ -108,11 +152,11 @@ export default class LoadDiskImage extends React.Component {
       steps = cloneDeep(this.state.steps)
     }
 
-    const step_no = loading.step;
-    const progress = loading.progress;
-    const elapseTime = loading.elapseTime;
-    const message = loading.message;
-    const status = loading.status;
+    const step_no = restoring.step;
+    const progress = restoring.progress;
+    const elapseTime = restoring.elapseTime;
+    const message = restoring.message;
+    const status = restoring.status;
 
     if (step_no) {
       steps[step_no].progress = progress;
@@ -122,27 +166,28 @@ export default class LoadDiskImage extends React.Component {
     }
 
     var disks = cloneDeep(this.state.disks);
-    console.log("disk status " + loading.device + " " + loading.runEstimate + " " + loading.runTime);
+    console.log("disk status " + restoring.device + " " + restoring.runEstimate + " " + restoring.runTime);
 
-    if (loading.device && loading.runEstimate && loading.runTime) {
-      const devname = loading.device;
+    if (restoring.device && restoring.runEstimate && restoring.runTime) {
+      const devname = restoring.device;
       var disk;
 
       for (disk of disks) {
         if (disk.deviceName === devname) {
-          disk.progress = Math.round(loading.runTime/loading.runEstimate * 100);
-          disk.runEstiamte = loading.runEstimate;
-          disk.runTime = loading.runTime;
+          disk.progress = Math.round(restoring.runTime / restoring.runEstimate * 100);
+          disk.runEstiamte = restoring.runEstimate;
+          disk.runTime = restoring.runTime;
+          disk.runStatus = restoring.runStatus;
           break;
         }
       }
     }
 
-
-    this.setState( {steps: steps,
-                          stepsLoading: false,
-                          disks: disks,
-                          disksLoading: false,
+    this.setState({
+      steps: steps,
+      stepsLoading: false,
+      disks: disks,
+      disksLoading: false,
     })
   }
 
@@ -170,26 +215,40 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
-  onLoad() {
+  getRestoringUrl() {
     const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    if (selectedDevices.length === 0)
-      return;
-
-    const loadingSource = this.state.source;
+    const resotringSource = this.state.source;
     const restoreType = this.state.restoreType;
-    if (! loadingSource || !restoreType)
-      return;
+
+    if (selectedDevices.length == 0 || !resotringSource || !restoreType) {
+      return undefined;
+    }
 
     // time to make donuts
-    const loadingDisk = selectedDevices[0];
+    const targetDisk = selectedDevices[0];
+    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
+  }
+
+  onLoad() {
+    const restoringUrl = this.getRestoringUrl();
+
+    if (restoringUrl == undefined) {
+      this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
+      return;
+    }
+
+    console.log(restoringUrl);
+
+    // time to make donuts
+    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    const targetDisk = selectedDevices[0];
     var remainings = {}
     Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
-
-    this.setState({ loadingDisk: true, selected: remainings, target: loadingDisk });
+    this.setState({ diskRestoring: true, selected: remainings, target: targetDisk });
 
     request({
       "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/load?deviceName=" + loadingDisk + "&source=" + loadingSource[0].fullpath + "&size=" + loadingSource[0].size + "&restoretype=" + restoreType,
+      "uri": restoringUrl,
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
@@ -198,7 +257,7 @@ export default class LoadDiskImage extends React.Component {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
         target: null,
-        sourcesLoading: false
+        diskRestoring: true
       });
     });
 
@@ -206,9 +265,24 @@ export default class LoadDiskImage extends React.Component {
   }
 
   onReset() {
+    this.setState( {source: undefined, sources: []});
     this.fetchSources()
-    this.fetchRestoreTypes()
     this.fetchDisks()
+  }
+
+  onAbort() {
+    request({
+      "method":"POST",
+      "uri": sweetHome.backendUrl + "/dispatch/stop-load",
+      "json": true,
+      "headers": {
+        "User-Agent": "WCE Triage"
+      }}
+    ).then(res => {
+      this.setState({
+        diskRestoring: false,
+      });
+    });
   }
 
 
@@ -224,18 +298,11 @@ export default class LoadDiskImage extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      var source = undefined;
-      if (res.sources.length > 0) {
-        // FIXME: should pick the latest depending on the mod time
-        source = res.sources[0];
-      }
-
-
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
-        sources: res.sources,
-        source: source,
-        sourcesLoading: false
+        sources: res.sources.map( src => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType})),
+        source: undefined,
+        sourcesLoading: false,
       });
     });
   }
@@ -254,14 +321,11 @@ export default class LoadDiskImage extends React.Component {
     ).then(res => {
       console.log(res.restoreTypes);
 
-      var restoreType;
-      if (res.restoreTypes.length > 0) {
-        restoreType = [res.restoreTypes[0]];
-      }
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
-        restoreTypes: res.restoreTypes,
-        restoreType: restoreType,
+        // marshall this for ReactSelect
+        restoreTypes: res.restoreTypes.map(rt => ({label: rt.name, value: rt.id})),
+        restoreType: undefined,
         restoreTypesLoading: false
       });
     });
@@ -334,20 +398,25 @@ export default class LoadDiskImage extends React.Component {
   }
 
   render() {
-    const { sources, source, sourcesLoading, restoreTypes, restoreType, restoreTypesLoading, disks, diskPages, steps, disksLoading, stepPages, stepsLoading } = this.state;
+    const { sources, source, sourcesLoading, restoreTypes, restoreType, restoreTypesLoading, diskRestoring, disks, diskPages, steps, disksLoading, stepPages, stepsLoading, selected } = this.state;
+    const restoringUrl = this.getRestoringUrl();
+
+
     return (
       <div>
         <Container>
           <Row>
             <Col sm={1}>
-              <button class="LoadButton" onClick={() => this.onLoad()}>Load</button>
+              <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl == undefined}>Load</Button>
             </Col>
             <Col sm={4}>
-              <Select
+              <ReactSelect
+                // handing down undefined doesn't change the selection. Dummy value '' sets it.
+                value={source || ''}
                 style={{fontSize: 13, textAlign: "left"}}
                 placeholder="Select source"
-                options={sources.map( src => ({value: src.fullpath, label: src.name}))}
-                onChange={ (value) => this.setSource(value)}
+                options={sources}
+                onChange={(value) => this.setSource(value)}
               />
             </Col>
 
@@ -355,15 +424,22 @@ export default class LoadDiskImage extends React.Component {
                 Restore type:
             </label>
             <Col sm={3}>
-              <Select options={this.state.restoreTypes.map( rt => ({label: rt.name, value: rt.id}))} onChange={this.setRestoreType} />
+              <ReactSelect value={restoreType || ''} options={restoreTypes} onChange={this.setRestoreType}/>
             </Col>
-            <Col sm={2}>
-              <button class="CommandButton" onClick={() => this.onReset()}>Reset</button>
+            <Col sm={1}>
+              <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
             </Col>
+            <Col sm={1}>
+              <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
+            </Col>
+          </Row>
+          <Row>
+            <label visible={restoringUrl != undefined}>{restoringUrl}</label>
           </Row>
         </Container>
 
         <ReactTable
+          disabled={disksLoading}
           columns={[
             {
               id: "checkbox",
@@ -438,7 +514,12 @@ export default class LoadDiskImage extends React.Component {
               accessor: "runTime"
             },
             {
-              Header: '-',
+              Header: "Status",
+              accessor: "runStatus"
+            },
+            {
+              Header: 'Progress',
+              width: 200,
               accessor: 'progress',
               Cell: row => (
                 <div
@@ -531,7 +612,7 @@ export default class LoadDiskImage extends React.Component {
                 >
                   <div
                     style={{
-                      width: `${row.value}%`,
+                      width: `${Math.min(100, row.value)}%`,
                       height: '100%',
                       backgroundColor: value_to_color(row.value),
                       borderRadius: '2px',
@@ -558,6 +639,12 @@ export default class LoadDiskImage extends React.Component {
           showPagination={false}
           sortable={false}
           className="-striped -highlight"
+        />
+
+        <ErrorMessageModal
+          errorMessage={this.state.errorMessage}
+          show={this.state.modaling}
+          onHide={this.closeErrorMessageModal}
         />
       </div>
     );
