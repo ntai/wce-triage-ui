@@ -18,12 +18,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
 
-function value_to_color(value) {
-  return value > 100 ? '#FF1f1f'
-    : value === 100 ? '#00ef0f'
-      : value > 0 ? '#5f8fff'
-        : '#dadada';
-}
+import {RunnerProgress, value_to_color} from "./RunnerProgress";
+import Disks from "./Disks";
 
 class ErrorMessageModal extends React.Component {
   render() {
@@ -59,7 +55,7 @@ export default class LoadDiskImage extends React.Component {
     this.state = {
       /* The disk images sources */
       sources: [],
-      /* Selected disk image source. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
+      /* Selected disk image destination. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
       source: undefined,
       /* Fetching the disk images */
       sourcesLoading: true,
@@ -69,51 +65,41 @@ export default class LoadDiskImage extends React.Component {
       restoreType: undefined,
       restoreTypesLoading: true,
 
-      /* Raw disks */
-      disks: [],
-      /* Disk table - page 1 always */
-      diskPages: null,
-      /* Fetching list of disks */
-      disksLoading: true,
-
-      /* Disk operation steps (aka tasks) */
-      steps: [],
-      /* Page number of the table */
-      stepPages: 1,
-      /* Loading steps */
-      stepsLoading: true,
-
-      /* Restroing a disk */
-      diskRestoring: false,
-      /* Target disk for loadiing */
-      targetDisk: 0,
-
-      /* Selected disks */
+      /* selected disks */
       selected: {},
-      /* ReactSelect all status */
-      selectAll: 0,
-
-      /* Mounted disks */
-      mounted: {},
 
       /* Error message modal dialog */
       modaling: false,
       errorMessage: "",
-      errorTitle: ""
+      errorTitle: "",
+
+      resetting : false
     };
 
     this.fetchSources = this.fetchSources.bind(this);
-    this.fetchDisks = this.fetchDisks.bind(this);
-    this.fetchSteps = this.fetchSteps.bind(this);
-
     this.setRestoreType = this.setRestoreType.bind(this);
-
     this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
+    this.disk_selection_changed = this.disk_selection_changed.bind(this);
+    this.did_reset = this.did_reset.bind(this);
+  }
+
+  disk_selection_changed(selectedDisks) {
+    this.setState( {selected: selectedDisks});
+  }
+
+  did_reset() {
+    this.setState( {resetting: false});
+  }
+
+  onReset() {
+    this.setState( {resetting: true});
+    this.setState( {destination: undefined, sources: []});
+    this.fetchSources();
   }
 
   setSource(source) {
     console.log(source);
-    this.setState({source: source,
+    this.setState({destination: source,
       restoreType: this.state.restoreTypes.filter( rt => rt.value == source.restoreType)[0]});
   }
 
@@ -133,91 +119,11 @@ export default class LoadDiskImage extends React.Component {
   componentWillMount() {
     this.fetchSources()
     this.fetchRestoreTypes()
-    this.fetchDisks()
-  }
-
-  componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on('loadimage', this.onResoringState.bind(this));
-  }
-
-  onResoringState(restoring) {
-    var steps = restoring.steps;
-
-    // if the browser reloaded, nothing I can do.
-    if (this.state.steps === undefined && steps === undefined)
-      return;
-
-    if (steps === undefined) {
-      steps = cloneDeep(this.state.steps)
-    }
-
-    const step_no = restoring.step;
-    const progress = restoring.progress;
-    const elapseTime = restoring.elapseTime;
-    const message = restoring.message;
-    const status = restoring.status;
-
-    if (step_no) {
-      steps[step_no].progress = progress;
-      steps[step_no].elapseTime = elapseTime;
-      steps[step_no].message = message;
-      steps[step_no].status = status;
-    }
-
-    var disks = cloneDeep(this.state.disks);
-    console.log("disk status " + restoring.device + " " + restoring.runEstimate + " " + restoring.runTime);
-
-    if (restoring.device && restoring.runEstimate && restoring.runTime) {
-      const devname = restoring.device;
-      var disk;
-
-      for (disk of disks) {
-        if (disk.deviceName === devname) {
-          disk.progress = Math.round(restoring.runTime / restoring.runEstimate * 100);
-          disk.runEstiamte = restoring.runEstimate;
-          disk.runTime = restoring.runTime;
-          disk.runStatus = restoring.runStatus;
-          break;
-        }
-      }
-    }
-
-    this.setState({
-      steps: steps,
-      stepsLoading: false,
-      disks: disks,
-      disksLoading: false,
-    })
-  }
-
-  toggleSelectAll() {
-    let newSelected = {};
-
-    if (this.state.selectAll === 0) {
-      this.state.disks.forEach(x => {
-        newSelected[x.deviceName] = true;
-      });
-    }
-
-    this.setState({
-      selected: newSelected,
-      selectAll: this.state.selectAll === 0 ? 1 : 0
-    });
-  }
-
-  toggleRow(deviceName) {
-    const newSelected = Object.assign({}, this.state.selected);
-    newSelected[deviceName] = !this.state.selected[deviceName];
-    this.setState({
-      selected: newSelected,
-      selectAll: 2
-    });
   }
 
   getRestoringUrl() {
     const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const resotringSource = this.state.source;
+    const resotringSource = this.state.destination;
     const restoreType = this.state.restoreType;
 
     if (selectedDevices.length == 0 || !resotringSource || !restoreType) {
@@ -226,14 +132,14 @@ export default class LoadDiskImage extends React.Component {
 
     // time to make donuts
     const targetDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
+    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&destination=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
   }
 
   onLoad() {
     const restoringUrl = this.getRestoringUrl();
 
     if (restoringUrl == undefined) {
-      this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
+      this.showErrorMessageModal("Please select...", "No disk, destination or restore type selected.");
       return;
     }
 
@@ -260,15 +166,8 @@ export default class LoadDiskImage extends React.Component {
         diskRestoring: true
       });
     });
-
-    // this.onLoad();
   }
 
-  onReset() {
-    this.setState( {source: undefined, sources: []});
-    this.fetchSources()
-    this.fetchDisks()
-  }
 
   onAbort() {
     request({
@@ -301,7 +200,7 @@ export default class LoadDiskImage extends React.Component {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
         sources: res.sources.map( src => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType})),
-        source: undefined,
+        destination: undefined,
         sourcesLoading: false,
       });
     });
@@ -331,83 +230,16 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
-  fetchDisks(state, instance) {
-    // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
-    // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
-    this.setState({ disksLoading: true });
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
-    request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + "/dispatch/disks.json",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        disks: res.disks,
-        diskPages: res.pages,
-        disksLoading: false,
-        mounted: {}, // FIXME: filter disk by mounted === 1
-        selected: {} // FIXME: filter disk by selected === 1
-      });
-    });
-  }
-
-  fetchSteps(state, instance) {
-    // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
-    // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
-    this.setState({ stepsLoading: true });
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
-    request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + "/dispatch/disk-load-status.json",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        steps: res.steps,
-        stepPages: res.pages,
-        stepsLoading: false
-      });
-    });
-  }
-
-  requestUnmount(deviceName, mountState) {
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
-    request({
-      "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/unmount?deviceName=" + deviceName + "&mount=" + mountState,
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        mounted: {} // FIXME: do something from the reply
-      });
-    });
-  }
-
   render() {
-    const { sources, source, sourcesLoading, restoreTypes, restoreType, restoreTypesLoading, diskRestoring, disks, diskPages, steps, disksLoading, stepPages, stepsLoading, selected } = this.state;
+    const { sources, source, restoreTypes, restoreType, diskRestoring, selected, resetting} = this.state;
     const restoringUrl = this.getRestoringUrl();
-
 
     return (
       <div>
         <Container>
           <Row>
             <Col sm={1}>
-              <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl == undefined}>Load</Button>
+              <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
             </Col>
             <Col sm={4}>
               <ReactSelect
@@ -438,208 +270,9 @@ export default class LoadDiskImage extends React.Component {
           </Row>
         </Container>
 
-        <ReactTable
-          disabled={disksLoading}
-          columns={[
-            {
-              id: "checkbox",
-              accessor: "",
-              Cell: ({ original }) => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={this.state.selected[original.deviceName] === true}
-                    onChange={() => this.toggleRow(original.deviceName)}
-                  />
-                );
-              },
-              Header: x => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={this.state.selectAll === 1}
-                    ref={input => {
-                      if (input) {
-                        input.indeterminate = this.state.selectAll === 2;
-                      }
-                    }}
-                    onChange={() => this.toggleSelectAll()}
-                  />
-                );
-              },
-              sortable: false,
-              width: 45
-            },
-            {
-              Header: "Disk",
-              accessor: "deviceName",
-              width: 100
-            },
-            {
-              Header: "Mounted",
-              width: 80,
-              accessor: "",
-              Cell: ({ original }) => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={this.state.mounted[original.deviceName] === true}
-                    onChange={() => this.requestUnmount(original.deviceName, this.state.mounted[original.deviceName]) }
-                  />
-                );
-              },
-
-            },
-            {
-              Header: "Bus",
-              width: 45,
-              accessor: "bus"
-            },
-            {
-              Header: "Model",
-              width: 400,
-              accessor: "model"
-            },
-            {
-              Header: "Estimate",
-              width: 100,
-              accessor: "runEstiamte"
-            },
-            {
-              Header: "Elapsed",
-              width: 100,
-              accessor: "runTime"
-            },
-            {
-              Header: "Status",
-              accessor: "runStatus"
-            },
-            {
-              Header: 'Progress',
-              width: 200,
-              accessor: 'progress',
-              Cell: row => (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#dadada',
-                    borderRadius: '2px'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${row.value}%`,
-                      height: '100%',
-                      backgroundColor: value_to_color(row.value),
-                      borderRadius: '2px',
-                      transition: 'all .2s ease-out'
-                    }}
-                  />
-                </div>
-              )
-            },
-          ]}
-          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-          data={disks}
-          pages={diskPages}      // Display the total number of pages
-          loading={disksLoading} // Display the loading overlay when we need it
-          onFetchData={this.fetchDisks} // Request new data when things change
-          defaultPageSize={4}
-          showPagination={false}
-          className="-striped"
-        />
+        <Disks runner={"loadimage"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />
         <br />
-
-        <ReactTable
-          columns={[
-            {
-              Header: "Step",
-              width: 250,
-              accessor: "category",
-              style: {textAlign: "right"},
-            },
-            {
-              Header: "Estimate",
-              width: 60,
-              accessor: "timeEstimate"
-            },
-            {
-              Header: "Elapsed",
-              width: 60,
-              accessor: "elapseTime"
-            },
-            {
-              Header: 'Status',
-              width: 100,
-              accessor: 'status',
-              Cell: row => (
-                <span>
-                  <span style={{
-                   color: row.value === 'waiting' ? value_to_color(0)
-                     : row.value === 'running' ?  value_to_color(1)
-                     : row.value === 'done' ? value_to_color(100)
-                     : row.value === 'fail' ? value_to_color(999)
-                     : '#404040',
-                    transition: 'all .3s ease'
-                }}>
-              &#x25cf;
-            </span> {
-                  row.value === 'waiting' ? 'Holding'
-                    : row.value === 'running' ? `In progress`
-                    : row.value === 'done' ? `Completed`
-                    : row.value === 'fail' ? `Failed`
-                    : 'Bug'
-                }
-          </span>
-              )
-            },
-            {
-              Header: 'Progress',
-              width: 100,
-              accessor: 'progress',
-              Cell: row => (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#dadada',
-                    borderRadius: '2px'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${Math.min(100, row.value)}%`,
-                      height: '100%',
-                      backgroundColor: value_to_color(row.value),
-                      borderRadius: '2px',
-                      transition: 'all .2s ease-out'
-                    }}
-                  />
-                </div>
-              )
-            },
-            {
-              Header: "Description",
-              width: 200,
-              accessor: "message",
-              style: {textAlign: "left"},
-            },
-          ]}
-          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-          style={{fontSize: 12, borderRadius: 0, textAligh: "left"}}
-          data={steps}
-          pages={stepPages}      // Display the total number of pages
-          loading={stepsLoading} // Display the loading overlay when we need it
-          onFetchData={this.fetchSteps} // Request new data when things change
-          defaultPageSize={15}
-          showPagination={false}
-          sortable={false}
-          className="-striped -highlight"
-        />
+        <RunnerProgress runner={"loadimage"} statuspath={"/dispatch/disk-load-status.json"}/>
 
         <ErrorMessageModal
           errorMessage={this.state.errorMessage}

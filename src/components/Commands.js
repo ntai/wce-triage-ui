@@ -1,6 +1,7 @@
 import React from 'react';
 import Triage from './commands/Triage';
 import LoadDiskImage from './commands/LoadDiskImage';
+import SaveDiskImage from './commands/SaveDiskImage';
 import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
 
@@ -22,6 +23,9 @@ export default class Commands extends React.Component {
             </Tab>
             <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
               <LoadDiskImage wock={this.props.wock}/>
+            </Tab>
+            <Tab key="loadImage" eventKey="SaveImage" title="Create Disk Image">
+              <SaveDiskImage wock={this.props.wock}/>
             </Tab>
           </Tabs>
         </div>
