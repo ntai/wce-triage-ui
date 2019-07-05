@@ -59,10 +59,6 @@ export default class Messages extends Component {
   render() {
     const messages = this.state.messages;
 
-    messages.map((msg) => {
-      console.log(msg);
-    })
-
     return (
       <ScrollView>
         {messages.map((msg) => {

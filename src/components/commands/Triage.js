@@ -12,6 +12,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
+import cloneDeep from "lodash/cloneDeep";
 
 export default class Triage extends React.Component {
   constructor(props) {
@@ -19,31 +20,29 @@ export default class Triage extends React.Component {
 
     this.state = {triageResult: [], loading: true, soundPlaying: false}
     this.columns = [
-      {"Header": "Component",
+      {
+        "Header": "Component",
         "accessor": "component",
         "maxWidth": "120",
-        style: { textAlign: "right"}},
+        style: {textAlign: "right"}
+      },
       {
         "Header": "Result", "accessor": "result", "maxWidth": "80",
         Cell: row => (
+          // circle with color
           <span>
             <span style={{
-              color: row.value === 'Good' ? '#1fff2e'
-                : row.value === 'Bad' ? '#ff2e00'
-                  : '#ffd557',
+              color: row.value ? '#1fff2e' : '#ff2e00',
               transition: 'all .3s ease'
             }}>
-		&#x25cf;
-            </span> {
-            row.value === 'Good' ? ' Pass'
-              : row.value === 'Bad' ? 'Fail'
-              : row.value
-          }
+              &#x25cf;
             </span>
+            {row.value ? ' Pass' : 'Fail'}
+          </span>
         )
       },
       {
-        "Header": "Details", "accessor": "details", width: 800, maxWidth: "1000",
+        "Header": "Details", "accessor": "message", width: 800,
         Cell: row => (<div align="left">{row.value}</div>)
       },
     ];
@@ -52,16 +51,17 @@ export default class Triage extends React.Component {
   }
 
   fetchTriage(state, instance) {
-    this.setState({ sourcesLoading: true, triageResult: [] });
+    this.setState({sourcesLoading: true, triageResult: []});
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
     console.log(sweetHome.backendUrl + '/dispatch/triage.json');
     request({
-      "method":"GET",
-      'uri': sweetHome.backendUrl + '/dispatch/triage.json',
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "GET",
+        'uri': sweetHome.backendUrl + '/dispatch/triage.json',
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
       console.log(res.components);
       // Now just get the rows of triage results
@@ -74,17 +74,18 @@ export default class Triage extends React.Component {
 
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on("optocaldrive", this.onOpticalDrive.bind(this));
+    loadWock.on("opticaldrive", this.onOpticalDrive.bind(this));
   }
 
   onShutdown() {
     request({
-      "method":"POST",
-      'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff',
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "POST",
+        'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff',
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
       // Now just get the rows of triage results
     });
@@ -93,19 +94,66 @@ export default class Triage extends React.Component {
 
   onReboot() {
     request({
-      "method":"POST",
-      'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot',
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "POST",
+        'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot',
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
       // Now just get the rows of triage results
     });
   }
 
-  onOpticalDrive(optest) {
+  onMusicPlay() {
+    var rows = cloneDeep(this.state.triageResult);
+    var row;
 
+    for (row of rows) {
+      if (row.component == "Sound") {
+        row.result = true
+        break;
+      }
+    }
+
+    this.setState({triageResult: rows});
+  }
+
+  onOpticalTest() {
+    request({
+        "method": "GET",
+        'uri': sweetHome.backendUrl + '/dispatch/opticaldrivetest',
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
+    ).then(res => {
+      //
+    });
+  }
+
+  onOpticalDrive(optest) {
+    console.log(optest);
+    var rows = cloneDeep(this.state.triageResult);
+    var row;
+    var updated;
+
+    for (row of rows) {
+      if (row.component == "Optical drive") {
+        if (row.device == optest.device) {
+          row.result = optest.result;
+          row.details = optest.message + row.details;
+          updated = row;
+          break;
+        }
+      }
+    }
+
+    console.log(updated);
+
+    this.setState({ triageResult: rows } );
   }
 
   render() {
@@ -119,8 +167,8 @@ export default class Triage extends React.Component {
               <span>Reload</span>
             </button>
           </Col>
-          <Col> <PressPlay url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
-          <Col> <PressPlay url={sweetHome.backendUrl + '/dispatch/opticaldrive'}/> </Col>
+          <Col> <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
+          <Col> <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/> </Col>
           <Col>
             <button type="button" onClick={ () => this.onReboot()} class="CommandButton">
               <span>Reboot Computer</span>
