@@ -55,7 +55,7 @@ export default class LoadDiskImage extends React.Component {
     this.state = {
       /* The disk images sources */
       sources: [],
-      /* Selected disk image destination. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
+      /* Selected disk image source. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
       source: undefined,
       /* Fetching the disk images */
       sourcesLoading: true,
@@ -93,13 +93,13 @@ export default class LoadDiskImage extends React.Component {
 
   onReset() {
     this.setState( {resetting: true});
-    this.setState( {destination: undefined, sources: []});
+    this.setState( {source: undefined, sources: []});
     this.fetchSources();
   }
 
   setSource(source) {
     console.log(source);
-    this.setState({destination: source,
+    this.setState({source: source,
       restoreType: this.state.restoreTypes.filter( rt => rt.value == source.restoreType)[0]});
   }
 
@@ -123,7 +123,7 @@ export default class LoadDiskImage extends React.Component {
 
   getRestoringUrl() {
     const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const resotringSource = this.state.destination;
+    const resotringSource = this.state.source;
     const restoreType = this.state.restoreType;
 
     if (selectedDevices.length == 0 || !resotringSource || !restoreType) {
@@ -132,14 +132,14 @@ export default class LoadDiskImage extends React.Component {
 
     // time to make donuts
     const targetDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&destination=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
+    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
   }
 
   onLoad() {
     const restoringUrl = this.getRestoringUrl();
 
     if (restoringUrl == undefined) {
-      this.showErrorMessageModal("Please select...", "No disk, destination or restore type selected.");
+      this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
       return;
     }
 
@@ -200,7 +200,7 @@ export default class LoadDiskImage extends React.Component {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
         sources: res.sources.map( src => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType})),
-        destination: undefined,
+        source: undefined,
         sourcesLoading: false,
       });
     });
@@ -231,7 +231,7 @@ export default class LoadDiskImage extends React.Component {
   }
 
   render() {
-    const { sources, source, restoreTypes, restoreType, diskRestoring, selected, resetting} = this.state;
+    const { sources, source, restoreTypes, restoreType, diskRestoring, resetting} = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
@@ -245,7 +245,7 @@ export default class LoadDiskImage extends React.Component {
               <ReactSelect
                 // handing down undefined doesn't change the selection. Dummy value '' sets it.
                 value={source || ''}
-                style={{fontSize: 13, textAlign: "left"}}
+                style={{fontSize: 12, textAlign: "left"}}
                 placeholder="Select source"
                 options={sources}
                 onChange={(value) => this.setSource(value)}
@@ -256,7 +256,7 @@ export default class LoadDiskImage extends React.Component {
                 Restore type:
             </label>
             <Col sm={3}>
-              <ReactSelect value={restoreType || ''} options={restoreTypes} onChange={this.setRestoreType}/>
+              <ReactSelect style={{fontSize: 12, textAlign: "left"}} value={restoreType || ''} options={restoreTypes} onChange={this.setRestoreType}/>
             </Col>
             <Col sm={1}>
               <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
