@@ -10,7 +10,8 @@ import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, 
 import "./commands.css";
 import { Container, Row, Col } from 'react-bootstrap'
 
-import Music from "./Music";
+import PressPlay from "./PressPlay";
+import socketio from "socket.io-client";
 
 export default class Triage extends React.Component {
   constructor(props) {
@@ -47,7 +48,6 @@ export default class Triage extends React.Component {
       },
     ];
 
-    this.handleCheckClicked = this.handleCheckClicked.bind(this);
     this.fetchTriage = this.fetchTriage.bind(this);
   }
 
@@ -72,6 +72,10 @@ export default class Triage extends React.Component {
     });
   }
 
+  componentDidMount() {
+    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    loadWock.on("optocaldrive", this.onOpticalDrive.bind(this));
+  }
 
   onShutdown() {
     request({
@@ -100,7 +104,8 @@ export default class Triage extends React.Component {
     });
   }
 
-  handleCheckClicked(e) {
+  onOpticalDrive(optest) {
+
   }
 
   render() {
@@ -114,7 +119,8 @@ export default class Triage extends React.Component {
               <span>Reload</span>
             </button>
           </Col>
-          <Col> <Music url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
+          <Col> <PressPlay url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
+          <Col> <PressPlay url={sweetHome.backendUrl + '/dispatch/opticaldrive'}/> </Col>
           <Col>
             <button type="button" onClick={ () => this.onReboot()} class="CommandButton">
               <span>Reboot Computer</span>

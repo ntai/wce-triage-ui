@@ -4,7 +4,7 @@ import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 import "./commands.css";
 
-class Music extends React.Component {
+class PressPlay extends React.Component {
   state = {
     play: false
   }
@@ -25,4 +25,4 @@ class Music extends React.Component {
   }
 }
 
-export default Music;
+export default PressPlay;
