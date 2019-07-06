@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/commands/PressPlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/PressPlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="370">
+              <caret line="255" column="22" selection-start-line="255" selection-start-column="22" selection-end-line="255" selection-end-column="22" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="e#92#116#0" expanded="true" />
@@ -117,7 +117,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
@@ -169,8 +169,8 @@
       <find>==</find>
       <find>visi</find>
       <find>!=</find>
-      <find>mounted</find>
       <find>onOpticalDrive</find>
+      <find>mounted</find>
     </findStrings>
     <replaceStrings>
       <replace>command</replace>
@@ -188,8 +188,8 @@
       <replace>&quot;%PUBLIC_URL%/dispatch/</replace>
       <replace>backendUrl</replace>
       <replace>makingImage</replace>
-      <replace>source</replace>
       <replace>elapseTime</replace>
+      <replace>source</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -233,10 +233,10 @@
         <option value="$PROJECT_DIR$/src/components/Commands.js" />
         <option value="$PROJECT_DIR$/src/components/commands/Triage.js" />
         <option value="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
         <option value="$PROJECT_DIR$/src/components/Messages.js" />
         <option value="$PROJECT_DIR$/src/components/commands/Disks.js" />
         <option value="$PROJECT_DIR$/src/components/commands/PressPlay.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
       </list>
     </option>
   </component>
@@ -431,12 +431,12 @@
       <workItem from="1561509358193" duration="11422000" />
       <workItem from="1561564813083" duration="206000" />
       <workItem from="1561565043610" duration="16760000" />
-      <workItem from="1561896235259" duration="110113000" />
+      <workItem from="1561896235259" duration="111031000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="293918000" />
+    <option name="totallyTimeSpent" value="294836000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2" y="40" width="1658" height="994" extended-state="0" />
@@ -834,18 +834,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#92#116#0" expanded="true" />
-            <element signature="e#384#423#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="568">
@@ -884,6 +872,18 @@
           <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
             <element signature="e#30#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="255" column="22" selection-start-line="255" selection-start-column="22" selection-end-line="255" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#92#116#0" expanded="true" />
+            <element signature="e#384#423#0" expanded="true" />
           </folding>
         </state>
       </provider>

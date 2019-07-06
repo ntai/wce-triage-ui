@@ -236,10 +236,10 @@ export default class LoadDiskImage extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col sm={1}>
+            <Col sm={0.7}>
               <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
             </Col>
-            <Col sm={4}>
+            <Col sm={5}>
               <ReactSelect
                 // handing down undefined doesn't change the selection. Dummy value '' sets it.
                 value={source || ''}
@@ -256,7 +256,7 @@ export default class LoadDiskImage extends React.Component {
             <Col sm={3}>
               <ReactSelect style={{fontSize: 12, textAlign: "left"}} value={restoreType || ''} options={restoreTypes} onChange={this.setRestoreType}/>
             </Col>
-            <Col sm={1}>
+            <Col sm={0.7}>
               <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
             </Col>
             <Col sm={1}>
