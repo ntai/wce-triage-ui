@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" line="214" mnemonic="5" />
+    <bookmark url="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" line="212" mnemonic="5" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Messages.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Messages.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/Disks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/Disks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/PressPlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/PressPlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/Triage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/Triage.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -25,8 +27,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="915">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
+            <state relative-caret-position="568">
+              <caret line="58" selection-start-line="58" selection-end-line="58" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -37,11 +39,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1023">
-              <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+            <state relative-caret-position="60">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
-                <element signature="e#92#129#0" expanded="true" />
+                <element signature="e#92#116#0" expanded="true" />
+                <element signature="e#384#423#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,8 +67,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/SaveDiskImage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="123" column="118" selection-start-line="123" selection-start-column="118" selection-end-line="123" selection-end-column="118" />
+            <state relative-caret-position="290">
+              <caret line="123" column="102" selection-start-line="123" selection-start-column="102" selection-end-line="123" selection-end-column="102" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="e#92#129#0" expanded="true" />
@@ -78,8 +81,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/Disks.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="641">
-              <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+            <state relative-caret-position="226">
+              <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
               <folding>
                 <element signature="e#92#129#0" expanded="true" />
                 <element signature="e#154#192#0" expanded="true" />
@@ -88,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="76" column="29" selection-start-line="76" selection-start-column="29" selection-end-line="76" selection-end-column="29" />
+            <state relative-caret-position="312">
+              <caret line="144" column="25" selection-start-line="144" selection-start-column="25" selection-end-line="144" selection-end-column="25" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="e#106#144#0" expanded="true" />
@@ -119,11 +122,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="495">
+              <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
               <folding>
                 <element signature="e#30#68#0" expanded="true" />
               </folding>
@@ -143,10 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>disks</find>
-      <find>runEstiamte</find>
-      <find>runStatus</find>
-      <find>getRestoringUrl</find>
       <find>disaab</find>
       <find>setstate</find>
       <find>setrest</find>
@@ -169,10 +168,14 @@
       <find>source</find>
       <find>wock</find>
       <find>rotate</find>
-      <find>props</find>
       <find>onMusicPlay</find>
       <find>onOpticalTest</find>
+      <find>props</find>
+      <find>==</find>
       <find>onOpticalDrive</find>
+      <find>visi</find>
+      <find>!=</find>
+      <find>mounted</find>
     </findStrings>
     <replaceStrings>
       <replace>command</replace>
@@ -232,13 +235,13 @@
         <option value="$PROJECT_DIR$/package-lock.json" />
         <option value="$PROJECT_DIR$/src/components/commands/commands.css" />
         <option value="$PROJECT_DIR$/src/components/commands/RunnerProgress.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/Disks.js" />
         <option value="$PROJECT_DIR$/src/components/Commands.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/Triage.js" />
         <option value="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" />
         <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/PressPlay.js" />
         <option value="$PROJECT_DIR$/src/components/Messages.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/Triage.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/Disks.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/PressPlay.js" />
       </list>
     </option>
   </component>
@@ -433,18 +436,18 @@
       <workItem from="1561509358193" duration="11422000" />
       <workItem from="1561564813083" duration="206000" />
       <workItem from="1561565043610" duration="16760000" />
-      <workItem from="1561896235259" duration="104536000" />
+      <workItem from="1561896235259" duration="108626000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="288341000" />
+    <option name="totallyTimeSpent" value="292431000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2" y="40" width="1658" height="994" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32487625" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.32487625" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -477,6 +480,40 @@
       <window_info anchor="right" id="Database" order="8" />
       <window_info anchor="right" id="SciView" order="9" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32487625" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Designer" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3287827" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.2320819" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49938118" weight="0.13651878" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.17064847" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5006188" side_tool="true" weight="0.40159273" />
+      <window_info anchor="bottom" id="Messages" order="12" />
+      <window_info anchor="bottom" id="Pylint" order="13" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="4" />
+      <window_info anchor="right" id="Maven" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Database" order="8" />
+      <window_info anchor="right" id="SciView" order="9" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -484,11 +521,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/commands/PressPlay.js</url>
-          <line>12</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/node_modules/dotenv/lib/main.js</url>
           <line>77</line>
@@ -795,10 +827,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="144" column="25" selection-start-line="144" selection-start-column="25" selection-end-line="144" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#106#144#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/SaveDiskImage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="123" column="118" selection-start-line="123" selection-start-column="118" selection-end-line="123" selection-end-column="118" />
+        <state relative-caret-position="290">
+          <caret line="123" column="102" selection-start-line="123" selection-start-column="102" selection-end-line="123" selection-end-column="102" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
             <element signature="e#92#129#0" expanded="true" />
@@ -809,19 +852,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1023">
-          <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#92#129#0" expanded="true" />
+            <element signature="e#92#116#0" expanded="true" />
+            <element signature="e#384#423#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="568">
+          <caret line="58" selection-start-line="58" selection-end-line="58" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/Disks.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
-          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+        <state relative-caret-position="226">
+          <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
           <folding>
             <element signature="e#92#129#0" expanded="true" />
             <element signature="e#154#192#0" expanded="true" />
@@ -831,31 +885,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="495">
+          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
           <folding>
             <element signature="e#30#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Messages.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="76" column="29" selection-start-line="76" selection-start-column="29" selection-end-line="76" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#106#144#0" expanded="true" />
           </folding>
         </state>
       </provider>

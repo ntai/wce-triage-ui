@@ -46,7 +46,7 @@ export default class SaveDiskImage extends React.Component {
     const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
     const destination = this.state.destination;
 
-    if (selectedDevices.length == 0 || !destination) {
+    if (selectedDevices.length === 0 || !destination) {
       return undefined;
     }
 
@@ -121,7 +121,7 @@ export default class SaveDiskImage extends React.Component {
         <Container>
           <Row>
             <Col sm={1}>
-              <Button variant="danger" size="sm" onClick={() => this.onSave()} disabled={imagingUrl == undefined}>Save</Button>
+              <Button variant="danger" size="sm" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
             </Col>
             <Col sm={4}>
               // fix me.
@@ -135,7 +135,7 @@ export default class SaveDiskImage extends React.Component {
             </Col>
           </Row>
           <Row>
-            <label visible={imagingUrl != undefined}>{imagingUrl}</label>
+            <label visible={imagingUrl !== undefined}>{imagingUrl}</label>
           </Row>
         </Container>
         <Disks runner={"saveimage"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />

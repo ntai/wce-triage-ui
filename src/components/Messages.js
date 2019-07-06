@@ -56,6 +56,7 @@ export default class Messages extends Component {
     console.log("got message." + messages);
     this.setState({messages: messages});
   }
+
   render() {
     const messages = this.state.messages;
 

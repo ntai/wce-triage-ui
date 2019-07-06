@@ -111,7 +111,7 @@ export default class Triage extends React.Component {
     var row;
 
     for (row of rows) {
-      if (row.component == "Sound") {
+      if (row.component === "Sound") {
         row.result = true
         break;
       }
@@ -141,8 +141,8 @@ export default class Triage extends React.Component {
     var updated;
 
     for (row of rows) {
-      if (row.component == "Optical drive") {
-        if (row.device == optest.device) {
+      if (row.component === "Optical drive") {
+        if (row.device === optest.device) {
           row.result = optest.result;
           row.details = optest.message + row.details;
           updated = row;
@@ -163,7 +163,7 @@ export default class Triage extends React.Component {
 
         <Row>
           <Col>
-            <button type="button" class="CommandButton" onClick={() => this.fetchTriage()}>
+            <button type="button" className="CommandButton" onClick={() => this.fetchTriage()}>
               <span>Reload</span>
             </button>
           </Col>

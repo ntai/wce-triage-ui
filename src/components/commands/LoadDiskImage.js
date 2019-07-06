@@ -2,8 +2,6 @@ import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 
 // Import React Table
-import ReactTable from "react-table";
-import "react-table/react-table.css";
 import "./commands.css";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -100,7 +98,7 @@ export default class LoadDiskImage extends React.Component {
   setSource(source) {
     console.log(source);
     this.setState({source: source,
-      restoreType: this.state.restoreTypes.filter( rt => rt.value == source.restoreType)[0]});
+      restoreType: this.state.restoreTypes.filter( rt => rt.value === source.restoreType)[0]});
   }
 
   setRestoreType(selected) {
@@ -126,7 +124,7 @@ export default class LoadDiskImage extends React.Component {
     const resotringSource = this.state.source;
     const restoreType = this.state.restoreType;
 
-    if (selectedDevices.length == 0 || !resotringSource || !restoreType) {
+    if (selectedDevices.length === 0 || !resotringSource || !restoreType) {
       return undefined;
     }
 
@@ -138,7 +136,7 @@ export default class LoadDiskImage extends React.Component {
   onLoad() {
     const restoringUrl = this.getRestoringUrl();
 
-    if (restoringUrl == undefined) {
+    if (restoringUrl === undefined) {
       this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
       return;
     }
@@ -266,7 +264,7 @@ export default class LoadDiskImage extends React.Component {
             </Col>
           </Row>
           <Row>
-            <label visible={restoringUrl != undefined}>{restoringUrl}</label>
+            <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
           </Row>
         </Container>
 

@@ -18,7 +18,7 @@ class PressPlay extends React.Component {
   state = {
     play: false
   }
-  player = this.props.kind == "mp3" ? new Audio(this.props.url) : new OpticalDriveTest();
+  player = this.props.kind === "mp3" ? new Audio(this.props.url) : new OpticalDriveTest();
 
   togglePlay = () => {
     this.props.onPlay();
@@ -30,8 +30,8 @@ class PressPlay extends React.Component {
   render() {
     return (
       <div>
-        {this.props.title}
-        <button class="CommandButton" onClick={this.togglePlay}>{this.state.play ? '\u25a0' : '\u25B6'}</button>
+        {this.props.title + ": "}
+        <button onClick={this.togglePlay}>{this.state.play ? '\u25a0' : '\u25B6'}</button>
       </div>
     );
   }

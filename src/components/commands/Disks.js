@@ -52,11 +52,16 @@ export default class Disks extends React.Component {
       }
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
+      var mounted = {};
+      var disk;
+      for (disk of res.disks) {
+        mounted[disk.deviceName] = disk.mounted;
+      }
       this.setState({
         disks: res.disks,
         disksLoading: false,
-        mounted: {}, // FIXME: filter disk by mounted === 1
-        selected: {} // FIXME: filter disk by selected === 1
+        mounted: mounted, // FIXME: filter disk by mounted === 1
+        selected: {}
       });
     });
   }
@@ -166,7 +171,7 @@ export default class Disks extends React.Component {
   }
 
   render() {
-    const { disks, diskPages, selected, mounted, disksLoading } = this.state;
+    const { disks, diskPages, disksLoading } = this.state;
 
     return (
       <div>
