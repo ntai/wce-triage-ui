@@ -18,11 +18,13 @@ class PressPlay extends React.Component {
   state = {
     play: false
   }
-  player = this.props.kind === "mp3" ? new Audio(this.props.url) : new OpticalDriveTest();
+  player = undefined;
 
   togglePlay = () => {
     this.props.onPlay();
     this.setState({ play: !this.state.play }, () => {
+      if (this.player === undefined)
+        this.player = this.props.kind === "mp3" ? new Audio(this.props.url) : new OpticalDriveTest();
       this.state.play ? this.player.play() : this.player.pause();
     });
   }
