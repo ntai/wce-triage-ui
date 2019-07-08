@@ -5,20 +5,27 @@ import "react-table/react-table.css";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 
-import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
-
 import "./commands.css";
-import { Container, Row, Col } from 'react-bootstrap'
+import "../../bootstrap.min.css";
+import { Tree, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
+import Text from "react-native-web/dist/exports/Text";
 
 export default class Triage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {triageResult: [], loading: true, soundPlaying: false}
+    this.state = {
+      triageResult: [],
+      loading: true,
+      soundPlaying: false,
+      fontSize: 16,
+      opticals: []
+    };
+
     this.columns = [
       {
         "Header": "Component",
@@ -27,7 +34,8 @@ export default class Triage extends React.Component {
         style: {textAlign: "right"}
       },
       {
-        "Header": "Result", "accessor": "result", "maxWidth": "80",
+        "Header": "Result", "accessor": "result", "maxWidth": "80", style: {textAlign: "left"},
+
         Cell: row => (
           // circle with color
           <span>
@@ -35,9 +43,9 @@ export default class Triage extends React.Component {
               color: row.value ? '#1fff2e' : '#ff2e00',
               transition: 'all .3s ease'
             }}>
-              &#x25cf;
+              {row.value ? '\u25cf' : '\u25a0' }
             </span>
-            {row.value ? ' Pass' : 'Fail'}
+            {row.value ? ' Pass' : ' Fail'}
           </span>
         )
       },
@@ -74,8 +82,13 @@ export default class Triage extends React.Component {
 
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on("opticaldrive", this.onOpticalDrive.bind(this));
+    loadWock.on("triageupdate", this.onTriageUpdate.bind(this));
   }
+
+  setFontSize(fontSize) {
+    this.setState( {fontSize: fontSize});
+  }
+
 
   onShutdown() {
     request({
@@ -122,7 +135,7 @@ export default class Triage extends React.Component {
 
   onOpticalTest() {
     request({
-        "method": "GET",
+        "method": "POST",
         'uri': sweetHome.backendUrl + '/dispatch/opticaldrivetest',
         "json": true,
         "headers": {
@@ -134,17 +147,17 @@ export default class Triage extends React.Component {
     });
   }
 
-  onOpticalDrive(optest) {
-    console.log(optest);
+  onTriageUpdate(update) {
+    console.log(update);
     var rows = cloneDeep(this.state.triageResult);
     var row;
     var updated;
 
     for (row of rows) {
-      if (row.component === "Optical drive") {
-        if (row.device === optest.device) {
-          row.result = optest.result;
-          row.details = optest.message + row.details;
+      if (row.component === update.component) {
+        if (row.device === update.device) {
+          row.result = update.result;
+          row.details = update.message;
           updated = row;
           break;
         }
@@ -158,30 +171,47 @@ export default class Triage extends React.Component {
 
   render() {
     const data = this.state.triageResult;
+    const fontSize = this.state.fontSize;
 
       return <div>
 
-        <Row>
-          <Col>
-            <button type="button" className="CommandButton" onClick={() => this.fetchTriage()}>
+        <ButtonToolbar>
+          <ButtonGroup  className="mr-2" aria-label="First group">
+            <Button  onClick={() => this.fetchTriage()}>
               <span>Reload</span>
-            </button>
-          </Col>
-          <Col> <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/> </Col>
-          <Col> <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/> </Col>
-          <Col>
-            <button type="button" onClick={ () => this.onReboot()} class="CommandButton">
+            </Button>
+          </ButtonGroup>
+          <br />
+          <ButtonGroup  className="mr-2" aria-label="First group">
+            <span className="align-middle"> <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/> </span>
+            <span className="align-middle"> <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/> </span>
+          </ButtonGroup>
+            <br />
+          <ButtonGroup  className="mr-2">
+            <Button variant="danger" onClick={ () => this.onReboot()}>
               <span>Reboot Computer</span>
-            </button>
-            <button type="button" onClick={ () => this.onShutdown()} class="CommandButton">
+            </Button>
+            <Button variant="danger" onClick={ () => this.onShutdown()} >
               <span>Power off</span>
-            </button>
-          </Col>
-        </Row>
+            </Button>
+          </ButtonGroup>
+              <br />
+              <Text>
+
+              </Text>
+          <ButtonGroup  className="mr-2">
+            <Button variant="outline-info" onClick={() => this.setFontSize(fontSize+2)}>
+              <span>{'Font \u25b3'}</span>
+            </Button>
+            <Button variant="outline-info" onClick={() => this.setFontSize(fontSize-2)}>
+              <span>{'Font \u25bd'}</span>
+            </Button>
+          </ButtonGroup>
+        </ButtonToolbar>
 
         <ReactTable
           data={data}
-          style={{fontSize: 12, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
+          style={{fontSize: this.state.fontSize, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
           defaultPageSize={15}
           showPagination={false}
           showPageSizeOptions={false}

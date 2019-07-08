@@ -3,6 +3,8 @@ import React from "react";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 import "./commands.css";
+import "../../bootstrap.min.css";
+import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 
 // stub to run optical test
 class OpticalDriveTest {
@@ -32,8 +34,9 @@ class PressPlay extends React.Component {
   render() {
     return (
       <div>
-        {this.props.title + ": "}
-        <button onClick={this.togglePlay}>{this.state.play ? '\u25a0' : '\u25B6'}</button>
+        <Container>
+        <Button onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
+        </Container>
       </div>
     );
   }
