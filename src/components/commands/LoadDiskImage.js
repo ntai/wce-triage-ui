@@ -3,8 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 // Import React Table
 import "./commands.css";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 //
 import request from 'request-promise';
 
@@ -18,6 +17,7 @@ import socketio from "socket.io-client";
 
 import {RunnerProgress, value_to_color} from "./RunnerProgress";
 import Disks from "./Disks";
+import Catalog from "./Catalog";
 
 class ErrorMessageModal extends React.Component {
   render() {
@@ -61,7 +61,6 @@ export default class LoadDiskImage extends React.Component {
       /* The restore types */
       restoreTypes: [],
       restoreType: undefined,
-      restoreTypesLoading: true,
 
       /* selected disks */
       selected: {},
@@ -76,6 +75,7 @@ export default class LoadDiskImage extends React.Component {
 
     this.fetchSources = this.fetchSources.bind(this);
     this.setRestoreType = this.setRestoreType.bind(this);
+    this.setRestoreTypes = this.setRestoreTypes.bind(this);
     this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
     this.disk_selection_changed = this.disk_selection_changed.bind(this);
     this.did_reset = this.did_reset.bind(this);
@@ -98,12 +98,17 @@ export default class LoadDiskImage extends React.Component {
   setSource(source) {
     console.log(source);
     this.setState({source: source,
-      restoreType: this.state.restoreTypes.filter( rt => rt.value === source.restoreType)[0]});
+      restoreType: this.state.restoreTypes.filter(rt => rt.value === source.restoreType)[0]});
   }
 
   setRestoreType(selected) {
     console.log(selected);
     this.setState({restoreType: selected})
+  }
+
+  setRestoreTypes(catalog) {
+    console.log(catalog);
+    this.setState({restoreTypes: catalog, restoreType: undefined})
   }
 
   closeErrorMessageModal() {
@@ -116,7 +121,6 @@ export default class LoadDiskImage extends React.Component {
 
   componentWillMount() {
     this.fetchSources()
-    this.fetchRestoreTypes()
   }
 
   getRestoringUrl() {
@@ -204,42 +208,16 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
-  fetchRestoreTypes(state, instance) {
-    this.setState({ restoreTypesLoading: true });
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-
-    request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      console.log(res.restoreTypes);
-
-      // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        // marshall this for ReactSelect
-        restoreTypes: res.restoreTypes.map(rt => ({label: rt.name, value: rt.id})),
-        restoreType: undefined,
-        restoreTypesLoading: false
-      });
-    });
-  }
-
+ 
   render() {
-    const { sources, source, restoreTypes, restoreType, diskRestoring, resetting} = this.state;
+    const { sources, source, restoreType, diskRestoring, resetting} = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
       <div>
-        <Container>
-          <Row>
-            <Col sm={0.7}>
-              <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
-            </Col>
-            <Col sm={5}>
+        <ButtonToolbar>
+            <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
+            <Col sm={4}>
               <ReactSelect
                 // handing down undefined doesn't change the selection. Dummy value '' sets it.
                 value={source || ''}
@@ -250,23 +228,19 @@ export default class LoadDiskImage extends React.Component {
               />
             </Col>
 
-            <label>
-                Restore type:
-            </label>
-            <Col sm={3}>
-              <ReactSelect style={{fontSize: 12, textAlign: "left"}} value={restoreType || ''} options={restoreTypes} onChange={this.setRestoreType}/>
-            </Col>
-            <Col sm={0.7}>
+          <Col sm={3}>
+            <Catalog title={"Restore type"} currentSelection={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes}/>
+          </Col>
+
+          <ButtonGroup>
               <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
-            </Col>
-            <Col sm={1}>
               <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
-            </Col>
-          </Row>
-          <Row>
-            <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
-          </Row>
-        </Container>
+            </ButtonGroup>
+        </ButtonToolbar>
+
+        <Row>
+          <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
+        </Row>
 
         <Disks runner={"loadimage"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />
         <br />

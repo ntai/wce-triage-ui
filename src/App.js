@@ -14,9 +14,13 @@ const styles = StyleSheet.create({
   },
   Version: {
     align: "right",
-    fontSize: 16,
+    marginTop: 30,
+    marginLeft: 40,
+    verticalAlign: "bottom",
+    fontSize: 18,
+    color: "grey",
   },
-  Logo: {width: 300, height: 60, resizeMode: "contain", scale: 0.95}
+  Logo: {width: 500, height: 80, resizeMode: "contain", scale: 1}
 });
 
 function App() {
@@ -26,7 +30,7 @@ function App() {
         <View style={{flex: 1, flexDirection: 'row'}}>
           <Image onPress={ ()=> Linking.openURL('https://www.worldcomputerexchange.org') }
             source={require('./wce_logo.svg')} style={styles.Logo}/>
-          <Text style={styles.Version}> 0.1 </Text>
+          <Text style={styles.Version}>WCE Triage</Text>
         </View>
       </header>
 

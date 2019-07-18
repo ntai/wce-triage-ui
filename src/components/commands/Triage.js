@@ -178,7 +178,7 @@ export default class Triage extends React.Component {
         <ButtonToolbar>
           <ButtonGroup  className="mr-2" aria-label="First group">
             <Button  onClick={() => this.fetchTriage()}>
-              <span>Reload</span>
+              <span>Reload/Refresh Triage</span>
             </Button>
           </ButtonGroup>
           <br />

@@ -13,13 +13,14 @@ import request from 'request-promise';
 // Dropdown menu
 // import ReactSelect from 'react-select';
 import ReactSelect from 'react-select';
-import { Container, Row, Col } from 'react-bootstrap'
+import {Container, Row, Col, ButtonToolbar, ButtonGroup} from 'react-bootstrap'
 
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
 
 import {RunnerProgress, value_to_color} from "./RunnerProgress";
 import Disks from "./Disks";
+import Catalog from "./Catalog";
 
 
 export default class SaveDiskImage extends React.Component {
@@ -27,7 +28,8 @@ export default class SaveDiskImage extends React.Component {
     super();
     this.state = {
       /* Selected disk image destination. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
-      destination: undefined,
+      imageTypes: [],
+      imageType: undefined,
 
       makingImage: false,
       sourceDisk: undefined,
@@ -40,19 +42,32 @@ export default class SaveDiskImage extends React.Component {
     this.disk_selection_changed = this.disk_selection_changed.bind(this);
     this.did_reset = this.did_reset.bind(this);
 
+    this.setImageType = this.setImageType.bind(this);
+    this.setImageTypes = this.setImageTypes.bind(this);
+
   }
 
- getImagingUrl() {
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const destination = this.state.destination;
+  setImageType(selected) {
+    console.log(selected);
+    this.setState({imageType: selected})
+  }
 
-    if (selectedDevices.length === 0 || !destination) {
+  setImageTypes(catalog) {
+    console.log(catalog);
+    this.setState({imageTypes: catalog, imageType: undefined})
+  }
+
+  getImagingUrl() {
+    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    const imagingType = this.state.imageType;
+
+    if (selectedDevices.length === 0 || !imagingType) {
       return undefined;
     }
 
     // time to make donuts
     const sourceDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/image?deviceName=" + sourceDisk + "&destination=" + destination.value;
+    return sweetHome.backendUrl + "/dispatch/save?deviceName=" + sourceDisk + "&type=" + imagingType.value;
   }
 
   onSave() {
@@ -121,17 +136,18 @@ export default class SaveDiskImage extends React.Component {
         <Container>
           <Row>
             <Col sm={1}>
-              <Button variant="danger" size="sm" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
+              <Button className="mr-2" variant="danger" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
             </Col>
-            <Col sm={4}>
-              // fix me.
+
+            <Col sm={3}>
+            <Catalog title={"Disk image type"} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
             </Col>
 
             <Col sm={1}>
-              <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
+              <Button className="mr-2" onClick={() => this.onReset()}>Reset</Button>
             </Col>
             <Col sm={1}>
-              <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+              <Button className="mr-2" variant="danger" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
             </Col>
           </Row>
           <Row>
@@ -148,4 +164,3 @@ export default class SaveDiskImage extends React.Component {
     );
   }
 }
-
