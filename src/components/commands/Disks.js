@@ -107,7 +107,7 @@ export default class Disks extends React.Component {
 
       for (disk of disks) {
         if (disk.deviceName === devname) {
-          disk.progress = Math.round(runner.runTime / runner.runEstimate * 100);
+          disk.progress = runner.progress;
           disk.runEstiamte = runner.runEstimate;
           disk.runTime = runner.runTime;
           disk.runStatus = runner.runStatus;
