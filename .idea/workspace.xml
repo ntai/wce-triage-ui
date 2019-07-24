@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/commands/Catalog.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Dialog.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/commands/DiskWipe.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Commands.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Commands.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/Disks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/Disks.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/Triage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/Triage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/looseend/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/looseend/home.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,8 +39,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="42" selection-start-line="42" selection-end-line="42" />
+            <state relative-caret-position="450">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -49,13 +49,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1763">
-              <caret line="5" column="50" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
+            <state relative-caret-position="480">
+              <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
-                <element signature="e#297#336#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,8 +63,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/RunnerProgress.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1330">
-              <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+            <state relative-caret-position="-1060">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="e#92#129#0" expanded="true" />
@@ -76,10 +75,24 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1763">
+              <caret line="157" selection-start-line="157" selection-end-line="157" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#92#116#0" expanded="true" />
+                <element signature="e#297#336#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/commands/Disks.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="171" selection-start-line="166" selection-end-line="171" />
+            <state relative-caret-position="426">
+              <caret line="112" selection-start-line="112" selection-end-line="112" />
               <folding>
                 <element signature="e#154#192#0" expanded="true" />
               </folding>
@@ -88,18 +101,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/commands/Catalog.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="635">
-              <caret line="74" selection-start-line="74" selection-end-line="74" />
-              <folding>
-                <element signature="e#220#259#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/commands/SaveDiskImage.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="101">
@@ -114,10 +115,27 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.css">
+        <entry file="file://$PROJECT_DIR$/src/components/commands/DiskWipe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
+            <state relative-caret-position="786">
+              <caret line="104" column="13" lean-forward="true" selection-start-line="104" selection-start-column="13" selection-end-line="104" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#92#116#0" expanded="true" />
+                <element signature="e#297#336#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Dialog.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -125,8 +143,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="26" column="68" selection-start-line="23" selection-start-column="4" selection-end-line="26" selection-end-column="68" />
+            <state relative-caret-position="330">
+              <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
               </folding>
@@ -135,22 +153,9 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="178" column="24" selection-start-line="178" selection-start-column="24" selection-end-line="178" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-                <element signature="e#106#144#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
+            <state relative-caret-position="495">
               <caret line="37" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="e#30#68#0" expanded="true" />
@@ -171,9 +176,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cloned</find>
-      <find>targetDisk</find>
-      <find>step</find>
       <find>cloneDeep</find>
       <find>onload</find>
       <find>disksLoading</find>
@@ -183,9 +185,7 @@
       <find>onreset</find>
       <find>didmount</find>
       <find>save di</find>
-      <find>diskRestoring</find>
       <find>source</find>
-      <find>wock</find>
       <find>rotate</find>
       <find>onMusicPlay</find>
       <find>onOpticalTest</find>
@@ -201,6 +201,11 @@
       <find>restoreTypes</find>
       <find>Disk restore</find>
       <find>socketio</find>
+      <find>abort</find>
+      <find>onLoad</find>
+      <find>onRunnerUpdate</find>
+      <find>wock</find>
+      <find>diskRestoring</find>
     </findStrings>
     <replaceStrings>
       <replace>command</replace>
@@ -221,6 +226,8 @@
       <replace>source</replace>
       <replace>restoreType</replace>
       <replace>elapseTime</replace>
+      <replace>onWipe</replace>
+      <replace>diskWiping</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -258,17 +265,19 @@
         <option value="$PROJECT_DIR$/package-lock.json" />
         <option value="$PROJECT_DIR$/src/components/commands/commands.css" />
         <option value="$PROJECT_DIR$/src/components/commands/RunnerProgress.js" />
-        <option value="$PROJECT_DIR$/src/components/Commands.js" />
         <option value="$PROJECT_DIR$/src/components/Messages.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/Disks.js" />
         <option value="$PROJECT_DIR$/src/components/commands/PressPlay.js" />
         <option value="$PROJECT_DIR$/src/App.css" />
         <option value="$PROJECT_DIR$/src/App.js" />
-        <option value="$PROJECT_DIR$/src/looseend/home.js" />
-        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
         <option value="$PROJECT_DIR$/src/components/commands/Catalog.js" />
         <option value="$PROJECT_DIR$/src/components/commands/Triage.js" />
         <option value="$PROJECT_DIR$/src/components/commands/SaveDiskImage.js" />
+        <option value="$PROJECT_DIR$/src/components/Dialog.js" />
+        <option value="$PROJECT_DIR$/src/components/Commands.js" />
+        <option value="$PROJECT_DIR$/src/looseend/home.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/LoadDiskImage.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/DiskWipe.js" />
+        <option value="$PROJECT_DIR$/src/components/commands/Disks.js" />
       </list>
     </option>
   </component>
@@ -284,10 +293,10 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="18" />
-    <option name="y" value="25" />
-    <option name="width" value="1658" />
-    <option name="height" value="994" />
+    <option name="x" value="601" />
+    <option name="y" value="53" />
+    <option name="width" value="1979" />
+    <option name="height" value="1272" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -296,7 +305,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -349,18 +357,11 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="looseend" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="wce-triage-ui" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="wce-triage-ui" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -373,15 +374,18 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="ECMAScript 6" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="10.15.3" />
+    <property name="javascript.nodejs.core.library.configured.version" value="10.16.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.standard" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -469,17 +473,19 @@
       <workItem from="1561564813083" duration="206000" />
       <workItem from="1561565043610" duration="16760000" />
       <workItem from="1561896235259" duration="141051000" />
+      <workItem from="1563920872028" duration="5085000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="324856000" />
+    <option name="totallyTimeSpent" value="329941000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="18" y="25" width="1658" height="994" extended-state="0" />
+    <frame x="601" y="53" width="1979" height="1272" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.32487625" />
+      <window_info id="Learn" weight="0.32977018" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22509034" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -489,7 +495,7 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3287827" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.51194537" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.11271186" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49938118" weight="0.13651878" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -556,17 +562,9 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/node_modules/dotenv/lib/main.js</url>
           <line>77</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -594,22 +592,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/wockcontext.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/serviceWorker.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-350">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/bootstrap.min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3566">
@@ -638,13 +620,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/looseend/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/looseend/.env" />
     <entry file="file://$PROJECT_DIR$/node_modules/process/index.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -662,11 +638,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/fs/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-182" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/fs/package.json" />
     <entry file="file://$PROJECT_DIR$/node_modules/dotenv/lib/main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1680">
@@ -699,17 +671,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-dropdown-select/lib/components/Dropdown.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-dropdown-select/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-dropdown-select/lib/components/Dropdown.js" />
+    <entry file="file://$PROJECT_DIR$/node_modules/react-dropdown-select/README.md" />
     <entry file="file://$PROJECT_DIR$/node_modules/react-table/react-table.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4024">
@@ -795,18 +758,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bootstrap/css/bootstrap.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bootstrap/css/bootstrap-theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-449" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/bootstrap/css/bootstrap.css" />
+    <entry file="file://$PROJECT_DIR$/bootstrap/css/bootstrap-theme.css" />
     <entry file="file://$PROJECT_DIR$/src/components/commands/commands.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -817,13 +770,6 @@
     <entry file="file://$PROJECT_DIR$/bootstrap/config.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="51" selection-start-line="3" selection-start-column="51" selection-end-line="3" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/components.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
@@ -831,13 +777,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
+    <entry file="file://$PROJECT_DIR$/src/components/commands/Catalog.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <element signature="e#30#68#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1065">
+          <caret line="74" selection-start-line="74" selection-end-line="74" />
         </state>
       </provider>
     </entry>
@@ -848,76 +791,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="68" selection-start-line="23" selection-start-column="4" selection-end-line="26" selection-end-column="68" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/RunnerProgress.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1330">
-          <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#92#129#0" expanded="true" />
-            <element signature="e#196#234#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/Disks.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="171" selection-start-line="166" selection-end-line="171" />
-          <folding>
-            <element signature="e#154#192#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1763">
-          <caret line="5" column="50" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-            <element signature="e#297#336#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/commands/Catalog.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="635">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
-          <folding>
-            <element signature="e#220#259#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/commands/Triage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
+        <state relative-caret-position="2490">
           <caret line="178" column="24" selection-start-line="178" selection-start-column="24" selection-end-line="178" selection-end-column="40" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
             <element signature="e#106#144#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/PressPlay.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="e#30#68#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -930,6 +820,92 @@
             <element signature="e#0#26#0" expanded="true" />
             <element signature="e#92#129#0" expanded="true" />
             <element signature="e#384#423#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Dialog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Commands.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/looseend/home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/LoadDiskImage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1763">
+          <caret line="157" selection-start-line="157" selection-end-line="157" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#92#116#0" expanded="true" />
+            <element signature="e#297#336#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/RunnerProgress.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1060">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#92#129#0" expanded="true" />
+            <element signature="e#196#234#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/DiskWipe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="786">
+          <caret line="104" column="13" lean-forward="true" selection-start-line="104" selection-start-column="13" selection-end-line="104" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#92#116#0" expanded="true" />
+            <element signature="e#297#336#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/commands/Disks.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="112" selection-start-line="112" selection-end-line="112" />
+          <folding>
+            <element signature="e#154#192#0" expanded="true" />
           </folding>
         </state>
       </provider>

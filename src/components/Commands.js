@@ -4,6 +4,7 @@ import LoadDiskImage from './commands/LoadDiskImage';
 import SaveDiskImage from './commands/SaveDiskImage';
 import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
+import WipeDisk from "./commands/DiskWipe";
 
 export default class Commands extends React.Component {
   constructor(props) {
@@ -24,9 +25,14 @@ export default class Commands extends React.Component {
             <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
               <LoadDiskImage wock={this.props.wock}/>
             </Tab>
-            <Tab key="loadImage" eventKey="SaveImage" title="Create Disk Image">
+            <Tab key="saveImage" eventKey="SaveImage" title="Create Disk Image">
               <SaveDiskImage wock={this.props.wock}/>
             </Tab>
+
+            <Tab key="wipe" eventKey="wipeDisk" title="Wipe Disk">
+              <WipeDisk wock={this.props.wock}/>
+            </Tab>
+
           </Tabs>
         </div>
         <Messages wock={this.props.wock}/>

@@ -64,6 +64,7 @@ export default class LoadDiskImage extends React.Component {
 
       /* selected disks */
       selected: {},
+      diskRestoring: false,
 
       /* Error message modal dialog */
       modaling: false,
@@ -152,7 +153,7 @@ export default class LoadDiskImage extends React.Component {
     const targetDisk = selectedDevices[0];
     var remainings = {}
     Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
-    this.setState({ diskRestoring: true, selected: remainings, target: targetDisk });
+    this.setState({ selected: remainings, target: targetDisk });
 
     request({
       "method":"POST",
