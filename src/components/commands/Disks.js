@@ -108,7 +108,9 @@ export default class Disks extends React.Component {
 
       for (disk of disks) {
         if (disk.deviceName === devname) {
-          disk.progress = runner.progress;
+          // Little trick to show "some" progress if run time is smol and run estimate is big.
+          // cuz, after rounded, it can be zero and no visible bar on the screen and that's annoying.
+          disk.progress = max( runner.runTime > 0 ? 1 : 0, Math.round(runner.runTime / runner.runEstimate * 100)
           disk.runEstiamte = runner.runEstimate;
           disk.runTime = runner.runTime;
           disk.runStatus = runner.runStatus;
