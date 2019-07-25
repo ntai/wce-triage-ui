@@ -188,6 +188,7 @@ export default class Disks extends React.Component {
                     type="checkbox"
                     className="checkbox"
                     checked={this.state.selected[original.deviceName] === true}
+                    disabled={this.state.mounted[original.deviceName] === true}
                     onChange={() => this.toggleSelection(original.deviceName)}
                   />
                 );

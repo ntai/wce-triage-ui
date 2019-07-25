@@ -38,8 +38,8 @@ class App extends React.Component {
     super();
 
     this.state = {
-      frontendVersion: "0.2.1",
-      backendVersion: "0.1.56"
+      frontendVersion: "",
+      backendVersion: ""
     }
   }
 
@@ -64,9 +64,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App bg-white">
         <Container fluid={true}>
-          <Row>
+          <Row >
             <Col>
               <Image onPress={() => Linking.openURL('https://www.worldcomputerexchange.org')}
                      source={require('./wce_logo.svg')} style={styles.Logo}/>

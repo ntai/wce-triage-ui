@@ -6,7 +6,7 @@ import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 
 import "../../bootstrap.min.css";
-import { Tree, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
+import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
@@ -175,6 +175,8 @@ export default class Triage extends React.Component {
     const fontSize = this.state.fontSize;
 
       return <div>
+        <Container fluid={true}>
+          <Row>
 
         <ButtonToolbar>
           <ButtonGroup  className="mr-2" aria-label="First group">
@@ -209,6 +211,9 @@ export default class Triage extends React.Component {
             </Button>
           </ButtonGroup>
         </ButtonToolbar>
+          </Row>
+           <Row>
+             <Col fluid={true}>
 
         <ReactTable
           data={data}
@@ -220,8 +225,11 @@ export default class Triage extends React.Component {
           pages={1}
           loading={this.state.loading}
           onFetchData={this.fetchTriage}
-          className="-striped"
-      />
+          className="-striped" />
+             </Col>
+           </Row>
+        </Container>
+
       </div>
   }
 }
