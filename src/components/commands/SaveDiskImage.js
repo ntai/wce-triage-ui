@@ -4,7 +4,6 @@ import cloneDeep from 'lodash/cloneDeep';
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import "./commands.css";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 //
@@ -21,6 +20,8 @@ import socketio from "socket.io-client";
 import {RunnerProgress, value_to_color} from "./RunnerProgress";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
+
+import "./commands.css";
 
 
 export default class SaveDiskImage extends React.Component {

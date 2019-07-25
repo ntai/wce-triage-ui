@@ -51,3 +51,7 @@ HtmlSelect {
     background: #fff;
     border: 1px solid #0071dc;
 }
+
+.btn {
+  margin: 0rem 0.5rem;
+}

@@ -5,7 +5,6 @@ import "react-table/react-table.css";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 
-import "./commands.css";
 import "../../bootstrap.min.css";
 import { Tree, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 
@@ -13,6 +12,8 @@ import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
 import Text from "react-native-web/dist/exports/Text";
+
+import "./commands.css";
 
 export default class Triage extends React.Component {
   constructor(props) {

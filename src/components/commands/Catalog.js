@@ -1,8 +1,5 @@
 import React from "react";
 
-// Import React Table
-import "./commands.css";
-//
 import request from 'request-promise';
 
 // Dropdown menu
@@ -12,6 +9,7 @@ import { FormLabel, Col } from "react-bootstrap";
 
 import {sweetHome} from './../../looseend/home';
 
+import "./commands.css";
 
 export default class Catalog extends React.Component {
   constructor() {

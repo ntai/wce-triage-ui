@@ -1,8 +1,6 @@
 import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 
-// Import React Table
-import "./commands.css";
 import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 //
 import request from 'request-promise';
@@ -18,6 +16,9 @@ import socketio from "socket.io-client";
 import {RunnerProgress, value_to_color} from "./RunnerProgress";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
+
+import "./commands.css";
+
 
 class ErrorMessageModal extends React.Component {
   render() {

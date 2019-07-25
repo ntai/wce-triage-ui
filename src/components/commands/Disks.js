@@ -3,7 +3,6 @@ import React from "react";
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import "./commands.css";
 //
 import request from 'request-promise';
 
@@ -11,6 +10,8 @@ import {sweetHome} from './../../looseend/home';
 import cloneDeep from "lodash/cloneDeep";
 import socketio from "socket.io-client";
 import {value_to_color} from "./RunnerProgress";
+
+import "./commands.css";
 
 export default class Disks extends React.Component {
   constructor() {

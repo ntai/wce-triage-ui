@@ -1,24 +1,19 @@
 import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 
-// Import React Table
-import "./commands.css";
 import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 //
 import request from 'request-promise';
 
 // Dropdown menu
-// import ReactSelect from 'react-select';
-import ReactSelect from 'react-select';
 import { Container, Row, Col } from 'react-bootstrap'
 
 import {sweetHome} from './../../looseend/home';
-import socketio from "socket.io-client";
 
-import {RunnerProgress, value_to_color} from "./RunnerProgress";
 import Disks from "./Disks";
-import Catalog from "./Catalog";
+import '../../bootstrap.min.css';
 
+import "./commands.css";
 
 
 export default class WipeDisk extends React.Component {
@@ -125,12 +120,11 @@ export default class WipeDisk extends React.Component {
     return (
       <div>
         <ButtonToolbar>
-          <Button variant="danger" size="sm" onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
 
-          <ButtonGroup>
-            <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
-            <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
-          </ButtonGroup>
+          <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
+
+            <Button onClick={() => this.onReset()}>Reset</Button>
+            <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
         </ButtonToolbar>
 
         <Row>

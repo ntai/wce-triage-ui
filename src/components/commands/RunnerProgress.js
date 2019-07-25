@@ -4,12 +4,13 @@ import cloneDeep from 'lodash/cloneDeep';
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import "./commands.css";
 //
 import request from 'request-promise';
 
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
+
+import "./commands.css";
 
 function value_to_color(value) {
   return value > 100 ? '#FF1f1f'

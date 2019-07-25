@@ -2,9 +2,10 @@ import React from "react";
 //
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
-import "./commands.css";
 import "../../bootstrap.min.css";
 import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
+
+import "./commands.css";
 
 // stub to run optical test
 class OpticalDriveTest {
