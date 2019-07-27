@@ -34,18 +34,25 @@ export default class SaveDiskImage extends React.Component {
 
       makingImage: false,
       sourceDisk: undefined,
+      runningStatus: undefined,
       
       /* Selected disks */
       selected: {},
 
       resetting: false,
     };
-    this.disk_selection_changed = this.disk_selection_changed.bind(this);
     this.did_reset = this.did_reset.bind(this);
-
     this.setImageType = this.setImageType.bind(this);
     this.setImageTypes = this.setImageTypes.bind(this);
+  }
 
+  componentDidMount() {
+    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    loadWock.on("savedisk", this.onRunnerUpdate.bind(this));
+  }
+
+  onRunnerUpdate(update) {
+    this.setState({runningStatus: update})
   }
 
   setImageType(selected) {
@@ -105,7 +112,7 @@ export default class SaveDiskImage extends React.Component {
     this.setState( {destination: undefined, sources: []});
   }
 
-  disk_selection_changed(selectedDisks) {
+  diskSelectionChanged(selectedDisks) {
     this.setState( {selected: selectedDisks});
   }
 
@@ -129,7 +136,7 @@ export default class SaveDiskImage extends React.Component {
   }
 
   render() {
-    const { makingImage, resetting } = this.state;
+    const { runningStatus, makingImage, resetting } = this.state;
     const imagingUrl = this.getImagingUrl();
 
     return (
@@ -141,7 +148,7 @@ export default class SaveDiskImage extends React.Component {
             </Col>
 
             <Col sm={3}>
-            <Catalog title={"Disk image type"} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
+              <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
             </Col>
 
             <Col sm={1}>
@@ -155,11 +162,11 @@ export default class SaveDiskImage extends React.Component {
             <label visible={imagingUrl !== undefined}>{imagingUrl}</label>
           </Row>
         </Container>
-        <Disks runner={"saveimage"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />
+        <Disks runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
 
         <br />
 
-        <RunnerProgress runner={"saveimage"} statuspath={"/dispatch/disk-save-status.json"}/>
+        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status.json"}/>
 
       </div>
     );

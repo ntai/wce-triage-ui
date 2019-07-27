@@ -18,6 +18,7 @@ import Disks from "./Disks";
 import Catalog from "./Catalog";
 
 import "./commands.css";
+import WipeOption from "./WipeOption";
 
 
 class ErrorMessageModal extends React.Component {
@@ -59,6 +60,11 @@ export default class LoadDiskImage extends React.Component {
       /* Fetching the disk images */
       sourcesLoading: true,
 
+      /* wipe */
+      wipeOptions: [],
+      wipeOption: undefined,
+
+
       /* The restore types */
       restoreTypes: [],
       restoreType: undefined,
@@ -66,6 +72,7 @@ export default class LoadDiskImage extends React.Component {
       /* selected disks */
       selected: {},
       diskRestoring: false,
+      runningStatus: undefined,
 
       /* Error message modal dialog */
       modaling: false,
@@ -79,11 +86,10 @@ export default class LoadDiskImage extends React.Component {
     this.setRestoreType = this.setRestoreType.bind(this);
     this.setRestoreTypes = this.setRestoreTypes.bind(this);
     this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
-    this.disk_selection_changed = this.disk_selection_changed.bind(this);
     this.did_reset = this.did_reset.bind(this);
   }
 
-  disk_selection_changed(selectedDisks) {
+  diskSelectionChanged(selectedDisks) {
     this.setState( {selected: selectedDisks});
   }
 
@@ -91,25 +97,35 @@ export default class LoadDiskImage extends React.Component {
     this.setState( {resetting: false});
   }
 
+
   onReset() {
     this.setState( {resetting: true});
     this.setState( {source: undefined, sources: []});
     this.fetchSources();
+    // this.setState( {wipeOption: undefined})
   }
 
   setSource(source) {
-    console.log(source);
-    this.setState({source: source,
-      restoreType: this.state.restoreTypes.filter(rt => rt.value === source.restoreType)[0]});
+    const restoreType = this.state.restoreTypes.filter(rt => rt.value === source.restoreType)[0];
+    this.setState({source: source, restoreType: restoreType});
+    console.log("Restore type:");
+    console.log(restoreType);
+    this.forceUpdate();
+  }
+
+  selectWipe(selected) {
+    this.setState({wipeOption: selected})
+  }
+
+  setWipeOptions(wipers) {
+    this.setState({wipeOptions: wipers, wipeOption: wipers[0]})
   }
 
   setRestoreType(selected) {
-    console.log(selected);
     this.setState({restoreType: selected})
   }
 
   setRestoreTypes(catalog) {
-    console.log(catalog);
     this.setState({restoreTypes: catalog, restoreType: undefined})
   }
 
@@ -121,8 +137,14 @@ export default class LoadDiskImage extends React.Component {
     this.setState({modaling: true, errorTitle: title, errorMessage: msg});
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchSources()
+    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    loadWock.on("loadimage", this.onRunnerUpdate.bind(this));
+  }
+
+  onRunnerUpdate(update) {
+    this.setState({runningStatus: update, diskRestoring: true });
   }
 
   getRestoringUrl() {
@@ -136,7 +158,12 @@ export default class LoadDiskImage extends React.Component {
 
     // time to make donuts
     const targetDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value;
+    var wipe = "";
+    if (this.state.wipeOption !== undefined) {
+      wipe = "&wipe=" + this.state.wipeOption.value;
+      console.log(this.state.wipeOption)
+    }
+    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
   }
 
   onLoad() {
@@ -212,14 +239,18 @@ export default class LoadDiskImage extends React.Component {
 
  
   render() {
-    const { sources, source, restoreType, diskRestoring, resetting} = this.state;
+    const { sources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
       <div>
         <ButtonToolbar>
             <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
-            <Col sm={4}>
+          <Col sm={2}>
+            <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
+          </Col>
+
+          <Col sm={4}>
               <ReactSelect
                 // handing down undefined doesn't change the selection. Dummy value '' sets it.
                 value={source || ''}
@@ -231,7 +262,7 @@ export default class LoadDiskImage extends React.Component {
             </Col>
 
           <Col sm={3}>
-            <Catalog title={"Restore type"} currentSelection={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes}/>
+            <Catalog title={"Restore type"} catalogType={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
           </Col>
 
           <ButtonGroup>
@@ -244,9 +275,9 @@ export default class LoadDiskImage extends React.Component {
           <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
         </Row>
 
-        <Disks runner={"loadimage"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />
+        <Disks runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
         <br />
-        <RunnerProgress runner={"loadimage"} statuspath={"/dispatch/disk-load-status.json"}/>
+        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
 
         <ErrorMessageModal
           errorMessage={this.state.errorMessage}

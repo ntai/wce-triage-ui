@@ -16,7 +16,6 @@ export default class Catalog extends React.Component {
     super();
     this.state = {
       catalogTypes: [],
-      catalogType: undefined,
       catalogTypesLoading: true,
     };
 
@@ -25,17 +24,12 @@ export default class Catalog extends React.Component {
 
   selectCatalogType(selected) {
     console.log(selected);
-    this.setState({catalogType: selected})
-    this.props.catalogTypeChanged(selected);
+    if (this.props.catalogType !== selected)
+      this.props.catalogTypeChanged(selected);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchCatalogTypes();
-  }
-
-  componentWillUpdate(nextProps, nextState, nextContext) {
-      if (nextProps.currentSelection && this.state.catalogType !== nextProps.currentSelection)
-        this.setState({catalogType: nextProps.currentSelection})
   }
 
   fetchCatalogTypes(state, instance) {
@@ -50,26 +44,22 @@ export default class Catalog extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      console.log(res.restoreTypes);
       const catalogs = res.restoreTypes.map(rt => ({label: rt.name, value: rt.id}))
-
       this.setState({
         // marshall this for ReactSelect
         catalogTypes: catalogs,
-        catalogType: undefined,
         catalogTypesLoading: false
       });
-
-      this.props.catalogTypesChanged(this.state.catalogTypes);
+      this.props.catalogTypesChanged(catalogs);
     });
   }
 
   render() {
-    const { catalogTypes, catalogType} = this.state;
+    const { catalogTypes} = this.state;
 
     return (
       <div>
-            <ReactSelect style={{fontSize: 14, textAlign: "left"}} value={catalogType || ''} options={catalogTypes} onChange={this.selectCatalogType} placeholder={this.props.title}/>
+        <ReactSelect style={{fontSize: 14, textAlign: "left"}} value={this.props.catalogType || ''} options={catalogTypes} onChange={this.selectCatalogType} placeholder={this.props.title}/>
       </div>
     );
   }

@@ -12,6 +12,7 @@ import socketio from "socket.io-client";
 import {value_to_color} from "./RunnerProgress";
 
 import "./commands.css";
+import WipeSelection from "./WipeSelection";
 
 export default class Disks extends React.Component {
   constructor() {
@@ -23,6 +24,8 @@ export default class Disks extends React.Component {
       diskPages: null,
       /* Fetching list of disks */
       disksLoading: true,
+      /* disk loading update sequence number */
+      sequenceNumber: undefined,
 
       /* Selected disks */
       selected: {},
@@ -31,6 +34,10 @@ export default class Disks extends React.Component {
 
       /* Mounted disks */
       mounted: {},
+
+      /* Wipe options */
+      wipeOptions: [],
+      wipeOptionsLoading: true,
     };
 
     this.fetchDisks = this.fetchDisks.bind(this);
@@ -67,14 +74,38 @@ export default class Disks extends React.Component {
     });
   }
 
+  fetchWipeOptions(state, instance) {
+    this.setState({wipeOptionsLoading: true});
+    // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-  componentWillMount() {
-    this.fetchDisks();
+    request({
+        "method": "GET",
+        "uri": sweetHome.backendUrl + "/dispatch/wipe-types.json",
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
+    ).then(res => {
+      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}))
+      this.setState({wipeOptions: wipeOptions, wipeOptionsLoading: false});
+    });
   }
 
+  resetDiskWipeOption() {
+    var disks = cloneDeep(this.state.disks);
+    var disk;
+
+    for (disk of disks) {
+      disk.wipe = this.wipeOptions[0];
+    }
+    this.setState({disks: disks})
+  }
+
+
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on(this.props.runner, this.onRunnerUpdate.bind(this));
+    this.fetchWipeOptions();
+    this.fetchDisks();
   }
 
   onReset() {
@@ -93,35 +124,46 @@ export default class Disks extends React.Component {
 
       /* Mounted disks */
       mounted: {},
+
+      /* available wipeOptions */
+      wipeOptions: [],
+
     });
     this.fetchDisks();
     this.props.did_reset();
   }
 
-  onRunnerUpdate(runner) {
+  componentDidUpdate() {
+    if (this.props.runningStatus === undefined) {
+      return;
+    }
+
+    if (this.state.sequenceNumber === this.props.runningStatus._sequence_)
+      return;
+
+    this.setState({sequenceNumber: this.props.runningStatus._sequence_});
+
     var disks = cloneDeep(this.state.disks);
-    console.log("disk status " + runner.device + " " + runner.runEstimate + " " + runner.runTime);
 
-    if (runner.device && runner.runEstimate && runner.runTime) {
-      const devname = runner.device;
+    if (this.props.runningStatus.device && this.props.runningStatus.runEstimate && this.props.runningStatus.runTime) {
+      const devname = this.props.runningStatus.device;
       var disk;
-
+      const runTime = this.props.runningStatus.runTime;
+      const runEstimate = this.props.runningStatus.runEstimate;
+      const runStatus = this.props.runningStatus.runStatus;
       for (disk of disks) {
         if (disk.deviceName === devname) {
           // Little trick to show "some" progress if run time is smol and run estimate is big.
           // cuz, after rounded, it can be zero and no visible bar on the screen and that's annoying.
-          disk.progress = max( runner.runTime > 0 ? 1 : 0, Math.round(runner.runTime / runner.runEstimate * 100)
-          disk.runEstiamte = runner.runEstimate;
-          disk.runTime = runner.runTime;
-          disk.runStatus = runner.runStatus;
+          disk.progress = Math.max( runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
+          disk.runEstiamte = runEstimate;
+          disk.runTime = runTime;
+          disk.runStatus = runStatus;
           break;
         }
       }
     }
-
-    this.setState({
-      disks: disks
-    })
+    this.setState({disks: disks })
   }
 
   toggleSelectAll() {
@@ -147,10 +189,10 @@ export default class Disks extends React.Component {
       selected: newSelected,
       selectAll: selectAllState
     });
-    this.props.disk_selection_changed(newSelected);
+    this.props.diskSelectionChanged(newSelected);
   }
 
-  requestUnmount(deviceName, mountState) {
+  requestUnmountDisk(deviceName, mountState) {
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
     request({
       "method":"POST",
@@ -167,14 +209,9 @@ export default class Disks extends React.Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState, nextContext) {
-    if (this.props.resetting) {
-      this.onReset();
-    }
-  }
 
   render() {
-    const { disks, diskPages, disksLoading } = this.state;
+    const { disks, diskPages, disksLoading, wipeOptions } = this.state;
 
     return (
       <div>
@@ -213,6 +250,7 @@ export default class Disks extends React.Component {
               sortable: false,
               width: 45
             },
+
             {
               Header: "Disk",
               accessor: "deviceName",
@@ -228,7 +266,7 @@ export default class Disks extends React.Component {
                     type="checkbox"
                     className="checkbox"
                     checked={this.state.mounted[original.deviceName] === true}
-                    onChange={() => this.requestUnmount(original.deviceName, this.state.mounted[original.deviceName]) }
+                    onChange={() => this.requestUnmountDisk(original.deviceName, this.state.mounted[original.deviceName]) }
                   />
                 );
               },

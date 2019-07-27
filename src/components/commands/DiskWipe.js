@@ -32,11 +32,11 @@ export default class WipeDisk extends React.Component {
       resetting : false
     };
 
-    this.disk_selection_changed = this.disk_selection_changed.bind(this);
+    this.diskSelectionChanged = this.diskSelectionChanged.bind(this);
     this.did_reset = this.did_reset.bind(this);
   }
 
-  disk_selection_changed(selectedDisks) {
+  diskSelectionChanged(selectedDisks) {
     console.log(selectedDisks);
     this.setState( {selected: selectedDisks});
   }
@@ -131,7 +131,7 @@ export default class WipeDisk extends React.Component {
           <label visible={wipeUrl !== undefined}>{wipeUrl}</label>
         </Row>
 
-        <Disks runner={"zerowipe"} resetting={resetting} did_reset={this.did_reset} disk_selection_changed={this.disk_selection_changed} />
+        <Disks runner={"zerowipe"} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
       </div>
     );
   }

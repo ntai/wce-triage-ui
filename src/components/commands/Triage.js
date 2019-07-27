@@ -61,8 +61,6 @@ export default class Triage extends React.Component {
 
   fetchTriage(state, instance) {
     this.setState({sourcesLoading: true, triageResult: []});
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-    console.log(sweetHome.backendUrl + '/dispatch/triage.json');
     request({
         "method": "GET",
         'uri': sweetHome.backendUrl + '/dispatch/triage.json',
@@ -72,7 +70,6 @@ export default class Triage extends React.Component {
         }
       }
     ).then(res => {
-      console.log(res.components);
       // Now just get the rows of triage results
       this.setState({
         triageResult: res.components,

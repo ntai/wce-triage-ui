@@ -24,6 +24,10 @@ class RunnerProgress extends React.Component {
   constructor() {
     super();
     this.state = {
+      /* Restroing is going on */
+      restroing: false,
+      sequenceNumber: undefined,
+
       /* Disk operation steps (aka tasks) */
       steps: [],
       /* Page number of the table */
@@ -35,43 +39,45 @@ class RunnerProgress extends React.Component {
     this.fetchSteps = this.fetchSteps.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchSteps()
   }
 
-  componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
-    // 'loadimage'
-    loadWock.on(this.props.runner, this.onRunnerUpdate.bind(this));
-  }
+  componentDidUpdate() {
+    if (this.props.runningStatus === undefined) {
+      return;
+    }
 
-  onRunnerUpdate(runner) {
-    var steps = runner.steps;
-
-    // if the browser reloaded, nothing I can do.
-    if (this.state.steps === undefined && steps === undefined)
+    if (this.state.sequenceNumber === this.props.runningStatus._sequence_)
       return;
 
-    if (steps === undefined) {
-      steps = cloneDeep(this.state.steps)
+    this.setState({sequenceNumber: this.props.runningStatus._sequence_});
+
+    console.log(this.props.runningStatus._sequence_);
+
+    if (this.props.runningStatus.steps !== undefined) {
+      this.setState({steps: this.props.runningStatus.steps})
     }
 
-    const step_no = runner.step;
-    const progress = runner.progress;
-    const elapseTime = runner.elapseTime;
-    const message = runner.message;
-    const status = runner.status;
+    if (this.props.runningStatus.step !== undefined) {
+      if (this.state.steps !== undefined) {
+	console.log( this.props.runningStatus)
+	var steps = cloneDeep(this.state.steps);
 
-    if (step_no) {
-      steps[step_no].progress = progress;
-      steps[step_no].elapseTime = elapseTime;
-      steps[step_no].message = message;
-      steps[step_no].status = status;
+	const step_no = this.props.runningStatus.step;
+	const elapseTime = this.props.runningStatus.elapseTime;
+	const message = this.props.runningStatus.message;
+	const status = this.props.runningStatus.status;
+	steps[step_no].elapseTime = elapseTime;
+	steps[step_no].message = message;
+	steps[step_no].status = status;
+	console.log(steps)
+	this.setState({steps: steps})
+      }
+      else {
+	console.log("steps is not defined yet.")
+      }
     }
-    this.setState({
-      steps: steps,
-      stepsLoading: false,
-    })
   }
 
   fetchSteps(state, instance) {
@@ -90,6 +96,7 @@ class RunnerProgress extends React.Component {
     ).then(res => {
       // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
       this.setState({
+	restroing: res.diskRestoring,
         steps: res.steps,
         stepPages: res.pages,
         stepsLoading: false
