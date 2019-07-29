@@ -24,23 +24,22 @@ class RunnerProgress extends React.Component {
   constructor() {
     super();
     this.state = {
-      /* Restroing is going on */
-      restroing: false,
+      /* Status update sequence number */
       sequenceNumber: undefined,
 
-      /* Disk operation steps (aka tasks) */
-      steps: [],
+      /* Disk operation tasks (aka tasks) */
+      tasks: [],
       /* Page number of the table */
-      stepPages: 1,
-      /* Loading steps */
-      stepsLoading: true,
+      taskPages: 1,
+      /* Loading tasks */
+      tasksLoading: true,
     };
 
-    this.fetchSteps = this.fetchSteps.bind(this);
+    this.fetchTasks = this.fetchTasks.bind(this);
   }
 
   componentDidMount() {
-    this.fetchSteps()
+    this.fetchTasks()
   }
 
   componentDidUpdate() {
@@ -55,35 +54,29 @@ class RunnerProgress extends React.Component {
 
     console.log(this.props.runningStatus._sequence_);
 
-    if (this.props.runningStatus.steps !== undefined) {
-      this.setState({steps: this.props.runningStatus.steps})
+    if (this.props.runningStatus.tasks !== undefined) {
+      this.setState({tasks: this.props.runningStatus.tasks})
     }
 
     if (this.props.runningStatus.step !== undefined) {
-      if (this.state.steps !== undefined) {
-	console.log( this.props.runningStatus)
-	var steps = cloneDeep(this.state.steps);
-
-	const step_no = this.props.runningStatus.step;
-	const elapseTime = this.props.runningStatus.elapseTime;
-	const message = this.props.runningStatus.message;
-	const status = this.props.runningStatus.status;
-	steps[step_no].elapseTime = elapseTime;
-	steps[step_no].message = message;
-	steps[step_no].status = status;
-	console.log(steps)
-	this.setState({steps: steps})
+      if (this.state.tasks !== undefined) {
+        console.log( this.props.runningStatus)
+        var tasks = cloneDeep(this.state.tasks);
+        const step_no = this.props.runningStatus.step;
+        const task = this.props.runningStatus.task;
+        tasks[step_no] = task;
+        this.setState({tasks: tasks})
       }
       else {
-	console.log("steps is not defined yet.")
+    	console.log("tasks is not defined yet.")
       }
     }
   }
 
-  fetchSteps(state, instance) {
+  fetchTasks(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
-    this.setState({ stepsLoading: true });
+    this.setState({ tasksLoading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
     request({
@@ -96,16 +89,15 @@ class RunnerProgress extends React.Component {
     ).then(res => {
       // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
       this.setState({
-	restroing: res.diskRestoring,
-        steps: res.steps,
-        stepPages: res.pages,
-        stepsLoading: false
+        tasks: res.tasks,
+        taskPages: res.pages,
+        tasksLoading: false
       });
     });
   }
 
   render() {
-    const {steps, stepPages, stepsLoading } = this.state;
+    const {tasks, taskPages, tasksLoading } = this.state;
 
     return (
       <div>
@@ -114,23 +106,23 @@ class RunnerProgress extends React.Component {
             {
               Header: "Step",
               width: 250,
-              accessor: "category",
+              accessor: "taskCategory",
               style: {textAlign: "right"},
             },
             {
               Header: "Estimate",
               width: 60,
-              accessor: "timeEstimate"
+              accessor: "taskEstimate"
             },
             {
               Header: "Elapsed",
               width: 60,
-              accessor: "elapseTime"
+              accessor: "taskElapse"
             },
             {
               Header: 'Status',
               width: 100,
-              accessor: 'status',
+              accessor: 'taskStatus',
               Cell: row => (
                 <span>
                   <span style={{
@@ -155,7 +147,7 @@ class RunnerProgress extends React.Component {
             {
               Header: 'Progress',
               width: 100,
-              accessor: 'progress',
+              accessor: 'taskProgress',
               Cell: row => (
                 <div
                   style={{
@@ -180,16 +172,16 @@ class RunnerProgress extends React.Component {
             {
               Header: "Description",
               width: 200,
-              accessor: "message",
+              accessor: "taskMessage",
               style: {textAlign: "left"},
             },
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           style={{fontSize: 12, borderRadius: 0, textAligh: "left"}}
-          data={steps}
-          pages={stepPages}      // Display the total number of pages
-          loading={stepsLoading} // Display the loading overlay when we need it
-          onFetchData={this.fetchSteps} // Request new data when things change
+          data={tasks}
+          pages={taskPages}      // Display the total number of pages
+          loading={tasksLoading} // Display the loading overlay when we need it
+          onFetchData={this.fetchTasks} // Request new data when things change
           defaultPageSize={15}
           showPagination={false}
           sortable={false}

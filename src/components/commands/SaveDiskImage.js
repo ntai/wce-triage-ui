@@ -37,7 +37,7 @@ export default class SaveDiskImage extends React.Component {
       runningStatus: undefined,
       
       /* Selected disks */
-      selected: {},
+      selectedDisks: {},
 
       resetting: false,
     };
@@ -48,11 +48,11 @@ export default class SaveDiskImage extends React.Component {
 
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on("savedisk", this.onRunnerUpdate.bind(this));
+    loadWock.on("saveimage", this.onRunnerUpdate.bind(this));
   }
 
   onRunnerUpdate(update) {
-    this.setState({runningStatus: update})
+    this.setState({runningStatus: update, makingImage: true})
   }
 
   setImageType(selected) {
@@ -66,7 +66,7 @@ export default class SaveDiskImage extends React.Component {
   }
 
   getImagingUrl() {
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    const selectedDevices = Object.keys(this.state.selectedDisks).filter( devName => this.state.selectedDisks[devName]);
     const imagingType = this.state.imageType;
 
     if (selectedDevices.length === 0 || !imagingType) {
@@ -82,13 +82,6 @@ export default class SaveDiskImage extends React.Component {
     const savingUrl = this.getImagingUrl();
     console.log(savingUrl);
 
-    // time to make donuts
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const selectedDisk = selectedDevices[0];
-    var remainings = {}
-    Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
-    this.setState({ makingImage: true, selected: remainings, sourceDisk: selectedDisk });
-
     request({
       "method":"POST",
       "uri": savingUrl,
@@ -98,22 +91,23 @@ export default class SaveDiskImage extends React.Component {
       }}
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        target: null,
-        makingImage: true
-      });
+      this.setState({ makingImage: true });
     });
-
-    // this.onLoad();
   }
 
   onReset() {
-    this.setState( {resetting: true});
-    this.setState( {destination: undefined, sources: []});
+    this.setState( {resetting: true, destination: undefined});
   }
 
   diskSelectionChanged(selectedDisks) {
-    this.setState( {selected: selectedDisks});
+    var devname;
+
+    for (devname of Object.keys(this.state.selectedDisks)) {
+      if (this.state.selectedDisks[devname]) {
+        selectedDisks[devname] = false;
+      }
+    }
+    this.setState( {selectedDisks: selectedDisks} );
   }
 
   did_reset() {
@@ -136,7 +130,7 @@ export default class SaveDiskImage extends React.Component {
   }
 
   render() {
-    const { runningStatus, makingImage, resetting } = this.state;
+    const { runningStatus, makingImage, resetting, selectedDisks } = this.state;
     const imagingUrl = this.getImagingUrl();
 
     return (
@@ -162,7 +156,7 @@ export default class SaveDiskImage extends React.Component {
             <label visible={imagingUrl !== undefined}>{imagingUrl}</label>
           </Row>
         </Container>
-        <Disks runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+        <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
 
         <br />
 

@@ -69,8 +69,9 @@ export default class LoadDiskImage extends React.Component {
       restoreTypes: [],
       restoreType: undefined,
 
-      /* selected disks */
-      selected: {},
+      /* target disks */
+      targetDisks: {},
+
       diskRestoring: false,
       runningStatus: undefined,
 
@@ -90,7 +91,7 @@ export default class LoadDiskImage extends React.Component {
   }
 
   diskSelectionChanged(selectedDisks) {
-    this.setState( {selected: selectedDisks});
+    this.setState( {targetDisks: selectedDisks});
   }
 
   did_reset() {
@@ -148,22 +149,38 @@ export default class LoadDiskImage extends React.Component {
   }
 
   getRestoringUrl() {
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    const targetDisks = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
     const resotringSource = this.state.source;
     const restoreType = this.state.restoreType;
 
-    if (selectedDevices.length === 0 || !resotringSource || !restoreType) {
+    if (targetDisks.length === 0 || !resotringSource || !restoreType) {
       return undefined;
     }
 
     // time to make donuts
-    const targetDisk = selectedDevices[0];
     var wipe = "";
     if (this.state.wipeOption !== undefined) {
       wipe = "&wipe=" + this.state.wipeOption.value;
       console.log(this.state.wipeOption)
     }
-    return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
+
+    console.log(targetDisks);
+
+    if (targetDisks.length > 1) {
+      var url = sweetHome.backendUrl + "/dispatch/load?deviceNames=";
+      var sep = "";
+      var targetDisk;
+      for (targetDisk of targetDisks) {
+        url = url + sep + targetDisk;
+        sep = ",";
+      }
+      url = url + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
+      return url;
+    }
+    else {
+      const targetDisk = targetDisks[0];
+      return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
+    }
   }
 
   onLoad() {
@@ -177,11 +194,11 @@ export default class LoadDiskImage extends React.Component {
     console.log(restoringUrl);
 
     // time to make donuts
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const targetDisk = selectedDevices[0];
-    var remainings = {}
-    Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
-    this.setState({ selected: remainings, target: targetDisk });
+    // const selectedDevices = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
+    // const targetDisk = selectedDevices[0];
+    // var remainings = {}
+    // Object.keys(this.state.targetDisks).slice(1).map( tag => remainings[tag] = true )
+    // this.setState({ targetDisks: remainings, target: targetDisk });
 
     request({
       "method":"POST",
@@ -193,7 +210,6 @@ export default class LoadDiskImage extends React.Component {
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
-        target: null,
         diskRestoring: true
       });
     });
@@ -239,7 +255,7 @@ export default class LoadDiskImage extends React.Component {
 
  
   render() {
-    const { sources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus } = this.state;
+    const { sources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
@@ -275,7 +291,7 @@ export default class LoadDiskImage extends React.Component {
           <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
         </Row>
 
-        <Disks runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+        <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
         <br />
         <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
 

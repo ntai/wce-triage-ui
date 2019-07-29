@@ -15,8 +15,8 @@ import "./commands.css";
 import WipeSelection from "./WipeSelection";
 
 export default class Disks extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       /* Raw disks */
       disks: [],
@@ -27,8 +27,6 @@ export default class Disks extends React.Component {
       /* disk loading update sequence number */
       sequenceNumber: undefined,
 
-      /* Selected disks */
-      selected: {},
       /* ReactSelect all status */
       selectAll: 0,
 
@@ -61,16 +59,18 @@ export default class Disks extends React.Component {
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       var mounted = {};
+      var selected = {};
       var disk;
       for (disk of res.disks) {
         mounted[disk.deviceName] = disk.mounted;
+        selected[disk.deviceName] = false;
       }
       this.setState({
         disks: res.disks,
         disksLoading: false,
-        mounted: mounted, // FIXME: filter disk by mounted === 1
-        selected: {}
+        mounted: mounted
       });
+      this.props.diskSelectionChanged(selected);
     });
   }
 
@@ -117,8 +117,6 @@ export default class Disks extends React.Component {
       /* Fetching list of disks */
       disksLoading: true,
 
-      /* Selected disks */
-      selected: {},
       /* ReactSelect all status */
       selectAll: 0,
 
@@ -150,20 +148,28 @@ export default class Disks extends React.Component {
       var disk;
       const runTime = this.props.runningStatus.runTime;
       const runEstimate = this.props.runningStatus.runEstimate;
-      const runStatus = this.props.runningStatus.runStatus;
+      const runMessage = this.props.runningStatus.runMessage;
       for (disk of disks) {
         if (disk.deviceName === devname) {
           // Little trick to show "some" progress if run time is smol and run estimate is big.
           // cuz, after rounded, it can be zero and no visible bar on the screen and that's annoying.
-          disk.progress = Math.max( runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
+          if (this.props.runningStatus.runStatus === "Preflight")
+            disk.progress = 0;
+          if (this.props.runningStatus.runStatus === "Running")
+            disk.progress = Math.max( runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
+          if (this.props.runningStatus.runStatus === "Success")
+            disk.progress = 100;
+          if (this.props.runningStatus.runStatus === "Failed")
+            disk.progress = 999;
+
           disk.runEstiamte = runEstimate;
           disk.runTime = runTime;
-          disk.runStatus = runStatus;
+          disk.runMessage = runMessage;
           break;
         }
       }
     }
-    this.setState({disks: disks })
+    this.setState({disks: disks });
   }
 
   toggleSelectAll() {
@@ -179,16 +185,13 @@ export default class Disks extends React.Component {
   }
 
   toggleSelection(deviceName) {
-    const newSelected = Object.assign({}, this.state.selected);
-    newSelected[deviceName] = !this.state.selected[deviceName];
+    var newSelected = Object.assign({}, this.props.selected);
+    newSelected[deviceName] = !this.props.selected[deviceName];
     this.setNewSelection(newSelected, 2);
   }
 
   setNewSelection(newSelected, selectAllState) {
-    this.setState({
-      selected: newSelected,
-      selectAll: selectAllState
-    });
+    this.setState({ selectAll: selectAllState });
     this.props.diskSelectionChanged(newSelected);
   }
 
@@ -212,11 +215,23 @@ export default class Disks extends React.Component {
 
   render() {
     const { disks, diskPages, disksLoading, wipeOptions } = this.state;
+    var selectedDisks = {};
+    var disk;
+    var deviceName;
+
+    for (disk of disks) {
+      selectedDisks[disk.deviceName] = false;
+    }
+    if (this.props.selected) {
+      for (deviceName of Object.keys(this.props.selected)) {
+        selectedDisks[deviceName] = this.props.selected[deviceName];
+      }
+    }
 
     return (
       <div>
         <ReactTable
-          disabled={disksLoading}
+          disabled={disksLoading || this.props.running}
           columns={[
             {
               id: "checkbox",
@@ -226,7 +241,7 @@ export default class Disks extends React.Component {
                   <input
                     type="checkbox"
                     className="checkbox"
-                    checked={this.state.selected[original.deviceName] === true}
+                    checked={selectedDisks[original.deviceName]}
                     disabled={this.state.mounted[original.deviceName] === true}
                     onChange={() => this.toggleSelection(original.deviceName)}
                   />
@@ -293,7 +308,7 @@ export default class Disks extends React.Component {
             },
             {
               Header: "Status",
-              accessor: "runStatus"
+              accessor: "runMessage"
             },
             {
               Header: 'Progress',
