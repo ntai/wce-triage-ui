@@ -8,14 +8,13 @@ import * as io from 'socket.io-client';
 
 
 const styles = StyleSheet.create({
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+  baseText: {
+    fontFamily: 'Arial',
+    textAlign: 'left'
   },
 });
+
+
 
 
 export default class Messages extends Component {
@@ -63,7 +62,7 @@ export default class Messages extends Component {
     return (
       <ScrollView>
         {messages.map((msg) => {
-          return <Text>{msg}</Text>
+          return <Text style={styles.baseText}>{msg}</Text>
         })}
       </ScrollView>
     );

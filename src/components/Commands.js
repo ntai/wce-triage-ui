@@ -5,11 +5,12 @@ import SaveDiskImage from './commands/SaveDiskImage';
 import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
 import WipeDisk from "./commands/DiskWipe";
+import TriageAppSettings from "./commands/TriageAppSettings";
 
 export default class Commands extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { key: "triage", message: "No message" }
+    this.state = { key: "triage", message: "No message", settings: false }
   }
 
   render() {
@@ -31,6 +32,9 @@ export default class Commands extends React.Component {
             </Tab>
             <Tab key="wipe" eventKey="wipeDisk" title="Wipe Disk">
               <WipeDisk wock={this.props.wock}/>
+            </Tab>
+            <Tab key="settings" eventKey="settings" title="Settings" disabled={!this.state.settings}>
+              <TriageAppSettings wock={this.props.wock}/>
             </Tab>
           </Tabs>
         </div>
