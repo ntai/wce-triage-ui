@@ -23,7 +23,8 @@ export default class Disks extends React.Component {
       /* Disk table - page 1 always */
       diskPages: null,
       /* Fetching list of disks */
-      disksLoading: true,
+      diskStatusLoading: true,
+
       /* disk loading update sequence number */
       sequenceNumber: undefined,
 
@@ -45,7 +46,7 @@ export default class Disks extends React.Component {
   fetchDisks(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
-    this.setState({disksLoading: true});
+    this.setState({diskStatusLoading: true});
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
     request({
@@ -67,7 +68,7 @@ export default class Disks extends React.Component {
       }
       this.setState({
         disks: res.disks,
-        disksLoading: false,
+        diskStatusLoading: false,
         mounted: mounted
       });
       this.props.diskSelectionChanged(selected);
@@ -115,7 +116,7 @@ export default class Disks extends React.Component {
       /* Disk table - page 1 always */
       diskPages: null,
       /* Fetching list of disks */
-      disksLoading: true,
+      diskStatusLoading: true,
 
       /* ReactSelect all status */
       selectAll: 0,
@@ -214,7 +215,7 @@ export default class Disks extends React.Component {
 
 
   render() {
-    const { disks, diskPages, disksLoading, wipeOptions } = this.state;
+    const { disks, diskPages, diskStatusLoading, wipeOptions } = this.state;
     var selectedDisks = {};
     var disk;
     var deviceName;
@@ -231,7 +232,7 @@ export default class Disks extends React.Component {
     return (
       <div>
         <ReactTable
-          disabled={disksLoading || this.props.running}
+          disabled={diskStatusLoading || this.props.running}
           columns={[
             {
               id: "checkbox",
@@ -339,7 +340,7 @@ export default class Disks extends React.Component {
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           data={disks}
           pages={diskPages}      // Display the total number of pages
-          loading={disksLoading} // Display the loading overlay when we need it
+          loading={diskStatusLoading} // Display the loading overlay when we need it
           onFetchData={this.fetchDisks} // Request new data when things change
           defaultPageSize={4}
           showPagination={false}

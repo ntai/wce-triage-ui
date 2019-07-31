@@ -14,15 +14,18 @@ import Disks from "./Disks";
 import '../../bootstrap.min.css';
 
 import "./commands.css";
+import socketio from "socket.io-client";
 
 
 export default class WipeDisk extends React.Component {
   constructor() {
     super();
     this.state = {
-      /* selected disks */
-      selected: {},
+      /* target disks */
+      targetDisks: {},
       diskWiping: false,
+
+      runningStatus: undefined,
 
       /* Error message modal dialog */
       modaling: false,
@@ -36,9 +39,18 @@ export default class WipeDisk extends React.Component {
     this.did_reset = this.did_reset.bind(this);
   }
 
-  diskSelectionChanged(selectedDisks) {
-    console.log(selectedDisks);
-    this.setState( {selected: selectedDisks});
+  componentDidMount() {
+    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    loadWock.on("zerowipe", this.onRunnerUpdate.bind(this));
+  }
+
+  onRunnerUpdate(update) {
+    this.setState({runningStatus: update, diskWiping: update.device !== ''});
+  }
+
+  diskSelectionChanged(targetDisksDisks) {
+    console.log(targetDisksDisks);
+    this.setState( {targetDisks: targetDisksDisks});
   }
 
   did_reset() {
@@ -51,15 +63,26 @@ export default class WipeDisk extends React.Component {
 
 
   getWipeUrl() {
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
+    const targetDisks = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
 
-    if (selectedDevices.length === 0) {
+    if (targetDisks.length === 0) {
       return undefined;
     }
 
-    // time to make donuts
-    const targetDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/wipe?deviceName=" + targetDisk;
+    if (targetDisks.length > 1) {
+      var url = sweetHome.backendUrl + "/dispatch/wipe?deviceNames=";
+      var sep = "";
+      var targetDisk;
+      for (targetDisk of targetDisks) {
+        url = url + sep + targetDisk;
+        sep = ",";
+      }
+      return url;
+    }
+    else {
+      const targetDisk = targetDisks[0];
+      return sweetHome.backendUrl + "/dispatch/wipe?deviceName=" + targetDisk;
+    }
   }
 
   
@@ -67,18 +90,14 @@ export default class WipeDisk extends React.Component {
     const wipeUrl = this.getWipeUrl();
 
     if (wipeUrl === undefined) {
-      this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
+      this.showErrorMessageModal("Please select...", "No disk, source or restore type targetDisks.");
       return;
     }
 
     console.log(wipeUrl);
 
     // time to make donuts
-    const selectedDevices = Object.keys(this.state.selected).filter( devName => this.state.selected[devName]);
-    const targetDisk = selectedDevices[0];
-    var remainings = {}
-    Object.keys(this.state.selected).slice(1).map( tag => remainings[tag] = true )
-    this.setState({ diskWiping: true, selected: remainings, target: targetDisk });
+    const targetDiskDevices = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
 
     request({
       "method":"POST",
@@ -89,10 +108,7 @@ export default class WipeDisk extends React.Component {
       }}
     ).then(res => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        target: null,
-        diskWiping: true
-      });
+      this.setState({diskWiping: true});
     });
   }
 
@@ -114,7 +130,7 @@ export default class WipeDisk extends React.Component {
 
 
   render() {
-    const { resetting, diskWiping } = this.state;
+    const { resetting, diskWiping, targetDisks, runningStatus } = this.state;
     const wipeUrl = this.getWipeUrl();
 
     return (
@@ -131,7 +147,7 @@ export default class WipeDisk extends React.Component {
           <label visible={wipeUrl !== undefined}>{wipeUrl}</label>
         </Row>
 
-        <Disks runner={"zerowipe"} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
+        <Disks runner={"zerowipe"} runningStatus={runningStatus} r selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
       </div>
     );
   }
