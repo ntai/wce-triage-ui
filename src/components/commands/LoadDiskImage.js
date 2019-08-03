@@ -100,8 +100,11 @@ export default class LoadDiskImage extends React.Component {
 
 
   onReset() {
-    this.setState( {resetting: true});
-    this.setState( {source: undefined, sources: []});
+    this.setState( {resetting: true,
+      source: undefined,
+      sources: [],
+      targetDisks: []
+    });
     this.fetchSources();
     // this.setState( {wipeOption: undefined})
   }

@@ -133,6 +133,10 @@ export default class Disks extends React.Component {
   }
 
   componentDidUpdate() {
+
+    if (this.props.resetting)
+      this.onReset();
+
     if (this.props.runningStatus === undefined) {
       return;
     }
