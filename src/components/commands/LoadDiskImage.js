@@ -55,6 +55,8 @@ export default class LoadDiskImage extends React.Component {
     this.state = {
       /* The disk images sources */
       sources: [],
+      /* The disk images sources */
+      subsetSources: [],
       /* Selected disk image source. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
       source: undefined,
       /* Fetching the disk images */
@@ -103,6 +105,7 @@ export default class LoadDiskImage extends React.Component {
     this.setState( {resetting: true,
       source: undefined,
       sources: [],
+      subsetSources: [],
       targetDisks: []
     });
     this.fetchSources();
@@ -126,7 +129,23 @@ export default class LoadDiskImage extends React.Component {
   }
 
   setRestoreType(selected) {
-    this.setState({restoreType: selected})
+    const restoreTypeID = selected.value;
+    console.log("selected restoreType: " + restoreTypeID);
+
+    var subset = [];
+    if (this.state.sources) {
+      subset = this.state.sources.filter(source => source.restoreType === restoreTypeID);
+      if (subset.length > 1) {
+        subset.sort( function(a, b) { return a.mtime < b.mtime; })
+      }
+    }
+
+    var source = undefined;
+
+    if (subset.length > 0) {
+      source = subset[0];
+    }
+    this.setState({restoreType: selected, subsetSources: subset, source: source})
   }
 
   setRestoreTypes(catalog) {
@@ -247,10 +266,20 @@ export default class LoadDiskImage extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
+      const srcs = res.sources.map( src => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType}));
+      var src = undefined;
+      var restoreType = undefined;
+      // if there is only one image source, pick it.
+      if (srcs.length === 1) {
+        src = srcs[0];
+        restoreType = src.restoreType;
+      }
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({
-        sources: res.sources.map( src => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType})),
-        source: undefined,
+        sources: srcs,
+        subsetSources: srcs,
+        source: src,
+        restoreType: restoreType,
         sourcesLoading: false,
       });
     });
@@ -258,7 +287,7 @@ export default class LoadDiskImage extends React.Component {
 
  
   render() {
-    const { sources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks } = this.state;
+    const { sources, subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
@@ -275,7 +304,7 @@ export default class LoadDiskImage extends React.Component {
                 value={source || ''}
                 style={{fontSize: 12, textAlign: "left"}}
                 placeholder="Select source"
-                options={sources}
+                options={subsetSources}
                 onChange={(value) => this.setSource(value)}
               />
             </Col>
@@ -289,10 +318,6 @@ export default class LoadDiskImage extends React.Component {
               <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
             </ButtonGroup>
         </ButtonToolbar>
-
-        <Row>
-          <label visible={restoringUrl !== undefined}>{restoringUrl}</label>
-        </Row>
 
         <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
         <br />

@@ -5,7 +5,7 @@ import SaveDiskImage from './commands/SaveDiskImage';
 import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
 import WipeDisk from "./commands/DiskWipe";
-import TriageAppSettings from "./commands/TriageAppSettings";
+import TriageAppSettings from "./settings/TriageAppSettings";
 
 export default class Commands extends React.Component {
   constructor(props) {

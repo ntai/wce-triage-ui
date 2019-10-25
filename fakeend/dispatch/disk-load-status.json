@@ -1,5 +1,0 @@
-{ "pages": 1,
-  "steps": [ { "category": "Step-1", "progress": 100, "elapseTime": "100", "status": "done" },
-             { "category": "Step-2", "progress": 30, "elapseTime": "30", "status": "running" },
-             { "category": "Step-3", "progress": 0, "elapseTime": "0", "status": "waiting" },
-             { "category": "Step-4", "progress": 0, "elapseTime": "0", "status": "waiting" } ] }

@@ -9,11 +9,11 @@ import request from 'request-promise';
 import ReactSelect from 'react-select';
 import {Container, Row, Col, ButtonToolbar, ButtonGroup, Modal, Button, Tab, ListGroup, ListGroupItem} from 'react-bootstrap'
 
-import {sweetHome} from './../../looseend/home';
+import {sweetHome} from '../../looseend/home';
 import socketio from "socket.io-client";
 import NetworkSettings from './NetworkSettings';
 
-import "./commands.css";
+import "../commands/commands.css";
 
 
 
@@ -65,6 +65,12 @@ export default class TriageAppSettings extends React.Component {
               <ListGroup.Item action href="#wipesettings">
                 Wipe Options
               </ListGroup.Item>
+              <ListGroup.Item action href="#pxeboot">
+                Client Boot
+              </ListGroup.Item>
+              <ListGroup.Item action href="#diskimages">
+                Disk Images
+              </ListGroup.Item>
             </ListGroup>
           </Col>
           <Col sm={8}>
@@ -73,7 +79,10 @@ export default class TriageAppSettings extends React.Component {
                 <NetworkSettings />
               </Tab.Pane>
               <Tab.Pane eventKey="#wipesettings">
-                <NetworkSettings />
+              </Tab.Pane>
+              <Tab.Pane eventKey="#pxeboot">
+              </Tab.Pane>
+              <Tab.Pane eventKey="#diskimages">
               </Tab.Pane>
             </Tab.Content>
           </Col>

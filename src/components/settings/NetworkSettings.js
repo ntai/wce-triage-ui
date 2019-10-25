@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {sweetHome} from './../../looseend/home';
+import {sweetHome} from '../../looseend/home';
 import socketio from "socket.io-client";
 
-import "./commands.css";
+import "../commands/commands.css";
 
 export default class NetworkSettings extends Component {
   constructor(props) {

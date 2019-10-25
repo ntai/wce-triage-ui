@@ -210,10 +210,7 @@ export default class Disks extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        mounted: {} // FIXME: do something from the reply
-      });
+      this.onReset();
     });
   }
 

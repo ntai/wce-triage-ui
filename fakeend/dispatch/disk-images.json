@@ -1,7 +1,0 @@
-{
-    "sources" : [
-      { "mtime": "2019-04-01", "name": "wce-1.tar.gz", "fullpath": "/var/www/wce-1.tar.gz", "size": 1001 },
-      { "mtime": "2019-04-02", "name": "wce-2.tar.gz", "fullpath": "/var/www/wce-2.tar.gz", "size": 1002 },
-      { "mtime": "2019-04-03", "name": "wce-3.tar.gz", "fullpath": "/var/www/wce-3.tar.gz", "size": 1003 }
-  ]
-}
