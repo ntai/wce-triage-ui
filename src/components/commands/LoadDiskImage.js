@@ -1,53 +1,17 @@
 import React from "react";
-import cloneDeep from 'lodash/cloneDeep';
-
-import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
-//
+// import cloneDeep from 'lodash/cloneDeep';
 import request from 'request-promise';
-
-// Dropdown menu
-// import ReactSelect from 'react-select';
-import ReactSelect from 'react-select';
-import { Container, Row, Col } from 'react-bootstrap'
-
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
-
-import {RunnerProgress, value_to_color} from "./RunnerProgress";
+import {RunnerProgress} from "./ProgressV2";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
-
-import "./commands.css";
 import WipeOption from "./WipeOption";
-
-
-class ErrorMessageModal extends React.Component {
-  render() {
-    return (
-      <Modal
-        {...this.props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Image loading
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h4>{this.props.errorTitle}</h4>
-          <p>
-            {this.props.errorMessage}
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.props.onHide}>Close</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import DiskImageSelector from './DiskImageSelector';
+import "./commands.css";
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -77,23 +41,23 @@ export default class LoadDiskImage extends React.Component {
       diskRestoring: false,
       runningStatus: undefined,
 
-      /* Error message modal dialog */
-      modaling: false,
-      errorMessage: "",
-      errorTitle: "",
-
       resetting : false
     };
 
     this.fetchSources = this.fetchSources.bind(this);
     this.setRestoreType = this.setRestoreType.bind(this);
     this.setRestoreTypes = this.setRestoreTypes.bind(this);
-    this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
     this.did_reset = this.did_reset.bind(this);
   }
 
   diskSelectionChanged(selectedDisks) {
-    this.setState( {targetDisks: selectedDisks});
+    var newSelection = {};
+    var selectedDisk = undefined;
+
+    for (selectedDisk of selectedDisks) {
+      newSelection[selectedDisk.deviceName] = selectedDisk;
+    }
+    this.setState( {targetDisks: newSelection});
   }
 
   did_reset() {
@@ -149,15 +113,9 @@ export default class LoadDiskImage extends React.Component {
   }
 
   setRestoreTypes(catalog) {
+    console.log("LoadDiskImage::setRestoreTypes");
+    console.log(catalog);
     this.setState({restoreTypes: catalog, restoreType: undefined})
-  }
-
-  closeErrorMessageModal() {
-    this.setState({modaling: false});
-  }
-
-  showErrorMessageModal(title, msg) {
-    this.setState({modaling: true, errorTitle: title, errorMessage: msg});
   }
 
   componentDidMount() {
@@ -207,12 +165,6 @@ export default class LoadDiskImage extends React.Component {
 
   onLoad() {
     const restoringUrl = this.getRestoringUrl();
-
-    if (restoringUrl === undefined) {
-      this.showErrorMessageModal("Please select...", "No disk, source or restore type selected.");
-      return;
-    }
-
     console.log(restoringUrl);
 
     // time to make donuts
@@ -285,49 +237,39 @@ export default class LoadDiskImage extends React.Component {
     });
   }
 
- 
   render() {
-    const { sources, subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks } = this.state;
+    const { sources, subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks, restoreTypes } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (
       <div>
-        <ButtonToolbar>
-            <Button variant="danger" size="sm" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
-          <Col sm={2}>
-            <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
-          </Col>
+        <Grid container item>
+          <Grid container xs={14} spacing={0}>
+            <Grid item xs={1}>
+              <Button variant="contained" color="secondary" size="small" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
+            </Grid>
+            <Grid item xs={1}>
+              <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
+            </Grid>
 
-          <Col sm={4}>
-              <ReactSelect
-                // handing down undefined doesn't change the selection. Dummy value '' sets it.
-                value={source || ''}
-                style={{fontSize: 12, textAlign: "left"}}
-                placeholder="Select source"
-                options={subsetSources}
-                onChange={(value) => this.setSource(value)}
-              />
-            </Col>
+            <Grid item xs={5}>
+              <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
+            </Grid>
 
-          <Col sm={3}>
-            <Catalog title={"Restore type"} catalogType={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
-          </Col>
+            <Grid item xs={3}>
+              <Catalog title={"Restore type"} catalogType={restoreType} catalogTypes={restoreTypes} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
+            </Grid>
+            <Grid item xs={2}>
+              <ButtonGroup>
+                <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+                <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
+              </ButtonGroup>
+            </Grid>
+          </Grid>
 
-          <ButtonGroup>
-              <Button size="sm" onClick={() => this.onReset()}>Reset</Button>
-              <Button size="sm" variant="danger" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
-            </ButtonGroup>
-        </ButtonToolbar>
-
-        <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
-        <br />
-        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
-
-        <ErrorMessageModal
-          errorMessage={this.state.errorMessage}
-          show={this.state.modaling}
-          onHide={this.closeErrorMessageModal}
-        />
+          <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
+        </Grid>
       </div>
     );
   }

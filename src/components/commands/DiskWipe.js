@@ -4,15 +4,9 @@ import cloneDeep from 'lodash/cloneDeep';
 import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 //
 import request from 'request-promise';
-
-// Dropdown menu
-import { Container, Row, Col } from 'react-bootstrap'
-
 import {sweetHome} from './../../looseend/home';
-
 import Disks from "./Disks";
 import '../../bootstrap.min.css';
-
 import "./commands.css";
 import socketio from "socket.io-client";
 

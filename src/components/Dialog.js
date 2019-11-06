@@ -1,10 +1,6 @@
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
-
-
 class ErrorMessageModal extends React.Component {
-
-
   render() {
     return (
       <Modal

@@ -1,18 +1,13 @@
 import React from "react";
-
-// Import React Table
-import ReactTable from "react-table";
-import "react-table/react-table.css";
-//
 import request from 'request-promise';
-
 import {sweetHome} from './../../looseend/home';
 import cloneDeep from "lodash/cloneDeep";
-import socketio from "socket.io-client";
-import {value_to_color} from "./RunnerProgress";
-
 import "./commands.css";
-import WipeSelection from "./WipeSelection";
+import MaterialTable from "material-table";
+import {tableTheme, tableIcons} from "./TriageTableTheme";
+import OperationProgressBar from './OperationProgressBar';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 export default class Disks extends React.Component {
   constructor(props) {
@@ -27,9 +22,6 @@ export default class Disks extends React.Component {
 
       /* disk loading update sequence number */
       sequenceNumber: undefined,
-
-      /* ReactSelect all status */
-      selectAll: 0,
 
       /* Mounted disks */
       mounted: {},
@@ -53,7 +45,7 @@ export default class Disks extends React.Component {
         "method": "GET",
         "uri": sweetHome.backendUrl + "/dispatch/disks.json",
         "json": true,
-        "headers": {
+        "titles": {
           "User-Agent": "WCE Triage"
         }
       }
@@ -83,7 +75,7 @@ export default class Disks extends React.Component {
         "method": "GET",
         "uri": sweetHome.backendUrl + "/dispatch/wipe-types.json",
         "json": true,
-        "headers": {
+        "titles": {
           "User-Agent": "WCE Triage"
         }
       }
@@ -118,9 +110,6 @@ export default class Disks extends React.Component {
       /* Fetching list of disks */
       diskStatusLoading: true,
 
-      /* ReactSelect all status */
-      selectAll: 0,
-
       /* Mounted disks */
       mounted: {},
 
@@ -133,71 +122,74 @@ export default class Disks extends React.Component {
   }
 
   componentDidUpdate() {
+    var disk;
+    var disks = undefined;
+    var target_update = false;
+
 
     if (this.props.resetting)
       this.onReset();
 
-    if (this.props.runningStatus === undefined) {
-      return;
-    }
-
-    if (this.state.sequenceNumber === this.props.runningStatus._sequence_)
-      return;
-
-    this.setState({sequenceNumber: this.props.runningStatus._sequence_});
-
-    var disks = cloneDeep(this.state.disks);
-
-    if (this.props.runningStatus.device && this.props.runningStatus.runEstimate && this.props.runningStatus.runTime) {
-      const devname = this.props.runningStatus.device;
-      var disk;
-      const runTime = this.props.runningStatus.runTime;
-      const runEstimate = this.props.runningStatus.runEstimate;
-      const runMessage = this.props.runningStatus.runMessage;
-      for (disk of disks) {
-        if (disk.deviceName === devname) {
-          // Little trick to show "some" progress if run time is smol and run estimate is big.
-          // cuz, after rounded, it can be zero and no visible bar on the screen and that's annoying.
-          if (this.props.runningStatus.runStatus === "Preflight")
-            disk.progress = 0;
-          if (this.props.runningStatus.runStatus === "Running")
-            disk.progress = Math.max( runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
-          if (this.props.runningStatus.runStatus === "Success")
-            disk.progress = 100;
-          if (this.props.runningStatus.runStatus === "Failed")
-            disk.progress = 999;
-
-          disk.runEstiamte = runEstimate;
-          disk.runTime = runTime;
-          disk.runMessage = runMessage;
-          break;
-        }
+    for (disk of this.state.disks) {
+      const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
+      if (disk['target'] !== is_target) {
+        target_update = true;
+        break;
       }
     }
-    this.setState({disks: disks });
-  }
 
-  toggleSelectAll() {
-    let newSelected = {};
-
-    if (this.state.selectAll === 0) {
-      this.state.disks.forEach(x => {
-        newSelected[x.deviceName] = true;
-      });
+    if (target_update) {
+      disks = cloneDeep(this.state.disks);
+      for (disk of disks) {
+        const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
+        disk['target'] = is_target;
+      }
+      this.setState({disks: disks});
     }
+    else {
+      if (this.props.runningStatus === undefined) {
+        return;
+      }
 
-    this.setNewSelection(newSelected, this.state.selectAll === 0 ? 1 : 0);
+      if (this.state.sequenceNumber === this.props.runningStatus._sequence_)
+        return;
+
+      this.setState({sequenceNumber: this.props.runningStatus._sequence_});
+
+      disks = cloneDeep(this.state.disks);
+
+      if (this.props.runningStatus.device && this.props.runningStatus.runEstimate && this.props.runningStatus.runTime) {
+        const devname = this.props.runningStatus.device;
+        const runTime = this.props.runningStatus.runTime;
+        const runEstimate = this.props.runningStatus.runEstimate;
+        const runMessage = this.props.runningStatus.runMessage;
+        for (disk of disks) {
+          if (disk.deviceName === devname) {
+            // Little trick to show "some" progress if run time is smol and run estimate is big.
+            // cuz, after rounded, it can be zero and no visible bar on the screen and that's annoying.
+            if (this.props.runningStatus.runStatus === "Preflight")
+              disk.progress = 0;
+            if (this.props.runningStatus.runStatus === "Running")
+              disk.progress = Math.max(runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
+            if (this.props.runningStatus.runStatus === "Success")
+              disk.progress = 100;
+            if (this.props.runningStatus.runStatus === "Failed")
+              disk.progress = 999;
+
+            disk.runEstiamte = runEstimate;
+            disk.runTime = runTime;
+            disk.runMessage = runMessage;
+            break;
+          }
+        }
+      }
+
+      this.setState({disks: disks});
+    }
   }
 
-  toggleSelection(deviceName) {
-    var newSelected = Object.assign({}, this.props.selected);
-    newSelected[deviceName] = !this.props.selected[deviceName];
-    this.setNewSelection(newSelected, 2);
-  }
-
-  setNewSelection(newSelected, selectAllState) {
-    this.setState({ selectAll: selectAllState });
-    this.props.diskSelectionChanged(newSelected);
+  setNewSelection(newSelection) {
+    this.props.diskSelectionChanged(newSelection);
   }
 
   requestUnmountDisk(deviceName, mountState) {
@@ -206,7 +198,7 @@ export default class Disks extends React.Component {
       "method":"POST",
       "uri": sweetHome.backendUrl + "/dispatch/unmount?deviceName=" + deviceName + "&mount=" + mountState,
       "json": true,
-      "headers": {
+      "titles": {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
@@ -217,135 +209,85 @@ export default class Disks extends React.Component {
 
   render() {
     const { disks, diskPages, diskStatusLoading, wipeOptions } = this.state;
-    var selectedDisks = {};
     var disk;
     var deviceName;
 
-    for (disk of disks) {
-      selectedDisks[disk.deviceName] = false;
-    }
-    if (this.props.selected) {
-      for (deviceName of Object.keys(this.props.selected)) {
-        selectedDisks[deviceName] = this.props.selected[deviceName];
-      }
-    }
-
     return (
       <div>
-        <ReactTable
+        <ThemeProvider theme={tableTheme} />
+        <MaterialTable
+          icons={tableIcons}
+          style={ {marginTop: 2, marginBottom: 2} }
           disabled={diskStatusLoading || this.props.running}
+          onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
             {
-              id: "checkbox",
-              accessor: "",
-              Cell: ({ original }) => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={selectedDisks[original.deviceName]}
-                    disabled={this.state.mounted[original.deviceName] === true}
-                    onChange={() => this.toggleSelection(original.deviceName)}
-                  />
-                );
-              },
-              Header: x => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={this.state.selectAll === 1}
-                    ref={input => {
-                      if (input) {
-                        input.indeterminate = this.state.selectAll === 2;
-                      }
-                    }}
-                    onChange={() => this.toggleSelectAll()}
-                  />
-                );
-              },
-              sortable: false,
-              width: 45
-            },
-
-            {
-              Header: "Disk",
-              accessor: "deviceName",
-              width: 100
+              title: "Disk",
+              field: "deviceName",
+              cellStyle: { width: 120 }
             },
             {
-              Header: "Mounted",
-              width: 80,
-              accessor: "mounted",
-              Cell: ({ original }) => {
-                return (
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={this.state.mounted[original.deviceName] === true}
-                    onChange={() => this.requestUnmountDisk(original.deviceName, this.state.mounted[original.deviceName]) }
-                  />
-                );
-              },
-            },
-            {
-              Header: "Bus",
-              width: 45,
-              accessor: "bus"
-            },
-            {
-              Header: "Model",
-              width: 400,
-              accessor: "model"
-            },
-            {
-              Header: "Estimate",
-              width: 100,
-              accessor: "runEstiamte"
-            },
-            {
-              Header: "Elapsed",
-              width: 100,
-              accessor: "runTime"
-            },
-            {
-              Header: "Status",
-              accessor: "runMessage"
-            },
-            {
-              Header: 'Progress',
-              width: 200,
-              accessor: 'progress',
-              Cell: row => (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#dadada',
-                    borderRadius: '2px'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${row.value}%`,
-                      height: '100%',
-                      backgroundColor: value_to_color(row.value),
-                      borderRadius: '2px',
-                      transition: 'all .2s ease-out'
-                    }}
-                  />
-                </div>
+              title: "Mounted",
+              field: "mounted",
+              cellStyle: { width: 40 },
+              render: row => ( <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={this.state.mounted[row.deviceName] === true}
+                  onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
+                />
               )
             },
-          ]}
-          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+            {
+              title: "Bus",
+              field: "bus",
+              cellStyle: { width: 40 }
+            },
+            {
+              title: "Model",
+              field: "model",
+              cellStyle: { width: 400 }
+            },
+            {
+              title: "Estimate",
+              field: "runEstiamte",
+              cellStyle: { width: 100 }
+            },
+            {
+              title: "Elapsed",
+              field: "runTime",
+              cellStyle: { width: 100 }
+            },
+            {
+              title: "Status",
+              field: "runMessage",
+              cellStyle: { width: 100 }
+            },
+            {
+              title: 'Progress',
+              cellStyle: { width: 200 },
+              field: 'progress',
+              render: row => (
+                <div>
+                  <OperationProgressBar value={Math.min(100, row.diskProgress)} />
+                </div>
+              )
+            }
+            ] }
           data={disks}
-          pages={diskPages}      // Display the total number of pages
-          loading={diskStatusLoading} // Display the loading overlay when we need it
-          onFetchData={this.fetchDisks} // Request new data when things change
-          defaultPageSize={4}
-          showPagination={false}
-          className="-striped"
+          isLoading={diskStatusLoading} // Display the loading overlay when we need it
+          options={{
+            selection: true,
+            selectionProps: rowData => ( { disabled: rowData.mounted, checked: rowData.target } ),
+            rowStyle: rowData => ({ backgroundColor: rowData.tableData.checked ? '#37b15933' : '' }),
+            paging: false,
+            draggable: false,
+            toolbar: false,
+            search: false,
+            showTitle: false,
+            detailPanelType: "single",
+            detailPanelColumnAlignment: "left",
+           }}
         />
       </div>
     );

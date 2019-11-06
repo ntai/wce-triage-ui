@@ -1,25 +1,12 @@
 import React from "react";
-import cloneDeep from 'lodash/cloneDeep';
-
-// Import React Table
-import ReactTable from "react-table";
-import "react-table/react-table.css";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-//
 import request from 'request-promise';
-
-// Dropdown menu
-// import ReactSelect from 'react-select';
-import ReactSelect from 'react-select';
-import {Container, Row, Col, ButtonToolbar, ButtonGroup} from 'react-bootstrap'
-
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
-
-import {RunnerProgress, value_to_color} from "./RunnerProgress";
+import {RunnerProgress} from "./ProgressV2";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 import "./commands.css";
 
@@ -100,14 +87,15 @@ export default class SaveDiskImage extends React.Component {
   }
 
   diskSelectionChanged(selectedDisks) {
-    var devname;
-
-    for (devname of Object.keys(this.state.selectedDisks)) {
-      if (this.state.selectedDisks[devname]) {
-        selectedDisks[devname] = false;
+    var newSelection = {};
+    var selectedDisk = undefined;
+    for (selectedDisk of selectedDisks) {
+      if (!this.state.selectedDisks[selectedDisk.deviceName]) { 
+	newSelection[selectedDisk.deviceName] = selectedDisk;
+	break;
       }
     }
-    this.setState( {selectedDisks: selectedDisks} );
+    this.setState( {selectedDisks: newSelection} );
   }
 
   did_reset() {
@@ -135,33 +123,33 @@ export default class SaveDiskImage extends React.Component {
 
     return (
       <div>
-        <Container>
-          <Row>
-            <Col sm={1}>
-              <Button className="mr-2" variant="danger" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
-            </Col>
+        <Grid container item sm={12}>
+          <Grid container>
+            <Grid item sm={1}>
+              <Button size="sm" variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
+            </Grid>
 
-            <Col sm={3}>
+            <Grid item sm={5}>
               <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
-            </Col>
+            </Grid>
 
-            <Col sm={1}>
-              <Button className="mr-2" onClick={() => this.onReset()}>Reset</Button>
-            </Col>
-            <Col sm={1}>
-              <Button className="mr-2" variant="danger" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
-            </Col>
-          </Row>
-          <Row>
-            <label visible={imagingUrl !== undefined}>{imagingUrl}</label>
-          </Row>
-        </Container>
-        <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+            <Grid item sm={1}>
+              <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+            </Grid>
+            <Grid item sm={1}>
+              <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+            </Grid>
+          </Grid>
 
-        <br />
+          <Grid container item xs={12}>
+          <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+          </Grid>
 
-        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status.json"}/>
+          <Grid container item xs={12}>
+          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status.json"}/>
+          </Grid>
 
+        </Grid>
       </div>
     );
   }

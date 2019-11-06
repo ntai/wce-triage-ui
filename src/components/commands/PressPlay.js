@@ -1,11 +1,7 @@
 import React from "react";
-//
-import request from 'request-promise';
-import {sweetHome} from './../../looseend/home'
-import "../../bootstrap.min.css";
-import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
-
 import "./commands.css";
+import { Grid, Button } from '@material-ui/core'
+
 
 // stub to run optical test
 class OpticalDriveTest {
@@ -35,9 +31,9 @@ class PressPlay extends React.Component {
   render() {
     return (
       <div>
-        <Container>
-        <Button onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
-        </Container>
+        <Grid item spacing={2}>
+          <Button variant={"contained"} color={"primary"} onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
+        </Grid>
       </div>
     );
   }

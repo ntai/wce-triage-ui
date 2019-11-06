@@ -171,10 +171,31 @@ class RunnerProgress extends React.Component {
             },
             {
               Header: "Description",
-              width: 200,
+              width: 300,
               accessor: "taskMessage",
               style: {textAlign: "left"},
-            },
+              Cell: row => (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#dadada',
+                    borderRadius: '2px'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${Math.min(100, row.value)}%`,
+                      height: '100%',
+                      backgroundColor: value_to_color(row.value),
+                      borderRadius: '2px',
+                      transition: 'all .2s ease-out'
+                    }}
+                  />
+                </div>
+              )
+
+            }
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           style={{fontSize: 12, borderRadius: 0, textAligh: "left"}}

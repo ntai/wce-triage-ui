@@ -1,40 +1,43 @@
 import React from "react";
 
 import request from 'request-promise';
-
-// Dropdown menu
-// import ReactSelect from 'react-select';
-import ReactSelect from 'react-select';
-import { FormLabel, Col } from "react-bootstrap";
-
 import {sweetHome} from './../../looseend/home';
-
 import "./commands.css";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
-export default class Catalog extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      catalogTypes: [],
-      catalogTypesLoading: true,
-    };
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(0),
+      minWidth: 180,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(0),
+    },
+  }),
+);
 
-    this.selectCatalogType = this.selectCatalogType.bind(this);
-  }
 
-  selectCatalogType(selected) {
-    console.log(selected);
-    if (this.props.catalogType !== selected)
-      this.props.catalogTypeChanged(selected);
-  }
+// <Catalog title={"Restore type"} catalogType={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
+export default function Catalog(props) {
+  const classes = useStyles();
+  const [catalogTypesLoading, setCatalogTypesLoading] = React.useState(true);
+  const [catalogTypes, setCatalogTypes] = React.useState([]);
 
-  componentDidMount() {
-    this.fetchCatalogTypes();
-  }
+  const inputLabel = React.useRef<HTMLLabelElement>(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
 
-  fetchCatalogTypes(state, instance) {
-    this.setState({ catalogTypesLoading: true });
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
+  const title = props.title;
+  const catalogType = props.catalogType;
+  const catalogTypeChanged = props.catalogTypeChanged;
+  const catalogTypesChanged = props.catalogTypesChanged;
+
+  function fetchCatalogTypes() {
+    setCatalogTypesLoading(true);
 
     request({
       "method":"GET",
@@ -44,24 +47,39 @@ export default class Catalog extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      const catalogs = res.restoreTypes.map(rt => ({label: rt.name, value: rt.id}))
-      this.setState({
-        // marshall this for ReactSelect
-        catalogTypes: catalogs,
-        catalogTypesLoading: false
-      });
-      this.props.catalogTypesChanged(catalogs);
+      const cats = res.restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
+      setCatalogTypesLoading(false);
+      setCatalogTypes(cats);
+      catalogTypesChanged(cats);
+      console.log("Setting catalog types");
+      console.log(cats);
     });
   }
 
-  render() {
-    const { catalogTypes} = this.state;
+  React.useEffect(() => {
+    // setLabelWidth(inputLabel.current.offsetWidth);
+    setLabelWidth(0);
+    fetchCatalogTypes();
+  }, []);
 
-    return (
-      <div>
-        <ReactSelect style={{fontSize: 14, textAlign: "left"}} value={this.props.catalogType || ''} options={catalogTypes} onChange={this.selectCatalogType} placeholder={this.props.title}/>
-      </div>
-    );
-  }
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    catalogTypeChanged(event.target.value);
+  };
+
+  return (
+    <div>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="wipe-option-select-label">{title}</InputLabel>
+        <Select
+          labelId="wipe-option-select-label"
+          // handing down undefined doesn't change the selection. Dummy value '' sets it.
+          value={catalogType || ''}
+          style={{fontSize: 12, textAlign: "left"}}
+          children={catalogTypes.map( item => <MenuItem value={item}>{item.label}</MenuItem>)}
+          onChange={handleChange}
+        />
+      </FormControl>
+
+    </div>
+  );
 }
-

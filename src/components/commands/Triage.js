@@ -1,19 +1,44 @@
 import React from "react";
-import ReactTable from 'react-table';
 import "react-table/react-table.css";
 //
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
 
-import "../../bootstrap.min.css";
-import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles } from '@material-ui/core/styles';
 
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
-import Text from "react-native-web/dist/exports/Text";
+
+// import Text from "react-native-web/dist/exports/Text";
+
+import MaterialTable from "material-table";
+import {Paper} from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import "./commands.css";
+
+
+const triageTheme = createMuiTheme({
+
+  overrides: {
+    MuiTableCell: {
+      root: {
+        paddingTop: 4,
+        paddingBottom: 4,
+        '&:last-child': {paddingRight: 5},
+      },
+      paddingDefault: {
+        padding: '10px 3px 10px 4px',
+      },
+    },
+  },
+});
+
 
 export default class Triage extends React.Component {
   constructor(props) {
@@ -27,34 +52,6 @@ export default class Triage extends React.Component {
       opticals: []
     };
 
-    this.columns = [
-      {
-        "Header": "Component",
-        "accessor": "component",
-        "maxWidth": "120",
-        style: {textAlign: "right"}
-      },
-      {
-        "Header": "Result", "accessor": "result", "maxWidth": "80", style: {textAlign: "left"},
-
-        Cell: row => (
-          // circle with color
-          <span>
-            <span style={{
-              color: row.value ? '#1fff2e' : '#ff2e00',
-              transition: 'all .3s ease'
-            }}>
-              {row.value ? '\u25cf' : '\u25a0' }
-            </span>
-            {row.value ? ' Pass' : ' Fail'}
-          </span>
-        )
-      },
-      {
-        "Header": "Details", "accessor": "message", width: 800,
-        Cell: row => (<div align="left">{row.value}</div>)
-      },
-    ];
 
     this.fetchTriage = this.fetchTriage.bind(this);
   }
@@ -81,6 +78,7 @@ export default class Triage extends React.Component {
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
     loadWock.on("triageupdate", this.onTriageUpdate.bind(this));
+    this.fetchTriage();
   }
 
   setFontSize(fontSize) {
@@ -171,62 +169,82 @@ export default class Triage extends React.Component {
     const data = this.state.triageResult;
     const fontSize = this.state.fontSize;
 
-      return <div>
-        <Container fluid={true}>
-          <Row>
+    return <div>
+      <Grid container spacing={0} xs={100}>
 
-        <ButtonToolbar>
-          <ButtonGroup  className="mr-2" aria-label="First group">
-            <Button  onClick={() => this.fetchTriage()}>
-              <span>Reload/Refresh Triage</span>
-            </Button>
-          </ButtonGroup>
-          <br />
-          <ButtonGroup  className="mr-2" aria-label="First group">
-            <span className="align-middle"> <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/> </span>
-            <span className="align-middle"> <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/> </span>
-          </ButtonGroup>
-            <br />
-          <ButtonGroup  className="mr-2">
-            <Button variant="danger" onClick={ () => this.onReboot()}>
-              <span>Reboot Computer</span>
-            </Button>
-            <Button variant="danger" onClick={ () => this.onShutdown()} >
-              <span>Power off</span>
-            </Button>
-          </ButtonGroup>
-              <br />
-              <Text>
+        <Grid container item>
 
-              </Text>
-          <ButtonGroup  className="mr-2">
-            <Button variant="outline-info" onClick={() => this.setFontSize(fontSize+2)}>
-              <span>{'Font \u25b3'}</span>
-            </Button>
-            <Button variant="outline-info" onClick={() => this.setFontSize(fontSize-2)}>
-              <span>{'Font \u25bd'}</span>
-            </Button>
-          </ButtonGroup>
-        </ButtonToolbar>
-          </Row>
-           <Row>
-             <Col fluid={true}>
+          <Grid xs={2}>
+              <Button variant="contained" onClick={() => this.fetchTriage()}>
+                Refresh Triage
+              </Button>
+          </Grid>
 
-        <ReactTable
-          data={data}
-          style={{fontSize: this.state.fontSize, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
-          defaultPageSize={15}
-          showPagination={false}
-          showPageSizeOptions={false}
-          columns={this.columns}
-          pages={1}
-          loading={this.state.loading}
-          onFetchData={this.fetchTriage}
-          className="-striped" />
-             </Col>
-           </Row>
-        </Container>
+          <Grid item xs={2}>
+            <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
+          </Grid>
+          <Grid item xs={2}>
+            <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
+          </Grid>
 
-      </div>
+          <Grid item xs={2}>
+              <Button variant="contained" color="secondary" onClick={ () => this.onReboot()}>
+                Reboot Computer
+              </Button>
+          </Grid>
+          <Grid item xs={2}>
+              <Button variant="contained" color="secondary" onClick={ () => this.onShutdown()} >
+                Power off
+              </Button>
+          </Grid>
+
+          <Grid item xs={2}>
+              <Button variant="outlined" onClick={() => this.setFontSize(fontSize+2)}>
+                {'Font \u25b3'}
+              </Button>
+              <Button variant="outlined" onClick={() => this.setFontSize(fontSize-2)}>
+                {'Font \u25bd'}
+              </Button>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12}>
+          <MaterialTable
+            data={data}
+            style={{fontSize: this.state.fontSize, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
+            isLoading={this.state.loading}
+            onFetchData={this.fetchTriage}
+            options={ {paging: false, sorting: false, draggable: false, toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
+            rowStyle: rowData => { return { backgroundColor: "white" }} } }
+            columns={ [
+              {
+                "title": "Component",
+                "field": "component",
+                cellStyle: { width: "100", textAlign: "right"}
+              },
+              {
+                "title": "Result",
+                "field": "result",
+                cellStyle: { "width": "80", textAlign: "left"},
+                render: row => (
+                  // circle with color
+                  <span>
+                    <span style={{
+                      color: row.result ? '#1fff2e' : '#ff2e00',
+                      transition: 'all .3s ease'
+                    }}>
+                      {row.value ? '\u25cf' : '\u25a0' }
+                    </span>
+                              {row.result ? ' Pass' : ' Fail'}
+                  </span>
+                )
+              },
+              {
+                "title": "Details",
+                "field": "message",
+            } ] } />
+        </Grid>
+      </Grid>
+    </div>
   }
 }

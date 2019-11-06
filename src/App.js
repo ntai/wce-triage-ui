@@ -1,15 +1,14 @@
 import React from 'react';
 import Commands from './components/Commands';
-
 import './commands.less';
 import './App.css';
-import './bootstrap.min.css';
-
 import {Image, Linking, Text, StyleSheet} from 'react-native-web';
-
-import {Col, Container, Row} from 'react-bootstrap';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Grid';
 import request from "request-promise";
 import {sweetHome} from "./looseend/home";
+
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const styles = StyleSheet.create({
   WCE: {
@@ -65,19 +64,18 @@ class App extends React.Component {
   render() {
     return (
       <div className="App bg-white">
+        <CssBaseline />
         <Container fluid={true}>
-          <Row >
-            <Col>
+          <Grid container item xs={12}>
               <Image onPress={() => Linking.openURL('https://www.worldcomputerexchange.org')}
                      source={require('./wce_logo.svg')} style={styles.Logo}/>
-            </Col>
-            <Col>
               <Text style={styles.Version}>WCE Triage {this.state.frontendVersion}/{this.state.backendVersion}</Text>
-            </Col>
-          </Row>
-          <Row>
+          </Grid>
+
+          <Grid item xs={12}>
             <Commands/>
-          </Row>
+          </Grid>
+
         </Container>
       </div>
     );

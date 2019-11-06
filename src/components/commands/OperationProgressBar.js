@@ -1,0 +1,73 @@
+import React from 'react';
+import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+const OperationProgress = withStyles({
+  root: {
+    height: 15,
+    backgroundColor: lighten('#0080FF', 0.5),
+  },
+  bar: {
+    borderRadius: 0,
+    transition: 'transform 0.1s linear',
+  },
+  barColorPrimary: {
+    backgroundColor: '#00E020'
+  },
+  barColorSecondary: {
+    backgroundColor: '#0080FF'
+  },
+})(LinearProgress);
+
+
+const NoProgress = withStyles({
+  root: {
+    height: 15,
+    backgroundColor: '#F0F0F0'
+  },
+  bar: {
+    borderRadius: 0,
+    transition: 'transform 0.1s linear',
+  },
+  barColorPrimary: {
+    backgroundColor: '#FF5050'
+  },
+  barColorSecondary: {
+    backgroundColor: '#F0F0F0'
+  },
+})(LinearProgress);
+
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+}));
+
+export default function OperationProgressBar(props) {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      {
+        (props.value <= 100) ?
+          <OperationProgress
+            className={classes.margin}
+            variant="determinate"
+            color={props.value < 100 ? "secondary": "primary"}
+            value={props.value}
+          />
+          :
+          <NoProgress
+            className={classes.margin}
+            variant="determinate"
+            color={props.value > 100 ? "primary" : "secondary"}
+            value={100}
+          />
+      }
+    </div>
+  );
+}
