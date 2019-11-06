@@ -1,7 +1,8 @@
 import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
-
-import { Button, Modal, ButtonToolbar, ButtonGroup } from "react-bootstrap";
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Grid from '@material-ui/core/Grid';
 //
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home';
@@ -9,7 +10,6 @@ import Disks from "./Disks";
 import '../../bootstrap.min.css';
 import "./commands.css";
 import socketio from "socket.io-client";
-
 
 export default class WipeDisk extends React.Component {
   constructor() {
@@ -129,19 +129,20 @@ export default class WipeDisk extends React.Component {
 
     return (
       <div>
-        <ButtonToolbar>
-
-          <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
-
-            <Button onClick={() => this.onReset()}>Reset</Button>
-            <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
-        </ButtonToolbar>
-
-        <Row>
-          <label visible={wipeUrl !== undefined}>{wipeUrl}</label>
-        </Row>
-
-        <Disks runner={"zerowipe"} runningStatus={runningStatus} r selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
+        <Grid container>
+        <Grid container item sm={12}>
+        <Grid item sm={4}>
+            <ButtonGroup>
+              <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
+              <Button onClick={() => this.onReset()}>Reset</Button>
+              <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
+            </ButtonGroup>
+        </Grid>
+	</Grid>
+        <Grid container item sm={12}>
+          <Disks runner={"zerowipe"} runningStatus={runningStatus} r selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
+	</Grid>
+	</Grid>
       </div>
     );
   }

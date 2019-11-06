@@ -2,7 +2,7 @@ import React from "react";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
-import {RunnerProgress} from "./ProgressV2";
+import {RunnerProgress} from "./ProgressProgress";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
 import Button from '@material-ui/core/Button';

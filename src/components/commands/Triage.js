@@ -1,9 +1,7 @@
 import React from "react";
-import "react-table/react-table.css";
 //
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home'
-
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
