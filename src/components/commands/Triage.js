@@ -15,27 +15,7 @@ import cloneDeep from "lodash/cloneDeep";
 // import Text from "react-native-web/dist/exports/Text";
 
 import MaterialTable from "material-table";
-import {Paper} from "@material-ui/core";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-
 import "./commands.css";
-
-
-const triageTheme = createMuiTheme({
-
-  overrides: {
-    MuiTableCell: {
-      root: {
-        paddingTop: 4,
-        paddingBottom: 4,
-        '&:last-child': {paddingRight: 5},
-      },
-      paddingDefault: {
-        padding: '10px 3px 10px 4px',
-      },
-    },
-  },
-});
 
 
 export default class Triage extends React.Component {

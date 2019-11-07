@@ -3,7 +3,7 @@ import React from "react";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
-import {RunnerProgress} from "./ProgressProgress";
+import {RunnerProgress} from "./RunnerProgress";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
 import WipeOption from "./WipeOption";
@@ -52,6 +52,8 @@ export default class LoadDiskImage extends React.Component {
   }
 
   diskSelectionChanged(selectedDisks, clicked) {
+    if (!clicked)
+      return;
     var newSelection = cloneDeep(this.state.targetDisks);
 
     if (this.state.targetDisks[clicked.deviceName]) {
@@ -74,7 +76,7 @@ export default class LoadDiskImage extends React.Component {
       source: undefined,
       sources: [],
       subsetSources: [],
-      targetDisks: []
+      targetDisks: {}
     });
     this.fetchSources();
     // this.setState( {wipeOption: undefined})
@@ -133,11 +135,12 @@ export default class LoadDiskImage extends React.Component {
   }
 
   getRestoringUrl() {
-    const targetDisks = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
+    // Make array rather than json object.
+    const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
     const resotringSource = this.state.source;
     const restoreType = this.state.restoreType;
 
-    if (targetDisks.length === 0 || !resotringSource || !restoreType) {
+    if (targetDiskList.length === 0 || !resotringSource || !restoreType) {
       return undefined;
     }
 
@@ -148,13 +151,13 @@ export default class LoadDiskImage extends React.Component {
       console.log(this.state.wipeOption)
     }
 
-    console.log(targetDisks);
+    console.log(targetDiskList);
 
-    if (targetDisks.length > 1) {
+    if (targetDiskList.length > 1) {
       var url = sweetHome.backendUrl + "/dispatch/load?deviceNames=";
       var sep = "";
       var targetDisk;
-      for (targetDisk of targetDisks) {
+      for (targetDisk of targetDiskList) {
         url = url + sep + targetDisk;
         sep = ",";
       }
@@ -162,7 +165,7 @@ export default class LoadDiskImage extends React.Component {
       return url;
     }
     else {
-      const targetDisk = targetDisks[0];
+      const targetDisk = targetDiskList[0];
       return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
     }
   }
@@ -274,7 +277,7 @@ export default class LoadDiskImage extends React.Component {
           <Grid container sm={15} spacing={0}>
             <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
-          <Grid container sm={15} spacing={0}>
+          <Grid item sm={15} spacing={0}>
             <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
           </Grid>
         </Grid>

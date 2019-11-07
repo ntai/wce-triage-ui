@@ -213,19 +213,28 @@ export default class Disks extends React.Component {
         <ThemeProvider theme={tableTheme} />
         <MaterialTable
           icons={tableIcons}
-          style={ {marginTop: 1, marginBottom: 1} }
+          style={ {marginTop: 1, marginBottom: 1, marginLeft: 0, marginRight: 0} }
           disabled={diskStatusLoading || this.props.running}
           onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
             {
               title: "Disk",
               field: "deviceName",
-              cellStyle: { width: 120 }
+              cellStyle: {
+                backgroundColor: '#eeeeee',
+                width: 120
+              },
+              headerStyle: {
+                backgroundColor: '#eeeeee',
+              }
             },
             {
               title: "Mounted",
               field: "mounted",
               cellStyle: { width: 30 },
+              headerStyle: {
+                maxWidth: 75,
+              },
               render: row => ( <input
                   type="checkbox"
                   className="checkbox"
@@ -237,7 +246,10 @@ export default class Disks extends React.Component {
             {
               title: "Bus",
               field: "bus",
-              cellStyle: { width: 40 }
+              cellStyle: { width: 40 },
+              headerStyle: {
+                maxWidth: 60,
+              },
             },
             {
               title: "Model",
@@ -247,25 +259,38 @@ export default class Disks extends React.Component {
             {
               title: "Estimate",
               field: "runEstiamte",
-              cellStyle: { width: 100 }
+              cellStyle: { width: 80, textAlign: 'center' },
+              headerStyle: {
+                maxWidth: 80,
+              },
             },
             {
               title: "Elapsed",
               field: "runTime",
-              cellStyle: { width: 100 }
+              cellStyle: { width: 80, textAlign: 'center'  },
+              headerStyle: {
+                maxWidth: 80,
+              },
             },
             {
               title: "Status",
               field: "runMessage",
-              cellStyle: { width: 100 }
+              cellStyle: { minWidth: 200 },
+              headerStyle: {
+                minWidth: 200,
+              },
             },
             {
               title: 'Progress',
-              cellStyle: { width: 200 },
+              cellStyle: { minWidth: 120 },
+              headerStyle: {
+                minWidth: 120,
+                maxWidth: 200
+              },
               field: 'progress',
               render: row => (
                 <div>
-                  <OperationProgressBar value={Math.min(100, row.progress)} />
+                  <OperationProgressBar value={row.progress} />
                 </div>
               )
             }

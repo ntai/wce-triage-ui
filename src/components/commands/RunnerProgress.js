@@ -95,27 +95,41 @@ class RunnerProgress extends React.Component {
         <ThemeProvider theme={tableTheme}>
         <MaterialTable
           icons={tableIcons}
-          style={ {marginTop: 2, marginBottom: 2} }
+          style={ {marginTop: 2, marginBottom: 2, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
-              cellStyle: {width: 250},
+              cellStyle: {textAlign: "right", minWidth: 250},
               field: "taskCategory",
-              style: {textAlign: "right"},
+              headerStyle: {
+                width: 250,
+              },
             },
             {
               title: "Estimate",
-              cellStyle: { width: 60 },
+              cellStyle: { minWidth: 80, textAlign: "center", },
+              headerStyle: {
+                minWidth: 80,
+                maxWidth: 120
+              },
               field: "taskEstimate"
             },
             {
               title: "Elapsed",
-              cellStyle: {width: 60},
+              cellStyle: { minWidth: 80, textAlign: "center", },
+              headerStyle: {
+                minWidth: 80,
+                maxWidth: 120
+              },
               field: "taskElapse"
             },
             {
               title: 'Status',
-              cellStyle: {width: 120},
+              cellStyle: { minWidth: 120 },
+              headerStyle: {
+                minWidth: 120,
+                maxWidth: 160
+              },
               render: row => (
                 <span>
                   <span style={{
@@ -139,25 +153,44 @@ class RunnerProgress extends React.Component {
             },
             {
               title: 'Progress',
-              cellStyle: { width: 100 },
+              cellStyle: { minWidth: 120 },
+              headerStyle: {
+                minWidth: 120,
+                maxWidth: 160
+              },
               // field: 'taskProgress', // field is not used but makes things clear
               render: row => (
                 <div>
-                  <OperationProgressBar value={Math.min(100, row.taskProgress)} />
+                  <OperationProgressBar value={row.taskProgress} />
                 </div>
               )
             },
             {
               title: "Description",
-              cellStyle: { width: 300 },
+              cellStyle: { minWidth: 300 },
+              headerStyle: {
+                minWidth: 300,
+              },
               field: "taskMessage",
               style: {textAlign: "left"},
             }
           ]}
           data={tasks}
           isLoading={tasksLoading} // Display the loading overlay when we need it
-          options={ {paging: false, sorting: false, draggable: false, toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
-          rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress) }} } }
+          options={
+            {
+              paging: false,
+              sorting: false,
+              draggable: false,
+              toolbar: false,
+              search: false,
+              showTitle: false,
+              detailPanelType: "single",
+              detailPanelColumnAlignment: "left",
+              rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress) } },
+              headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }
+            }
+          }
           detailPanel={rowData => {
             if (rowData.taskVerdict) {
               return (

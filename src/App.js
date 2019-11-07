@@ -9,6 +9,7 @@ import request from "request-promise";
 import {sweetHome} from "./looseend/home";
 
 import CssBaseline from '@material-ui/core/CssBaseline';
+import {Typography} from '@material-ui/core'
 
 const styles = StyleSheet.create({
   WCE: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 40,
     verticalAlign: "bottom",
-    fontSize: 18,
+    fontSize: 14,
     color: "grey",
   },
   Logo: {width: 500, height: 80, resizeMode: "contain", scale: 1},
@@ -67,9 +68,13 @@ class App extends React.Component {
         <CssBaseline />
         <Container fluid={true}>
           <Grid container item xs={12}>
+            <Grid container item xs={6}>
               <Image onPress={() => Linking.openURL('https://www.worldcomputerexchange.org')}
                      source={require('./wce_logo.svg')} style={styles.Logo}/>
+            </Grid>
+              <Grid item>
               <Text style={styles.Version}>WCE Triage {this.state.frontendVersion}/{this.state.backendVersion}</Text>
+              </Grid>
           </Grid>
 
           <Grid item xs={12}>
