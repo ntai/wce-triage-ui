@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
 import "./commands.css";
+import cloneDeep from "lodash/cloneDeep";
 
 
 export default class SaveDiskImage extends React.Component {
@@ -86,16 +87,13 @@ export default class SaveDiskImage extends React.Component {
     this.setState( {resetting: true, destination: undefined});
   }
 
-  diskSelectionChanged(selectedDisks) {
+  diskSelectionChanged(selectedDisks, clicked) {
     var newSelection = {};
-    var selectedDisk = undefined;
-    for (selectedDisk of selectedDisks) {
-      if (!this.state.selectedDisks[selectedDisk.deviceName]) { 
-	newSelection[selectedDisk.deviceName] = selectedDisk;
-	break;
-      }
+
+    if (!clicked.mounted) {
+      newSelection[clicked.deviceName] = clicked;
+      this.setState( {selectedDisks: newSelection});
     }
-    this.setState( {selectedDisks: newSelection} );
   }
 
   did_reset() {

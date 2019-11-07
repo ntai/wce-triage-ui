@@ -130,19 +130,19 @@ export default class WipeDisk extends React.Component {
     return (
       <div>
         <Grid container>
-        <Grid container item sm={12}>
-        <Grid item sm={4}>
-            <ButtonGroup>
-              <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
-              <Button onClick={() => this.onReset()}>Reset</Button>
-              <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
-            </ButtonGroup>
-        </Grid>
-	</Grid>
-        <Grid container item sm={12}>
-          <Disks runner={"zerowipe"} runningStatus={runningStatus} r selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
-	</Grid>
-	</Grid>
+          <Grid container item sm={12}>
+            <Grid item sm={4}>
+              <ButtonGroup>
+                <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
+                <Button onClick={() => this.onReset()}>Reset</Button>
+                <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
+              </ButtonGroup>
+             </Grid>
+            </Grid>
+          <Grid container item sm={12}>
+            <Disks runner={"zerowipe"} runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
+          </Grid>
+	    </Grid>
       </div>
     );
   }

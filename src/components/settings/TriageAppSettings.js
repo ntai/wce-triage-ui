@@ -1,93 +1,77 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
-import { Platform, FlatList, TouchableHighlight, View, Text } from "react-native-web";
-//
-import request from 'request-promise';
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
-// Dropdown menu
-// import ReactSelect from 'react-select';
-import ReactSelect from 'react-select';
-import {Container, Row, Col, ButtonToolbar, ButtonGroup, Modal, Button, Tab, ListGroup, ListGroupItem} from 'react-bootstrap'
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
+  );
+}
 
-import {sweetHome} from '../../looseend/home';
-import socketio from "socket.io-client";
-import NetworkSettings from './NetworkSettings';
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
 
-import "../commands/commands.css";
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    height: 224,
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 
+export default function TriageAppSettings() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
 
-export default class TriageAppSettings extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      settingsLoading: true,
-      networks: []
-    }
-  }
-
-  componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
-    loadWock.on("settings", this.onSettingsUpdate.bind(this));
-  }
-  onSettingsUpdate(update) {
-    this.setState({settings: update, settingsLoading: false });
-  }
-
-  _onPress(item) {
-
-  }
-
-  renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: "86%",
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
-        }}
-      />
-    );
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-
-  render() {
-    return <div>
-      <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
-        <Row>
-          <Col sm={4}>
-            <ListGroup>
-              <ListGroup.Item action href="#networksettings">
-                Networks
-              </ListGroup.Item>
-              <ListGroup.Item action href="#wipesettings">
-                Wipe Options
-              </ListGroup.Item>
-              <ListGroup.Item action href="#pxeboot">
-                Client Boot
-              </ListGroup.Item>
-              <ListGroup.Item action href="#diskimages">
-                Disk Images
-              </ListGroup.Item>
-            </ListGroup>
-          </Col>
-          <Col sm={8}>
-            <Tab.Content>
-              <Tab.Pane eventKey="#networksettings">
-                <NetworkSettings />
-              </Tab.Pane>
-              <Tab.Pane eventKey="#wipesettings">
-              </Tab.Pane>
-              <Tab.Pane eventKey="#pxeboot">
-              </Tab.Pane>
-              <Tab.Pane eventKey="#diskimages">
-              </Tab.Pane>
-            </Tab.Content>
-          </Col>
-        </Row>
-      </Tab.Container>
+  return (
+    <div className={classes.root}>
+      <Tabs
+        orientation="vertical"
+        variant="scrollable"
+        value={value}
+        onChange={handleChange}
+        aria-label="Vertical tabs example"
+        className={classes.tabs}
+      >
+        <Tab label="Network" {...a11yProps(0)} />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        Item One
+      </TabPanel>
     </div>
-  }
+  );
 }

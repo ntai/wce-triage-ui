@@ -105,8 +105,6 @@ export default class Disks extends React.Component {
     this.setState(  {
       /* Raw disks */
       disks: [],
-      /* Disk table - page 1 always */
-      diskPages: null,
       /* Fetching list of disks */
       diskStatusLoading: true,
 
@@ -188,8 +186,8 @@ export default class Disks extends React.Component {
     }
   }
 
-  setNewSelection(newSelection) {
-    this.props.diskSelectionChanged(newSelection);
+  setNewSelection(newSelection, clicked) {
+    this.props.diskSelectionChanged(newSelection, clicked);
   }
 
   requestUnmountDisk(deviceName, mountState) {
@@ -208,16 +206,14 @@ export default class Disks extends React.Component {
 
 
   render() {
-    const { disks, diskPages, diskStatusLoading, wipeOptions } = this.state;
-    var disk;
-    var deviceName;
+    const { disks, diskStatusLoading, wipeOptions } = this.state;
 
     return (
       <div>
         <ThemeProvider theme={tableTheme} />
         <MaterialTable
           icons={tableIcons}
-          style={ {marginTop: 2, marginBottom: 2} }
+          style={ {marginTop: 1, marginBottom: 1} }
           disabled={diskStatusLoading || this.props.running}
           onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
@@ -229,7 +225,7 @@ export default class Disks extends React.Component {
             {
               title: "Mounted",
               field: "mounted",
-              cellStyle: { width: 40 },
+              cellStyle: { width: 30 },
               render: row => ( <input
                   type="checkbox"
                   className="checkbox"
@@ -269,7 +265,7 @@ export default class Disks extends React.Component {
               field: 'progress',
               render: row => (
                 <div>
-                  <OperationProgressBar value={Math.min(100, row.diskProgress)} />
+                  <OperationProgressBar value={Math.min(100, row.progress)} />
                 </div>
               )
             }

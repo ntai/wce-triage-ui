@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DiskImageSelector from './DiskImageSelector';
 import "./commands.css";
+import cloneDeep from "lodash/cloneDeep";
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -50,12 +51,15 @@ export default class LoadDiskImage extends React.Component {
     this.did_reset = this.did_reset.bind(this);
   }
 
-  diskSelectionChanged(selectedDisks) {
-    var newSelection = {};
-    var selectedDisk = undefined;
+  diskSelectionChanged(selectedDisks, clicked) {
+    var newSelection = cloneDeep(this.state.targetDisks);
 
-    for (selectedDisk of selectedDisks) {
-      newSelection[selectedDisk.deviceName] = selectedDisk;
+    if (this.state.targetDisks[clicked.deviceName]) {
+        newSelection[clicked.deviceName] = false;
+    }
+    else {
+      if (!clicked.mounted)
+        newSelection[clicked.deviceName] = clicked;
     }
     this.setState( {targetDisks: newSelection});
   }
@@ -243,23 +247,23 @@ export default class LoadDiskImage extends React.Component {
 
     return (
       <div>
-        <Grid container item>
-          <Grid container xs={14} spacing={0}>
-            <Grid item xs={1}>
-              <Button variant="contained" color="secondary" size="small" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
+        <Grid container>
+          <Grid container sm={13} spacing={0}>
+            <Grid item sm={1}>
+              <Button variant="contained" color="secondary" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item sm={2}>
               <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
             </Grid>
 
-            <Grid item xs={5}>
+            <Grid item sm={4}>
               <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item sm={3}>
               <Catalog title={"Restore type"} catalogType={restoreType} catalogTypes={restoreTypes} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item sm={2}>
               <ButtonGroup>
                 <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
                 <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
@@ -267,8 +271,12 @@ export default class LoadDiskImage extends React.Component {
             </Grid>
           </Grid>
 
-          <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
-          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
+          <Grid container sm={15} spacing={0}>
+            <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+          </Grid>
+          <Grid container sm={15} spacing={0}>
+            <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
+          </Grid>
         </Grid>
       </div>
     );
