@@ -14,3 +14,7 @@
 .btn {
   margin: 0rem 0.5rem;
 }
+
+.preformat {
+    white-space: pre;
+}

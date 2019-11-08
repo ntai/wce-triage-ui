@@ -7,6 +7,7 @@ import MaterialTable from "material-table";
 import {tableTheme, tableIcons} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import DiskDetails from "./DiskDetails";
 
 
 export default class Disks extends React.Component {
@@ -254,7 +255,10 @@ export default class Disks extends React.Component {
             {
               title: "Model",
               field: "model",
-              cellStyle: { width: 400 }
+              cellStyle: { width: 300 },
+              headerStyle: {
+                width: 300,
+              },
             },
             {
               title: "Estimate",
@@ -308,7 +312,8 @@ export default class Disks extends React.Component {
             showTitle: false,
             detailPanelType: "single",
             detailPanelColumnAlignment: "left",
-           }}
+          }}
+          detailPanel={rowData => <DiskDetails disk={rowData} />}
         />
       </div>
     );

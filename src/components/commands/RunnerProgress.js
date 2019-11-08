@@ -6,7 +6,7 @@ import MaterialTable from "material-table";
 import {tableTheme, tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import { ThemeProvider } from '@material-ui/core/styles';
-
+import './commands.css';
 
 class RunnerProgress extends React.Component {
   constructor() {
@@ -194,7 +194,7 @@ class RunnerProgress extends React.Component {
           detailPanel={rowData => {
             if (rowData.taskVerdict) {
               return (
-                <div style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 0 }}>
+                <div className="preformat" style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 0 }}>
                   { rowData.taskVerdict.map( elem => <p>{elem}</p> )}
                 </div>
               )
