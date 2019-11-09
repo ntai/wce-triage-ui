@@ -251,33 +251,31 @@ export default class LoadDiskImage extends React.Component {
     return (
       <div>
         <Grid container>
-          <Grid container sm={13} spacing={0}>
-            <Grid item sm={1}>
+            <Grid item xs={1}>
               <Button variant="contained" color="secondary" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item xs={2}>
               <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
             </Grid>
 
-            <Grid item sm={4}>
+            <Grid item xs={4}>
               <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
             </Grid>
 
-            <Grid item sm={3}>
+            <Grid item xs={3}>
               <Catalog title={"Restore type"} catalogType={restoreType} catalogTypes={restoreTypes} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
             </Grid>
-            <Grid item sm={2}>
+            <Grid item xs={2}>
               <ButtonGroup>
                 <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
                 <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
               </ButtonGroup>
             </Grid>
-          </Grid>
 
-          <Grid container sm={15} spacing={0}>
+          <Grid item xs={12} spacing={0}>
             <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
-          <Grid item sm={15} spacing={0}>
+          <Grid item xs={12} spacing={0}>
             <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
           </Grid>
         </Grid>

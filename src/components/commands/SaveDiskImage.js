@@ -121,29 +121,27 @@ export default class SaveDiskImage extends React.Component {
 
     return (
       <div>
-        <Grid container item sm={12}>
-          <Grid container>
-            <Grid item sm={1}>
-              <Button size="sm" variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
-            </Grid>
-
-            <Grid item sm={5}>
-              <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
-            </Grid>
-
-            <Grid item sm={1}>
-              <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
-            </Grid>
-            <Grid item sm={1}>
-              <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
-            </Grid>
+        <Grid container>
+          <Grid item xs={1}>
+            <Button size="sm" variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
           </Grid>
 
-          <Grid container item xs={12}>
+          <Grid item xs={5}>
+            <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
+          </Grid>
+
+          <Grid item xs={1}>
+            <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+          </Grid>
+          <Grid item xs={1}>
+            <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+          </Grid>
+
+          <Grid item xs={12}>
           <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
 
-          <Grid container item xs={12}>
+          <Grid item xs={12}>
           <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status.json"}/>
           </Grid>
 

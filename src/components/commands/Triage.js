@@ -11,12 +11,56 @@ import { makeStyles } from '@material-ui/core/styles';
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
-
-// import Text from "react-native-web/dist/exports/Text";
-
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
 import "./commands.css";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(1, 1),
+    textAlign: 'left',
+    rounded: true,
+    fontSize: 13
+  },
+}));
+
+function CPU_Info(props) {
+  const classes = useStyles();
+
+  if (props.is_loading) {
+    return (
+      <Paper className={classes.root}>
+        <CircularProgress />
+      </Paper>
+    );
+  }
+  else {
+    if (props.cpu_info) {
+      return (
+        <Paper className={classes.root}>
+          <Typography component="p">
+            CPU Rating: {props.cpu_info.rating}
+          </Typography>
+          <Typography variant={"subtitle"}>
+            {props.cpu_info.name +  " " + props.cpu_info.description + " " + props.cpu_info.config}
+          </Typography>
+        </Paper>
+      );
+    }
+    else {
+      return (
+        <Paper className={classes.root}>
+          <Typography component="p">
+            CPU rating is not available.
+          </Typography>
+        </Paper>
+      );
+    }
+  }
+}
 
 export default class Triage extends React.Component {
   constructor(props) {
@@ -25,6 +69,8 @@ export default class Triage extends React.Component {
     this.state = {
       triageResult: [],
       loading: true,
+      cpu_info: undefined,
+      cpu_info_loading: true,
       soundPlaying: false,
       fontSize: 16,
       opticals: []
@@ -35,7 +81,7 @@ export default class Triage extends React.Component {
   }
 
   fetchTriage(state, instance) {
-    this.setState({sourcesLoading: true, triageResult: []});
+    this.setState({loading: true, triageResult: []});
     request({
         "method": "GET",
         'uri': sweetHome.backendUrl + '/dispatch/triage.json',
@@ -53,10 +99,29 @@ export default class Triage extends React.Component {
     });
   }
 
+  fetchCpuInfo(state, instance) {
+     request({
+        "method": "GET",
+        'uri': sweetHome.backendUrl + '/dispatch/cpu_info.json',
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
+    ).then(res => {
+      // Now just get the rows of triage results
+      this.setState({
+        cpu_info: res.cpu_info,
+        cpu_info_loading: false
+      });
+    });
+  }
+
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
     loadWock.on("triageupdate", this.onTriageUpdate.bind(this));
     this.fetchTriage();
+    this.fetchCpuInfo();
   }
 
   setFontSize(fontSize) {
@@ -148,42 +213,44 @@ export default class Triage extends React.Component {
     const fontSize = this.state.fontSize;
 
     return <div>
-      <Grid container spacing={0} xs={100}>
+      <Grid container spacing={1}>
 
-        <Grid container item>
 
-          <Grid xs={2}>
+          <Grid item xs={1}>
               <Button variant="contained" onClick={() => this.fetchTriage()}>
-                Refresh Triage
+                Refresh
               </Button>
           </Grid>
 
-          <Grid item xs={2}>
-            <PressPlay title={"Sound"}   kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
+          <Grid item xs={1}>
+            <PressPlay title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
           </Grid>
-          <Grid item xs={2}>
-            <PressPlay title={"Optical"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
+          <Grid item xs={1}>
+            <PressPlay title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={1}>
               <Button variant="contained" color="secondary" onClick={ () => this.onReboot()}>
-                Reboot Computer
+                Reboot
               </Button>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={1}>
               <Button variant="contained" color="secondary" onClick={ () => this.onShutdown()} >
-                Power off
+                Off
               </Button>
           </Grid>
 
           <Grid item xs={2}>
-              <Button variant="outlined" onClick={() => this.setFontSize(fontSize+2)}>
+              <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize+2)}>
                 {'Font \u25b3'}
               </Button>
-              <Button variant="outlined" onClick={() => this.setFontSize(fontSize-2)}>
+              <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize-2)}>
                 {'Font \u25bd'}
               </Button>
           </Grid>
+
+        <Grid item xs={12}>
+          <CPU_Info is_loading={this.state.cpu_info_loading} cpu_info={this.state.cpu_info} />
         </Grid>
 
         <Grid item xs={12}>
