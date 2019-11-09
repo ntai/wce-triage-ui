@@ -32,7 +32,7 @@ class PressPlay extends React.Component {
     return (
       <div>
         <Grid item spacing={2}>
-          <Button variant={"contained"} color={"primary"} onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
+          <Button variant={"contained"} size="small" color={"primary"} onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
         </Grid>
       </div>
     );

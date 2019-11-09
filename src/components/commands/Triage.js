@@ -16,51 +16,91 @@ import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
 import "./commands.css";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1, 1),
+    padding: theme.spacing(0, 0),
     textAlign: 'left',
     rounded: true,
-    fontSize: 13
+    fontSize: 13,
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
   },
 }));
 
+
 function CPU_Info(props) {
   const classes = useStyles();
+  const [loading, setLoading] = React.useState(true);
+  const [cpu_info, set_cpu_info] = React.useState(undefined);
 
-  if (props.is_loading) {
-    return (
-      <Paper className={classes.root}>
-        <CircularProgress />
-      </Paper>
-    );
+  React.useEffect(() => {
+    request({
+      "method": "GET",
+      'uri': sweetHome.backendUrl + '/dispatch/cpu_info.json',
+      "json": true,
+      "headers": {
+	 "User-Agent": "WCE Triage"
+      }
+    }).then(res => {
+      set_cpu_info(res.cpu_info);
+      props.onMount(res.cpu_info);
+      setLoading(false);
+    });
+  });
+
+  if (loading) {
+    return <CircularProgress/>
   }
   else {
-    if (props.cpu_info) {
-      return (
-        <Paper className={classes.root}>
-          <Typography component="p">
-            CPU Rating: {props.cpu_info.rating}
-          </Typography>
-          <Typography variant={"subtitle"}>
-            {props.cpu_info.name +  " " + props.cpu_info.description + " " + props.cpu_info.config}
-          </Typography>
-        </Paper>
-      );
-    }
-    else {
-      return (
-        <Paper className={classes.root}>
-          <Typography component="p">
-            CPU rating is not available.
-          </Typography>
-        </Paper>
-      );
-    }
+    return (
+      <Typography variant={"subtitle"}>
+        {cpu_info.name +  " " + cpu_info.description + " " + cpu_info.config}
+      </Typography>
+    )
   }
 }
+
+function CPU_Rating(props) {
+  const classes = useStyles();
+  const [cpu_info, set_cpu_info] = React.useState(undefined);
+
+  var summary = "Expand to see CPU rating. It may take up to a minute.";
+  const mounted = (info) => (set_cpu_info(info));
+
+  if (cpu_info) {
+    summary = "CPU Rating: " + cpu_info.rating;
+  }
+
+  return (
+    <div className={classes.root}>
+      <ExpansionPanel TransitionProps={{ unmountOnExit: true }}>
+      <ExpansionPanelSummary
+      expandIcon={<ExpandMoreIcon/>}
+      aria-controls="panel1a-content"
+      id="panel1a-header"
+      >
+        <Typography variant="body2">
+          {summary}
+        </Typography>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+         <CPU_Info onMount={mounted} />
+      </ExpansionPanelDetails>
+
+      </ExpansionPanel>
+    </div>
+  );
+}
+
 
 export default class Triage extends React.Component {
   constructor(props) {
@@ -69,6 +109,7 @@ export default class Triage extends React.Component {
     this.state = {
       triageResult: [],
       loading: true,
+      show_cpu_info: false,
       cpu_info: undefined,
       cpu_info_loading: true,
       soundPlaying: false,
@@ -99,33 +140,14 @@ export default class Triage extends React.Component {
     });
   }
 
-  fetchCpuInfo(state, instance) {
-     request({
-        "method": "GET",
-        'uri': sweetHome.backendUrl + '/dispatch/cpu_info.json',
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      // Now just get the rows of triage results
-      this.setState({
-        cpu_info: res.cpu_info,
-        cpu_info_loading: false
-      });
-    });
-  }
-
   componentDidMount() {
     const loadWock = socketio.connect(sweetHome.websocketUrl);
     loadWock.on("triageupdate", this.onTriageUpdate.bind(this));
     this.fetchTriage();
-    this.fetchCpuInfo();
   }
 
   setFontSize(fontSize) {
-    this.setState( {fontSize: fontSize});
+    this.setState({fontSize: fontSize});
   }
 
 
@@ -186,6 +208,11 @@ export default class Triage extends React.Component {
     });
   }
 
+  onBenchmark() {
+    this.fetchCpuInfo();
+    this.setState({show_cpu_info: true});
+  }
+
   onTriageUpdate(update) {
     console.log(update);
     var rows = cloneDeep(this.state.triageResult);
@@ -215,42 +242,40 @@ export default class Triage extends React.Component {
     return <div>
       <Grid container spacing={1}>
 
+        <Grid item xs={1}>
+            <Button variant="contained" size="small" onClick={() => this.fetchTriage()}>
+              Refresh
+            </Button>
+        </Grid>
 
-          <Grid item xs={1}>
-              <Button variant="contained" onClick={() => this.fetchTriage()}>
-                Refresh
-              </Button>
-          </Grid>
+        <Grid item xs={1}>
+          <PressPlay title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
+        </Grid>
+        <Grid item xs={1}>
+          <PressPlay title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
+        </Grid>
 
-          <Grid item xs={1}>
-            <PressPlay title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
-          </Grid>
-          <Grid item xs={1}>
-            <PressPlay title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
-          </Grid>
+        <Grid item xs={2}>
+            <Button variant="contained" size="small" color="secondary" onClick={ () => this.onReboot()}>
+              Reboot
+            </Button>
+          <Button variant="contained" size="small" color="secondary" onClick={ () => this.onShutdown()} >
+            Off
+          </Button>
+        </Grid>
 
-          <Grid item xs={1}>
-              <Button variant="contained" color="secondary" onClick={ () => this.onReboot()}>
-                Reboot
-              </Button>
-          </Grid>
-          <Grid item xs={1}>
-              <Button variant="contained" color="secondary" onClick={ () => this.onShutdown()} >
-                Off
-              </Button>
-          </Grid>
 
-          <Grid item xs={2}>
-              <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize+2)}>
-                {'Font \u25b3'}
-              </Button>
-              <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize-2)}>
-                {'Font \u25bd'}
-              </Button>
-          </Grid>
+        <Grid item xs={2}>
+          <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize+2)}>
+            {'Font \u25b3'}
+          </Button>
+          <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize-2)}>
+            {'Font \u25bd'}
+          </Button>
+        </Grid>
 
-        <Grid item xs={12}>
-          <CPU_Info is_loading={this.state.cpu_info_loading} cpu_info={this.state.cpu_info} />
+        <Grid item xs={5}>
+          <CPU_Rating />
         </Grid>
 
         <Grid item xs={12}>
