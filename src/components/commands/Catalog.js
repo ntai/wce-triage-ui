@@ -74,7 +74,7 @@ export default function Catalog(props) {
           labelId="wipe-option-select-label"
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
           value={catalogType || ''}
-          style={{fontSize: 12, textAlign: "left"}}
+          style={{fontSize: 14, textAlign: "left"}}
           children={catalogTypes.map( item => <MenuItem value={item}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />

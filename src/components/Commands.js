@@ -4,7 +4,7 @@ import LoadDiskImage from './commands/LoadDiskImage';
 import SaveDiskImage from './commands/SaveDiskImage';
 // import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
-import WipeDisk from "./commands/DiskWipe";
+import WipeDisk from "./commands/WipeDisk";
 import TriageAppSettings from "./settings/TriageAppSettings";
 
 
@@ -111,16 +111,20 @@ export default class Commands extends React.Component {
               <Tab label="Triage" {...a11yProps(0)} />
               <Tab label="Load Disk Image" {...a11yProps(1)} />
               <Tab label="Create Disk Image" {...a11yProps(2)} />
+              <Tab label="Wipe Disk" {...a11yProps(3)} />
             </Tabs>
           </AppBar>
-          <TabPanel value={selectedTab} index={0} visible={selectedTab === 0} title="FOO">
+          <TabPanel value={selectedTab} index={0} visible={selectedTab === 0} title="Triage">
             <Triage wock={this.props.wock}/>
           </TabPanel>
-          <TabPanel value={selectedTab} index={1} visible={selectedTab === 1} title="BAR">
+          <TabPanel value={selectedTab} index={1} visible={selectedTab === 1} title="Load">
             <LoadDiskImage wock={this.props.wock}/>
           </TabPanel>
-          <TabPanel value={selectedTab} index={2} visible={selectedTab === 2} title="BAZ">
+          <TabPanel value={selectedTab} index={2} visible={selectedTab === 2} title="Save">
             <SaveDiskImage wock={this.props.wock}/>
+          </TabPanel>
+          <TabPanel value={selectedTab} index={3} visible={selectedTab === 3} title="Wipe">
+            <WipeDisk wock={this.props.wock}/>
           </TabPanel>
         </div>
         <Messages wock={this.props.wock}/>

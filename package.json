@@ -1,11 +1,12 @@
 {
   "name": "wce-triage-ui",
-  "version": "0.3.20191108",
+  "version": "0.302.20191108",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.5.2",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.30",
+    "create-react-class": "^15.6.3",
     "lodash": "^4.17.15",
     "material-table": "^1.53.0",
     "prop-types": "^15.7.2",

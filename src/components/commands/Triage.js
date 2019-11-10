@@ -20,6 +20,11 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import PowerOffIcon from '@material-ui/icons/PowerOff';
+import LoopIcon from '@material-ui/icons/Loop';
+import StopIcon from '@material-ui/icons/Stop';
+import {Tooltip} from "@material-ui/core";
 
 
 const useStyles = makeStyles(theme => ({
@@ -73,7 +78,7 @@ function CPU_Rating(props) {
   const classes = useStyles();
   const [cpu_info, set_cpu_info] = React.useState(undefined);
 
-  var summary = "Expand to see CPU rating. It may take up to a minute.";
+  var summary = "CPU Rating: Expand to see. It may take a couple of minutes.";
   const mounted = (info) => (set_cpu_info(info));
 
   if (cpu_info) {
@@ -242,30 +247,33 @@ export default class Triage extends React.Component {
     return <div>
       <Grid container spacing={1}>
 
-        <Grid item xs={1}>
-            <Button variant="contained" size="small" onClick={() => this.fetchTriage()}>
+        <Grid xs={1}>
+            <Button startIcon={<RefreshIcon />} variant="contained" size="small" onClick={() => this.fetchTriage()}>
               Refresh
             </Button>
         </Grid>
 
-        <Grid item xs={1}>
-          <PressPlay title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
+        <Grid xs={1}>
+          <PressPlay tooltip={"Test sound"}  title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
         </Grid>
-        <Grid item xs={1}>
-          <PressPlay title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
+        <Grid xs={1}>
+          <PressPlay tooltip={"Test CD/DVD drive"} title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
         </Grid>
 
-        <Grid item xs={2}>
-            <Button variant="contained" size="small" color="secondary" onClick={ () => this.onReboot()}>
+        <Grid xs={2}>
+          <Tooltip title={"Reboot computer"}>
+            <Button startIcon={<LoopIcon />} variant="contained" size="small" color="secondary" onClick={ () => this.onReboot()}>
               Reboot
             </Button>
-          <Button variant="contained" size="small" color="secondary" onClick={ () => this.onShutdown()} >
-            Off
-          </Button>
+          </Tooltip>
+          <Tooltip title={"Turn off computer"}>
+            <Button startIcon={<StopIcon />} variant="contained" size="small" color="secondary" onClick={ () => this.onShutdown()} >
+              Off
+            </Button>
+          </Tooltip>
         </Grid>
 
-
-        <Grid item xs={2}>
+        <Grid xs={2}>
           <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize+2)}>
             {'Font \u25b3'}
           </Button>
@@ -281,21 +289,23 @@ export default class Triage extends React.Component {
         <Grid item xs={12}>
           <MaterialTable
             data={data}
-            style={{fontSize: this.state.fontSize, borderRadius: 0, borderWidth: 0, textAlign: "left"}}
+            style={{borderRadius: 0, borderWidth: 0, textAlign: "left", fontSize: this.state.fontSize }}
             isLoading={this.state.loading}
             onFetchData={this.fetchTriage}
-            options={ {paging: false, sorting: false, draggable: false, toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
-            rowStyle: rowData => { return { backgroundColor: "white" }} } }
+            options={ {paging: false, sorting: false, draggable: false,
+              toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
+              rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize },
+              } }
             columns={ [
               {
                 "title": "Component",
                 "field": "component",
-                cellStyle: { width: "100", textAlign: "right"}
+                cellStyle: { width: "100", textAlign: "right", fontSize: this.state.fontSize }
               },
               {
                 "title": "Result",
                 "field": "result",
-                cellStyle: { "width": "80", textAlign: "left"},
+                cellStyle: { "width": "80", textAlign: "left", fontSize: this.state.fontSize },
                 render: row => (
                   // circle with color
                   <span>
@@ -312,6 +322,7 @@ export default class Triage extends React.Component {
               {
                 "title": "Details",
                 "field": "message",
+                cellStyle: { fontSize: this.state.fontSize }
             } ] } />
         </Grid>
       </Grid>

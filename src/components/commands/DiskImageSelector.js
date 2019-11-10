@@ -38,7 +38,7 @@ export default function DiskImageSelector(props) {
         <Select
           labelId="source-select-label"
           value={props.source || ''}
-          style={{fontSize: 12, textAlign: "left"}}
+          style={{fontSize: 13, textAlign: "left"}}
           children={props.sources.map( item => <MenuItem value={item}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />

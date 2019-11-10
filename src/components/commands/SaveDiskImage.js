@@ -7,9 +7,12 @@ import Disks from "./Disks";
 import Catalog from "./Catalog";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import SaveIcon from '@material-ui/icons/Save';
 
 import "./commands.css";
 import cloneDeep from "lodash/cloneDeep";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 
 export default class SaveDiskImage extends React.Component {
@@ -122,19 +125,19 @@ export default class SaveDiskImage extends React.Component {
     return (
       <div>
         <Grid container>
-          <Grid item xs={1}>
-            <Button size="sm" variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
+          <Grid xs={1}>
+            <Button size="sm" startIcon={<SaveIcon />} variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
           </Grid>
 
           <Grid item xs={5}>
             <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
           </Grid>
 
-          <Grid item xs={1}>
-            <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+          <Grid xs={1}>
+            <Button startIcon={<RefreshIcon />} size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
           </Grid>
-          <Grid item xs={1}>
-            <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+          <Grid xs={1}>
+            <Button startIcon={<CancelIcon />} size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
           </Grid>
 
           <Grid item xs={12}>

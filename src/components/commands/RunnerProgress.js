@@ -167,9 +167,9 @@ class RunnerProgress extends React.Component {
             },
             {
               title: "Description",
-              cellStyle: { minWidth: 300 },
+              cellStyle: { width: 350 },
               headerStyle: {
-                minWidth: 300,
+                width: 350,
               },
               field: "taskMessage",
               style: {textAlign: "left"},

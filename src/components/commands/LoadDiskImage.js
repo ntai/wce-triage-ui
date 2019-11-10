@@ -13,6 +13,11 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DiskImageSelector from './DiskImageSelector';
 import "./commands.css";
 import cloneDeep from "lodash/cloneDeep";
+import BuildIcon from '@material-ui/icons/Build';
+import RestoreIcon from '@material-ui/icons/Restore';
+import RefreshIcon from "@material-ui/icons/Refresh";
+import CancelIcon from "@material-ui/icons/Cancel";
+
 
 export default class LoadDiskImage extends React.Component {
   constructor() {
@@ -250,25 +255,24 @@ export default class LoadDiskImage extends React.Component {
 
     return (
       <div>
-        <Grid container>
-            <Grid item xs={1}>
-              <Button variant="contained" color="secondary" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
-            </Grid>
-            <Grid item xs={2}>
+        <Grid container spacing={0} >
+          <Grid item xs={1}>
+              <Button startIcon={<BuildIcon />} variant="contained" color="secondary" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
+          </Grid>
+          <Grid item xs={2}>
               <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
-            </Grid>
-
+          </Grid>
             <Grid item xs={4}>
               <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Catalog title={"Restore type"} catalogType={restoreType} catalogTypes={restoreTypes} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
             </Grid>
             <Grid item xs={2}>
               <ButtonGroup>
-                <Button size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
-                <Button size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
+                <Button startIcon={<RefreshIcon />} size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+                <Button startIcon={<CancelIcon />} size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
               </ButtonGroup>
             </Grid>
 

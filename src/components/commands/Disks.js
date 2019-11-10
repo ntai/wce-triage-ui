@@ -169,7 +169,7 @@ export default class Disks extends React.Component {
             if (this.props.runningStatus.runStatus === "Preflight")
               disk.progress = 0;
             if (this.props.runningStatus.runStatus === "Running")
-              disk.progress = Math.max(runTime > 0 ? 1 : 0, Math.round(runTime / runEstimate * 100))
+              disk.progress = Math.max(runTime > 0 ? 1 : 0, Math.min(99, Math.round(runTime / runEstimate * 100)))
             if (this.props.runningStatus.runStatus === "Success")
               disk.progress = 100;
             if (this.props.runningStatus.runStatus === "Failed")

@@ -1,6 +1,7 @@
 import React from "react";
 import "./commands.css";
 import { Grid, Button } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 // stub to run optical test
@@ -31,9 +32,9 @@ class PressPlay extends React.Component {
   render() {
     return (
       <div>
-        <Grid item spacing={2}>
-          <Button variant={"contained"} size="small" color={"primary"} onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
-        </Grid>
+        <Tooltip title={this.props.tooltip}>
+        <Button variant={"contained"} size="small" color={"primary"} onClick={this.togglePlay}>{this.props.title  + ": " + (this.state.play ? '\u25a0' : '\u25B6')}</Button>
+        </Tooltip>
       </div>
     );
   }

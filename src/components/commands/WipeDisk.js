@@ -10,6 +10,9 @@ import Disks from "./Disks";
 import '../../bootstrap.min.css';
 import "./commands.css";
 import socketio from "socket.io-client";
+import DeleteIcon from '@material-ui/icons/Delete';
+import RefreshIcon from "@material-ui/icons/Refresh";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 export default class WipeDisk extends React.Component {
   constructor() {
@@ -42,9 +45,19 @@ export default class WipeDisk extends React.Component {
     this.setState({runningStatus: update, diskWiping: update.device !== ''});
   }
 
-  diskSelectionChanged(targetDisksDisks) {
-    console.log(targetDisksDisks);
-    this.setState( {targetDisks: targetDisksDisks});
+  diskSelectionChanged(selectedDisks, clicked) {
+    if (!clicked)
+      return;
+    var newSelection = cloneDeep(this.state.targetDisks);
+
+    if (this.state.targetDisks[clicked.deviceName]) {
+      newSelection[clicked.deviceName] = false;
+    }
+    else {
+      if (!clicked.mounted)
+        newSelection[clicked.deviceName] = clicked;
+    }
+    this.setState( {targetDisks: newSelection});
   }
 
   did_reset() {
@@ -130,16 +143,16 @@ export default class WipeDisk extends React.Component {
     return (
       <div>
         <Grid container>
-          <Grid container item sm={12}>
-            <Grid item sm={4}>
-              <ButtonGroup>
-                <Button variant="danger"  onClick={() => this.onWipe()} disabled={wipeUrl === undefined}>Wipe Disk</Button>
-                <Button onClick={() => this.onReset()}>Reset</Button>
-                <Button variant="danger" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
-              </ButtonGroup>
-             </Grid>
-            </Grid>
-          <Grid container item sm={12}>
+          <Grid item xs={2}>
+              <Button variant="contained" color="secondary" onClick={() => this.onWipe()} disabled={wipeUrl === undefined} startIcon={<DeleteIcon />}>Wipe</Button>
+          </Grid>
+          <Grid item xs={2}>
+            <Button startIcon={<CancelIcon />} variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskWiping}>Abort</Button>
+          </Grid>
+          <Grid item xs={2}>
+              <Button startIcon={<RefreshIcon />} variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+          </Grid>
+          <Grid item xs={12}>
             <Disks runner={"zerowipe"} runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
           </Grid>
 	    </Grid>
