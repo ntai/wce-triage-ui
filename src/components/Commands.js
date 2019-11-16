@@ -15,6 +15,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import DiskImageManagement from "./commands/DiskImageManagement";
 
 
 class TabPanel extends React.Component {
@@ -64,36 +65,6 @@ export default class Commands extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  dummy1() {
-    return (
-     <div>
-        <div>
-          <Tabs id="wce-ui-main"
-                activeKey={this.state.key}
-                onSelect={key => this.setState({ key })}
-          >
-            <Tab key="triage" eventKey="triage" title="Triage">
-              <Triage wock={this.props.wock}/>
-            </Tab>
-            <Tab key="loadImage" eventKey="loadImage" title="Load Disk Image">
-              <LoadDiskImage wock={this.props.wock}/>
-            </Tab>
-            <Tab key="saveImage" eventKey="SaveImage" title="Create Disk Image">
-              <SaveDiskImage wock={this.props.wock}/>
-            </Tab>
-            <Tab key="wipe" eventKey="wipeDisk" title="Wipe Disk">
-              <WipeDisk wock={this.props.wock}/>
-            </Tab>
-            <Tab key="settings" eventKey="settings" title="Settings" disabled={!this.state.settings}>
-              <TriageAppSettings wock={this.props.wock}/>
-            </Tab>
-          </Tabs>
-        </div>
-        <Messages wock={this.props.wock}/>
-      </div>
-    );
-  }
-
   handleChange(event, newValue) {
     console.log(newValue);
     this.setState( {selectedTab: newValue } );
@@ -112,6 +83,7 @@ export default class Commands extends React.Component {
               <Tab label="Load Disk Image" {...a11yProps(1)} />
               <Tab label="Create Disk Image" {...a11yProps(2)} />
               <Tab label="Wipe Disk" {...a11yProps(3)} />
+              <Tab label="Disk Image" {...a11yProps(4)} />
             </Tabs>
           </AppBar>
           <TabPanel value={selectedTab} index={0} visible={selectedTab === 0} title="Triage">
@@ -126,6 +98,14 @@ export default class Commands extends React.Component {
           <TabPanel value={selectedTab} index={3} visible={selectedTab === 3} title="Wipe">
             <WipeDisk wock={this.props.wock}/>
           </TabPanel>
+          <TabPanel value={selectedTab} index={4} visible={selectedTab === 4} title="Disk Images">
+            <DiskImageManagement wock={this.props.wock}/>
+          </TabPanel>
+          {/*
+          <Tab key="settings" eventKey="settings" title="Settings" disabled={!this.state.settings}>
+            <TriageAppSettings wock={this.props.wock}/>
+          </Tab>
+*/}
         </div>
         <Messages wock={this.props.wock}/>
       </div>
