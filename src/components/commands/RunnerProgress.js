@@ -185,7 +185,6 @@ class RunnerProgress extends React.Component {
               toolbar: false,
               search: false,
               showTitle: false,
-              detailPanelType: "single",
               detailPanelColumnAlignment: "left",
               rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress) } },
               headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }

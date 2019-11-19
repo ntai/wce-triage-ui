@@ -271,6 +271,7 @@ export default class DiskImageManagement extends React.Component {
 
   syncImages() {
     const url = this.getSyncImageUrl();
+    console.log(url);
     if (url) {
       console.log(url);
       request({
