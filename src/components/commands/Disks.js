@@ -223,7 +223,8 @@ export default class Disks extends React.Component {
               field: "deviceName",
               cellStyle: {
                 backgroundColor: '#eeeeee',
-                width: 120
+                width: 120,
+                paddingTop: 2, paddingBottom: 2, 
               },
               headerStyle: {
                 backgroundColor: '#eeeeee',
@@ -232,7 +233,8 @@ export default class Disks extends React.Component {
             {
               title: "Mounted",
               field: "mounted",
-              cellStyle: { width: 30 },
+              cellStyle: { width: 30,
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 maxWidth: 75,
               },
@@ -247,7 +249,8 @@ export default class Disks extends React.Component {
             {
               title: "Bus",
               field: "bus",
-              cellStyle: { width: 40 },
+              cellStyle: { width: 40,
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 maxWidth: 60,
               },
@@ -255,7 +258,8 @@ export default class Disks extends React.Component {
             {
               title: "Model",
               field: "model",
-              cellStyle: { width: 300 },
+              cellStyle: { width: 300,
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 width: 300,
               },
@@ -263,7 +267,8 @@ export default class Disks extends React.Component {
             {
               title: "Estimate",
               field: "runEstiamte",
-              cellStyle: { width: 80, textAlign: 'center' },
+              cellStyle: { width: 80, textAlign: 'center',
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 maxWidth: 80,
               },
@@ -271,7 +276,8 @@ export default class Disks extends React.Component {
             {
               title: "Elapsed",
               field: "runTime",
-              cellStyle: { width: 80, textAlign: 'center'  },
+              cellStyle: { width: 80, textAlign: 'center',
+                paddingTop: 2, paddingBottom: 2,   },
               headerStyle: {
                 maxWidth: 80,
               },
@@ -279,14 +285,16 @@ export default class Disks extends React.Component {
             {
               title: "Status",
               field: "runMessage",
-              cellStyle: { minWidth: 200 },
+              cellStyle: { minWidth: 200,
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 minWidth: 200,
               },
             },
             {
               title: 'Progress',
-              cellStyle: { minWidth: 120 },
+              cellStyle: { minWidth: 120,
+                paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 minWidth: 120,
                 maxWidth: 200
@@ -304,7 +312,7 @@ export default class Disks extends React.Component {
           options={{
             selection: true,
             selectionProps: rowData => ( { disabled: rowData.mounted, checked: rowData.target } ),
-            rowStyle: rowData => ({ backgroundColor: rowData.tableData.checked ? '#37b15933' : '' }),
+            rowStyle: rowData => ({ backgroundColor: rowData.tableData.checked ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2, }),
             paging: false,
             draggable: false,
             toolbar: false,

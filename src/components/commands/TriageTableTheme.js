@@ -16,6 +16,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { forwardRef } from 'react';
 
@@ -56,6 +57,27 @@ const tableTheme = createMuiTheme({
 });
 
 
+
+const triageTableStyle = makeStyles({
+  root: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    padding: 3,
+    '&:last-child': {paddingRight: 5},
+  },
+  cell: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    padding: 3,
+    '&:last-child': {paddingRight: 5},
+  },
+  paddingDefault: {
+        padding: '10px 3px 10px 4px',
+      },
+  },
+);
+
+
 function value_to_color(value) {
   return value > 100 ? '#FF1f1f'
     : value === 100 ? '#00ef0f'
@@ -72,4 +94,4 @@ function value_to_bgcolor(value) {
 };
 
 
-export { tableTheme, tableIcons, value_to_color, value_to_bgcolor }
+export { tableTheme, tableIcons, value_to_color, value_to_bgcolor, triageTableStyle }

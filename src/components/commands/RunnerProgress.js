@@ -5,7 +5,6 @@ import {sweetHome} from "../../looseend/home";
 import MaterialTable from "material-table";
 import {tableTheme, tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
-import { ThemeProvider } from '@material-ui/core/styles';
 import './commands.css';
 
 class RunnerProgress extends React.Component {
@@ -21,6 +20,8 @@ class RunnerProgress extends React.Component {
       taskPages: 1,
       /* Loading tasks */
       tasksLoading: true,
+      
+      fontSize: 12,
     };
 
     this.fetchTasks = this.fetchTasks.bind(this);
@@ -86,28 +87,28 @@ class RunnerProgress extends React.Component {
 
 
   render() {
-    const {tasks, tasksLoading } = this.state;
+    const {tasks, tasksLoading, fontSize } = this.state;
     var elem = null;
     var index = null;
 
     return (
       <div>
-        <ThemeProvider theme={tableTheme}>
         <MaterialTable
           icons={tableIcons}
+          margin="dense"
           style={ {marginTop: 2, marginBottom: 2, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
-              cellStyle: {textAlign: "right", minWidth: 250},
+              cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               field: "taskCategory",
               headerStyle: {
-                width: 250,
+                width: 300,
               },
             },
             {
               title: "Estimate",
-              cellStyle: { minWidth: 80, textAlign: "center", },
+              cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               headerStyle: {
                 minWidth: 80,
                 maxWidth: 120
@@ -116,7 +117,7 @@ class RunnerProgress extends React.Component {
             },
             {
               title: "Elapsed",
-              cellStyle: { minWidth: 80, textAlign: "center", },
+              cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
               headerStyle: {
                 minWidth: 80,
                 maxWidth: 120
@@ -125,7 +126,7 @@ class RunnerProgress extends React.Component {
             },
             {
               title: 'Status',
-              cellStyle: { minWidth: 120 },
+              cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
               headerStyle: {
                 minWidth: 120,
                 maxWidth: 160
@@ -153,7 +154,7 @@ class RunnerProgress extends React.Component {
             },
             {
               title: 'Progress',
-              cellStyle: { minWidth: 120 },
+              cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
               headerStyle: {
                 minWidth: 120,
                 maxWidth: 160
@@ -167,7 +168,7 @@ class RunnerProgress extends React.Component {
             },
             {
               title: "Description",
-              cellStyle: { width: 350 },
+              cellStyle: {fontSize: fontSize,  width: 350, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
               headerStyle: {
                 width: 350,
               },
@@ -186,26 +187,30 @@ class RunnerProgress extends React.Component {
               search: false,
               showTitle: false,
               detailPanelColumnAlignment: "left",
-              rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress) } },
+              rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress), paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 } },
               headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }
             }
           }
-          detailPanel={rowData => {
-            if (rowData.taskVerdict) {
-              return (
-                <div className="preformat" style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 0 }}>
-                  { rowData.taskVerdict.map( elem => <p>{elem}</p> )}
-                </div>
-              )
-            } else {
-              return (
-                <div>None</div>
-              )
-            }
-          }
+          detailPanel={[{
+            tooltip: "Show task details",
+            render: rowData => {
+              if (rowData.taskVerdict) {
+                return (
+                  <div className="preformat"
+                       style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 2}}>
+                    {rowData.taskVerdict.map(elem => <p>{elem}</p>)}
+                  </div>
+                )
+              } else {
+                return (
+                  <div>None</div>
+                )
+              }
+            },
+          },
+            ]
          }
          />
-        </ThemeProvider>
       </div>
     );
   }

@@ -167,11 +167,11 @@ export default class LoadDiskImage extends React.Component {
         sep = ",";
       }
       url = url + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
-      return url;
+      return encodeURI(url);
     }
     else {
       const targetDisk = targetDiskList[0];
-      return sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe;
+      return encodeURI(sweetHome.backendUrl + "/dispatch/load?deviceName=" + targetDisk + "&source=" + resotringSource.value + "&size=" + resotringSource.filesize + "&restoretype=" + restoreType.value + wipe);
     }
   }
 

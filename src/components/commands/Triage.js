@@ -25,14 +25,14 @@ import PowerOffIcon from '@material-ui/icons/PowerOff';
 import LoopIcon from '@material-ui/icons/Loop';
 import StopIcon from '@material-ui/icons/Stop';
 import {Tooltip} from "@material-ui/core";
-
+import {triageTableStyle} from "./TriageTableTheme"
 
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(0, 0),
     textAlign: 'left',
     rounded: true,
-    fontSize: 13,
+    fontSize: 11,
     width: '100%',
   },
   heading: {
@@ -118,7 +118,7 @@ export default class Triage extends React.Component {
       cpu_info: undefined,
       cpu_info_loading: true,
       soundPlaying: false,
-      fontSize: 16,
+      fontSize: 14,
       opticals: []
     };
 
@@ -289,23 +289,23 @@ export default class Triage extends React.Component {
         <Grid item xs={12}>
           <MaterialTable
             data={data}
-            style={{borderRadius: 0, borderWidth: 0, textAlign: "left", fontSize: this.state.fontSize }}
+            style={{borderRadius: 0, borderWidth: 0, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 5, paddingBottom: 5 }}
             isLoading={this.state.loading}
             onFetchData={this.fetchTriage}
             options={ {paging: false, sorting: false, draggable: false,
               toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
-              rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize },
-              } }
+              rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3, },
+              }}
             columns={ [
               {
                 "title": "Component",
                 "field": "component",
-                cellStyle: { width: "100", textAlign: "right", fontSize: this.state.fontSize }
+                cellStyle: { width: "100", textAlign: "right", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 }
               },
               {
                 "title": "Result",
                 "field": "result",
-                cellStyle: { "width": "80", textAlign: "left", fontSize: this.state.fontSize },
+                cellStyle: { "minWidth": 10 + this.state.fontSize * 5, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 },
                 render: row => (
                   // circle with color
                   <span>
@@ -322,7 +322,7 @@ export default class Triage extends React.Component {
               {
                 "title": "Details",
                 "field": "message",
-                cellStyle: { fontSize: this.state.fontSize }
+                cellStyle: { fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 }
             } ] } />
         </Grid>
       </Grid>
