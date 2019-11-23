@@ -6,17 +6,18 @@ import {sweetHome} from "../../looseend/home";
 import PropTypes from 'prop-types';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Label from '@material-ui/icons/Label';
-import {tableTheme} from "./TriageTableTheme";
 import {Checkbox} from "@material-ui/core";
 import {Menu, MenuItem} from "@material-ui/core";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import {Button, TextField} from "@material-ui/core";
-import CancelIcon from "@material-ui/core/SvgIcon/SvgIcon";
+
+import CancelIcon from "@material-ui/icons/Cancel";
+import KeyboardIcon from "@material-ui/icons/Keyboard";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 const useTreeItemStyles = makeStyles(theme => ({
