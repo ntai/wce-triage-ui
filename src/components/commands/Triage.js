@@ -244,7 +244,7 @@ export default class Triage extends React.Component {
     const data = this.state.triageResult;
     const fontSize = this.state.fontSize;
 
-    return <div>
+    return <div >
       <Grid container spacing={1}>
 
         <Grid item xs={1}>

@@ -65,9 +65,9 @@ const useTreeItemStyles = makeStyles(theme => ({
 
 function StyledTreeItem(props) {
   const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, selected, handleChange, value, ...other } = props;
+  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, selected, handleChange, value, nodeId, ...other } = props;
 
-  var checkbox;
+  var checkbox = null;
   if (value) {
     checkbox = <Checkbox
       checked={selected}
@@ -82,6 +82,8 @@ function StyledTreeItem(props) {
 
   return (
     <TreeItem
+      nodeId={nodeId}
+      key={nodeId}
       label={
         <div className={classes.labelRoot}>
           <LabelIcon color="inherit" className={classes.labelIcon} />
@@ -116,7 +118,7 @@ StyledTreeItem.propTypes = {
   labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
-  nodeId: PropTypes.string.isRequired,
+  nodeId: PropTypes.string.isRequired
 };
 
 
@@ -127,7 +129,7 @@ function ImageFileItem(props) {
   const imageFile = props.imageFile;
   const selChange = props.selectionChanged;
   const selected = props.selected;
-  const catalog=props.catalog;
+  const catalog = props.catalog;
 
   const handleItemClick = event => {
     event.preventDefault();
@@ -151,7 +153,7 @@ function ImageFileItem(props) {
 
   return (
     <div onContextMenu={handleItemClick} style={{ cursor: 'context-menu' }}>
-      <StyledTreeItem selected={selected} value={imageFile.label} handleChange={selChange} nodeId={catalog + "/" + imageFile.label} labelText={imageFile.label} labelIcon={ArchiveIcon} />
+      <StyledTreeItem selected={selected} nodeId={catalog + "/" + imageFile.label} value={imageFile.label} handleChange={selChange} labelText={imageFile.label} labelIcon={ArchiveIcon} />
       <Menu
         keepMounted
         open={isOpen}
@@ -273,6 +275,7 @@ function DeleteDialog(props) {
 }
 
 
+
 const diskImageViewStyle = makeStyles({
   root: {
     minHeight: 264,
@@ -291,9 +294,9 @@ export default function DiskImageTreeView(props) {
   const [catalogIndex, setCatalogIndex] = React.useState([]);
   const [selection, setSelection] = React.useState({});
   const [expandedCategories, setExpandedCategories] = React.useState([]);
-  const [renameDialogOpen, renameDialogSetOpen] = React.useState( false);
-  const [deleteDialogOpen, deleteDialogSetOpen] = React.useState( false);
-  const [targetImageFile, setTargetImageFile] = React.useState( undefined );
+  const [renameDialogOpen, renameDialogSetOpen] = React.useState(false);
+  const [deleteDialogOpen, deleteDialogSetOpen] = React.useState(false);
+  const [targetImageFile, setTargetImageFile] = React.useState(undefined);
 
   const expandCatsRequest = props.expandCategories;
   const selectionChangedCB = props.selectionChanged;
@@ -334,15 +337,16 @@ export default function DiskImageTreeView(props) {
     setCatalogTypesLoading(true);
 
     request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "GET",
+        "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
       var index = 0;
-      const srcs = res.restoreTypes.map(src => ({ index: index++, ...src}));
+      const srcs = res.restoreTypes.map(src => ({index: index++, ...src}));
       setCatalogTypes(srcs);
       setCatalogTypesLoading(false);
     });
@@ -382,12 +386,13 @@ export default function DiskImageTreeView(props) {
 
     const url = encodeURI(sweetHome.backendUrl + "/dispatch/rename?to=" + filename + "&restoretype=" + targetImageFile.restoreType + "&from=" + targetImageFile.label);
     request({
-      "method":"POST",
-      "uri": url,
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "POST",
+        "uri": url,
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
         console.log(res);
         renameDialogSetOpen(false);
@@ -408,12 +413,13 @@ export default function DiskImageTreeView(props) {
 
     const url = encodeURI(sweetHome.backendUrl + "/dispatch/delete?name=" + filename + "&restoretype=" + targetImageFile.restoreType);
     request({
-      "method":"POST",
-      "uri": url,
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
+        "method": "POST",
+        "uri": url,
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }
+      }
     ).then(res => {
       console.log(res);
       deleteDialogSetOpen(false);
@@ -421,36 +427,37 @@ export default function DiskImageTreeView(props) {
     });
   }
 
-  function fileList (catType, catind, selChange, renameCB, deleteCB) {
+  function fileList(catType, catind, selChange, renameCB, deleteCB) {
     var files = [];
     if (catind[catType] && catind[catType].length)
       files = catind[catType];
-    /*
-     <StyledTreeItem selected={selection[imageFile.label]} value={imageFile.label} handleChange={selChange} nodeId={imageFile.label} labelText={imageFile.label} labelIcon={ArchiveIcon} /> )
-     */
     return files.map(imageFile => {
-      return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange} selected={selection[imageFile.label]} handleItemRename={renameCB} handleItemDelete={deleteCB}/>
+      return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange}
+                            selected={selection[imageFile.label]} handleItemRename={renameCB}
+                            handleItemDelete={deleteCB}/>
     });
   }
 
 
   function catalogList(cats, catind, selChange, renameCB, deleteCB) {
-    return cats.map(function(catalog) {
+    return cats.map(function (catalog) {
+      if (!catalog.id) return;
       return (<StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label}>
           {fileList(catalog.id, catind, selChange, renameCB, deleteCB)}
         </StyledTreeItem>
-      )});
+      )
+    });
   }
 
   React.useEffect(() => {
     updateCatalogIndex();
-  }, [sourcesLoading, catalogTypesLoading, sources, catalogTypes]);
+  }, [sourcesLoading, catalogTypesLoading]);
 
 
   React.useEffect(() => {
     if (!catalogTypesLoading && catalogTypes) {
       if (props.expandCategories === true) {
-        setExpandedCategories(catalogTypes.map( cat => cat.id ));
+        setExpandedCategories(catalogTypes.map(cat => cat.id));
       }
       if (props.expandCategories === false) {
         setExpandedCategories([]);
@@ -468,23 +475,25 @@ export default function DiskImageTreeView(props) {
     }
   }
 
-  if (sourcesLoading || catalogTypesLoading) {
+  if (!sourcesLoading && !catalogTypesLoading) {
+    return (
+      <div>
+        <TreeView
+          className={classes.root}
+          expanded={expandedCategories}
+          defaultCollapseIcon={<ArrowDropDownIcon/>}
+          defaultExpandIcon={<ArrowRightIcon/>}
+          defaultEndIcon={<div style={{width: 24}}/>}
+        >
+          {catalogList(catalogTypes, catalogIndex, selectionChanged, handleRenameRequest, handleDeleteRequest)}
+        </TreeView>
+        <RenameDialog open={renameDialogOpen} setOpen={renameDialogSetOpen} submitRename={submitRename}
+                      filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
+        <DeleteDialog open={deleteDialogOpen} setOpen={deleteDialogSetOpen} submitDelete={submitDelete}
+                      filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
+      </div>
+    );
+  } else {
     return null;
   }
-
-  return (
-    <div>
-      <TreeView
-        className={classes.root}
-        expanded={expandedCategories}
-        defaultCollapseIcon={<ArrowDropDownIcon />}
-        defaultExpandIcon={<ArrowRightIcon />}
-        defaultEndIcon={<div style={{ width: 24 }} />}
-      >
-        { catalogList(catalogTypes, catalogIndex, selectionChanged, handleRenameRequest, handleDeleteRequest) }
-      </TreeView>
-      <RenameDialog open={renameDialogOpen} setOpen={renameDialogSetOpen} submitRename={submitRename} filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
-      <DeleteDialog open={deleteDialogOpen} setOpen={deleteDialogSetOpen} submitDelete={submitDelete} filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
-    </div>
-  );
 }

@@ -35,7 +35,7 @@ class TabPanel extends React.Component {
             id={`wrapped-tabpanel-${index}`}
             aria-labelledby={`wrapped-tab-${index}`}
           >
-            <Box p={3}>{children}</Box>
+            <Box p={1}>{children}</Box>
           </Typography>
         </div>
       );
@@ -49,13 +49,6 @@ function a11yProps(index) {
     'aria-controls': `wrapped-tabpanel-${index}`,
   };
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
 
 
 export default class Commands extends React.Component {
@@ -76,7 +69,7 @@ export default class Commands extends React.Component {
 
     return (
       <div>
-        <div>
+        <div style={{ padding: 0 }}>
           <AppBar position="static">
             <Tabs value={selectedTab} onChange={this.handleChange} aria-label="WCE Triage SPAs">
               <Tab label="Triage" {...a11yProps(0)} />

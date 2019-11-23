@@ -292,10 +292,6 @@ export default class DiskImageManagement extends React.Component {
     }
   }
 
-  deleteImages() {
-
-  }
-
   onRunnerUpdate(update) {this.setState({runningStatus: update, isRunning: update.device !== ''});}
 
   onReset() {
@@ -316,13 +312,13 @@ export default class DiskImageManagement extends React.Component {
     const deleteImageEnabled = this.getDeleteImageUrl() !== undefined;
 
     return (
-      <div>
+      <div style={{ padding: 0 }}>
         <Grid container spacing={1}>
           <Grid container item xs={12}>
-            <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled} syncImages={this.syncImages.bind(this)} deleteImages={this.deleteImages.bind(this)} targetDisks={targetDisks} expandAllCategories={this.expandCats.bind(this)} selectAllFiles={this.selectAll.bind(this)} />
+            <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled} syncImages={this.syncImages.bind(this)} targetDisks={targetDisks} expandAllCategories={this.expandCats.bind(this)} selectAllFiles={this.selectAll.bind(this)} />
           </Grid>
           <Grid item xs={4}>
-            <Box border={2} xs={4} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
+            <Box border={2} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
               <Typography>Disk Images</Typography>
               <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)} expandCategories={this.state.expandAllCategories}/>
             </Box>

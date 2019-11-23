@@ -15,11 +15,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    padding: theme.spacing(0, 3),
+    padding: 6,
   },
   paper: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(2),
+    padding: 6,
+  },
+  table: {
+    minWidth: 650,
   },
 }));
 
@@ -43,7 +46,7 @@ export default function DiskDetails(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           <Card className={classes.card}>
             <CardContent>
               <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -52,11 +55,11 @@ export default function DiskDetails(props) {
               <Typography variant="h5" component="h2">
                 Device node: {disk.deviceName}
               </Typography>
-              <Table className={classes.table} aria-label="custom pagination table">
+              <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableBody>
                   {details.map(row => (
                     <TableRow key={row.name}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" >
                         {row.name}
                       </TableCell>
                       <TableCell >
