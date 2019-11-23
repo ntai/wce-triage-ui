@@ -3,11 +3,28 @@ import cloneDeep from "lodash/cloneDeep";
 import request from "request-promise";
 import {sweetHome} from "../../looseend/home";
 import MaterialTable from "material-table";
-import {tableTheme, tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
+import {tableIcons, triageTableStyle, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import './commands.css';
 
-class RunnerProgress extends React.Component {
+const runnerIconButtonStyles = {
+  root: {
+    padding: 0,
+    style: {padding: 0}
+
+  },
+  MuiIconButton: {
+    root: {
+      padding: 0,
+      style: {padding: 0}
+    },
+    padding: 0,
+    style: {padding: 0}
+  }
+};
+
+
+export default class RunnerProgress extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -96,7 +113,7 @@ class RunnerProgress extends React.Component {
         <MaterialTable
           icons={tableIcons}
           margin="dense"
-          style={ {marginTop: 2, marginBottom: 2, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
+          style={ {marginTop: 1, marginBottom: 1, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
@@ -187,13 +204,14 @@ class RunnerProgress extends React.Component {
               search: false,
               showTitle: false,
               detailPanelColumnAlignment: "left",
-              rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress), paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 } },
+              padding: "small",
+              rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress), paddingTop: 0, paddingBottom: 0, paddingLeft: 8, paddingRight: 8 } },
               headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }
             }
           }
           detailPanel={[{
             tooltip: "Show task details",
-            iconProps: { fontSize: "small", padding: 0 },
+            iconProps: { size: "small" },
             render: rowData => {
               if (rowData.taskVerdict) {
                 return (
@@ -209,12 +227,10 @@ class RunnerProgress extends React.Component {
               }
             },
           },
-            ]
+          ]
          }
          />
       </div>
     );
   }
 }
-
-export { value_to_color, RunnerProgress}

@@ -3,7 +3,7 @@ import React from "react";
 import request from 'request-promise';
 import {sweetHome} from './../../looseend/home';
 import socketio from "socket.io-client";
-import {RunnerProgress} from "./RunnerProgress";
+import RunnerProgress from "./RunnerProgress";
 import Disks from "./Disks";
 import Catalog from "./Catalog";
 import WipeOption from "./WipeOption";

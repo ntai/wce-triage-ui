@@ -2,11 +2,8 @@ import React from 'react';
 import {makeStyles, Theme, withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
 import DiskImageTreeView from "./DiskImageTreeView";
 import Grid from "@material-ui/core/Grid";
 import IconButton from '@material-ui/core/IconButton';
@@ -17,17 +14,12 @@ import socketio from "socket.io-client";
 import {sweetHome} from "../../looseend/home";
 import Button from "@material-ui/core/Button";
 import BuildIcon from '@material-ui/icons/Build';
-import RestoreIcon from '@material-ui/icons/Restore';
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CancelIcon from "@material-ui/icons/Cancel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import SendIcon from '@material-ui/icons/Send';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import request from "request-promise";
-import {RunnerProgress} from "./RunnerProgress";
+import RunnerProgress from "./RunnerProgress";
 
 const appbarStyles = makeStyles( theme => ({
   root: {

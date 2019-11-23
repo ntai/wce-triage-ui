@@ -317,6 +317,7 @@ export default class Disks extends React.Component {
             search: false,
             showTitle: false,
             detailPanelColumnAlignment: "left",
+            padding: "small",
           }}
           detailPanel={rowData => <DiskDetails disk={rowData} />}
         />
