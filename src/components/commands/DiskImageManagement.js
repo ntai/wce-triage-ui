@@ -250,22 +250,25 @@ export default class DiskImageManagement extends React.Component {
   }
 
   getDeleteImageUrl() {
+    return undefined;
+    /*
     // Make array rather than json object.
-    const imageFiles = Object.keys(this.state.imageFileSelection).filter( filename => this.state.imageFileSelection[filename])
+    const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
 
-    if (imageFiles.length === 0) {
+    if (targetDiskList.length === 0) {
       return undefined;
     }
-    var url = sweetHome.backendUrl + "/dispatch/trim?=";
+
+    var url = sweetHome.backendUrl + "/dispatch/clean?=";
     var sep = "";
-    var imageFile;
-    var imageFileList = "";
-    sep = "";
-    for (imageFile of imageFiles) {
-      url = url + sep + imageFile;
+    var targetDisk;
+    for (targetDisk of targetDiskList) {
+      url = url + sep + targetDisk;
       sep = ",";
     }
     return url;
+
+     */
   }
 
 
@@ -319,13 +322,13 @@ export default class DiskImageManagement extends React.Component {
             <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled} syncImages={this.syncImages.bind(this)} deleteImages={this.deleteImages.bind(this)} targetDisks={targetDisks} expandAllCategories={this.expandCats.bind(this)} selectAllFiles={this.selectAll.bind(this)} />
           </Grid>
           <Grid item xs={4}>
-            <Box border={2} xs={4} borderColor="grey.500"  borderRadius={4} fixed={true}>
+            <Box border={2} xs={4} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
               <Typography>Disk Images</Typography>
               <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)} expandCategories={this.state.expandAllCategories}/>
             </Box>
           </Grid>
           <Grid item xs={8}>
-            <Box border={2} borderColor="grey.500" borderRadius={4} fixed={true}>
+            <Box border={2} borderColor="grey.500" borderRadius={4} fixed={"true"} >
               <Typography>Destination Disks</Typography>
               <Disks running={isRunning} selected={targetDisks} runningStatus={runningStatus} resetting={resetting}
                    did_reset={did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)}/>

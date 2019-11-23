@@ -6,7 +6,6 @@ import "./commands.css";
 import MaterialTable from "material-table";
 import {tableTheme, tableIcons} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import DiskDetails from "./DiskDetails";
 
 
@@ -211,7 +210,6 @@ export default class Disks extends React.Component {
 
     return (
       <div>
-        <ThemeProvider theme={tableTheme} />
         <MaterialTable
           icons={tableIcons}
           style={ {marginTop: 1, marginBottom: 1, marginLeft: 0, marginRight: 0} }
@@ -241,7 +239,7 @@ export default class Disks extends React.Component {
               render: row => ( <input
                   type="checkbox"
                   className="checkbox"
-                  checked={this.state.mounted[row.deviceName] === true}
+                  checked={this.state.mounted[row.deviceName] === true ? true : false}
                   onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
                 />
               )
@@ -311,7 +309,7 @@ export default class Disks extends React.Component {
           isLoading={diskStatusLoading} // Display the loading overlay when we need it
           options={{
             selection: true,
-            selectionProps: rowData => ( { disabled: rowData.mounted, checked: rowData.target } ),
+            selectionProps: rowData => ( { disabled: rowData.mounted, checked: rowData.target ? true : false } ),
             rowStyle: rowData => ({ backgroundColor: rowData.tableData.checked ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2, }),
             paging: false,
             draggable: false,

@@ -91,6 +91,7 @@ export default class SaveDiskImage extends React.Component {
   }
 
   diskSelectionChanged(selectedDisks, clicked) {
+    if (!clicked) return;
     var newSelection = {};
 
     if (!clicked.mounted) {
@@ -125,19 +126,19 @@ export default class SaveDiskImage extends React.Component {
     return (
       <div>
         <Grid container>
-          <Grid xs={1}>
-            <Button size="sm" startIcon={<SaveIcon />} variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
+          <Grid item xs={1}>
+            <Button size="small" startIcon={<SaveIcon />} variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
           </Grid>
 
           <Grid item xs={5}>
             <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
           </Grid>
 
-          <Grid xs={1}>
-            <Button startIcon={<RefreshIcon />} size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+          <Grid item xs={1}>
+            <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
           </Grid>
-          <Grid xs={1}>
-            <Button startIcon={<CancelIcon />} size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+          <Grid item xs={1}>
+            <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
           </Grid>
 
           <Grid item xs={12}>

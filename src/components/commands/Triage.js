@@ -247,20 +247,20 @@ export default class Triage extends React.Component {
     return <div>
       <Grid container spacing={1}>
 
-        <Grid xs={1}>
+        <Grid item xs={1}>
             <Button startIcon={<RefreshIcon />} variant="contained" size="small" onClick={() => this.fetchTriage()}>
               Refresh
             </Button>
         </Grid>
 
-        <Grid xs={1}>
+        <Grid item xs={1}>
           <PressPlay tooltip={"Test sound"}  title={"\u266B"} kind={"mp3"}     onPlay={ () => this.onMusicPlay()} url={sweetHome.backendUrl + '/dispatch/music'}/>
         </Grid>
-        <Grid xs={1}>
+        <Grid item xs={1}>
           <PressPlay tooltip={"Test CD/DVD drive"} title={"\u25CE"} kind={"optical"} onPlay={ () => this.onOpticalTest()} url={sweetHome.backendUrl + '/dispatch/opticaldrivetest'}/>
         </Grid>
 
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <Tooltip title={"Reboot computer"}>
             <Button startIcon={<LoopIcon />} variant="contained" size="small" color="secondary" onClick={ () => this.onReboot()}>
               Reboot
@@ -273,7 +273,7 @@ export default class Triage extends React.Component {
           </Tooltip>
         </Grid>
 
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <Button variant="outlined" size="small" onClick={() => this.setFontSize(fontSize+2)}>
             {'Font \u25b3'}
           </Button>

@@ -16,6 +16,7 @@ import {Checkbox} from "@material-ui/core";
 import {Menu, MenuItem} from "@material-ui/core";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import {Button, TextField} from "@material-ui/core";
+import CancelIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 
 const useTreeItemStyles = makeStyles(theme => ({
@@ -114,6 +115,7 @@ StyledTreeItem.propTypes = {
   labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
+  nodeId: PropTypes.string.isRequired,
 };
 
 
@@ -124,6 +126,7 @@ function ImageFileItem(props) {
   const imageFile = props.imageFile;
   const selChange = props.selectionChanged;
   const selected = props.selected;
+  const catalog=props.catalog;
 
   const handleItemClick = event => {
     event.preventDefault();
@@ -146,19 +149,19 @@ function ImageFileItem(props) {
   };
 
   return (
-      <div onContextMenu={handleItemClick} style={{ cursor: 'context-menu' }}>
-        <StyledTreeItem selected={selected} value={imageFile.label} handleChange={selChange} nodeId={imageFile.label} labelText={imageFile.label} labelIcon={ArchiveIcon} />
-        <Menu
-          keepMounted
-          open={isOpen}
-          onClose={handleMenuClose}
-          anchorReference="anchorPosition"
-          anchorPosition={{top: origin.y, left: origin.x}}
-        >
-          <MenuItem onClick={handleMenuRaname}>Rename</MenuItem>
-          <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
-        </Menu>
-      </div>
+    <div onContextMenu={handleItemClick} style={{ cursor: 'context-menu' }}>
+      <StyledTreeItem selected={selected} value={imageFile.label} handleChange={selChange} nodeId={catalog + "/" + imageFile.label} labelText={imageFile.label} labelIcon={ArchiveIcon} />
+      <Menu
+        keepMounted
+        open={isOpen}
+        onClose={handleMenuClose}
+        anchorReference="anchorPosition"
+        anchorPosition={{top: origin.y, left: origin.x}}
+      >
+        <MenuItem onClick={handleMenuRaname}>Rename</MenuItem>
+        <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
+      </Menu>
+    </div>
   );
 }
 
@@ -191,22 +194,22 @@ function RenameDialog(props) {
           <DialogContentText>
             Current filename: {filename}
           </DialogContentText>
-            <TextField
-              defaultValue={filename}
-              autoFocus
-              margin="dense"
-              id="filename"
-              label="New file name"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-            />
+          <TextField
+            defaultValue={filename}
+            autoFocus
+            margin="dense"
+            id="filename"
+            label="New file name"
+            type="text"
+            fullWidth
+            onChange={handleChange}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button startIcon={<CancelIcon />} onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button color="primary" disabled={value==="" || value == filename} onClick={handleRename} >
+          <Button startIcon={<KeyboardIcon />} color="primary" disabled={value==="" || value === filename || value[0] === "." || value[0] === "/"} onClick={handleRename} >
             Rename
           </Button>
         </DialogActions>
@@ -244,22 +247,22 @@ function DeleteDialog(props) {
           <DialogContentText>
             Filename: {filename}
           </DialogContentText>
-            <TextField
-              value={filename}
-              autoFocus
-              margin="dense"
-              id="filename"
-              label="Deleting filename"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-            />
+          <TextField
+            value={filename}
+            autoFocus
+            margin="dense"
+            id="filename"
+            label="Deleting filename"
+            type="text"
+            fullWidth
+            onChange={handleChange}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button startIcon={<CancelIcon />} onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button color="primary" disabled={value==="" || value[0] === "." || value[0] === "/"}  onClick={handleDelete}>
+          <Button startIcon={<DeleteIcon />} color="primary" disabled={value==="" || value[0] === "." || value[0] === "/"}  onClick={handleDelete}>
             Delete
           </Button>
         </DialogActions>
@@ -267,7 +270,6 @@ function DeleteDialog(props) {
     </div>
   );
 }
-
 
 
 const diskImageViewStyle = makeStyles({
@@ -386,9 +388,9 @@ export default function DiskImageTreeView(props) {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      console.log(res);
-      renameDialogSetOpen(false);
-      fetchSources();
+        console.log(res);
+        renameDialogSetOpen(false);
+        fetchSources();
       }
     );
   }
@@ -410,7 +412,7 @@ export default function DiskImageTreeView(props) {
       "json": true,
       "headers": {
         "User-Agent": "WCE Triage"
-        }}
+      }}
     ).then(res => {
       console.log(res);
       deleteDialogSetOpen(false);
@@ -426,7 +428,7 @@ export default function DiskImageTreeView(props) {
      <StyledTreeItem selected={selection[imageFile.label]} value={imageFile.label} handleChange={selChange} nodeId={imageFile.label} labelText={imageFile.label} labelIcon={ArchiveIcon} /> )
      */
     return files.map(imageFile => {
-      return <ImageFileItem imageFile={imageFile} selectionChanged={selChange} selected={selection[imageFile.label]} handleItemRename={renameCB} handleItemDelete={deleteCB}/>
+      return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange} selected={selection[imageFile.label]} handleItemRename={renameCB} handleItemDelete={deleteCB}/>
     });
   }
 
@@ -463,6 +465,10 @@ export default function DiskImageTreeView(props) {
       if (selectionChangedCB)
         selectionChangedCB(selection);
     }
+  }
+
+  if (sourcesLoading || catalogTypesLoading) {
+    return null;
   }
 
   return (

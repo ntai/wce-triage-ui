@@ -193,6 +193,7 @@ class RunnerProgress extends React.Component {
           }
           detailPanel={[{
             tooltip: "Show task details",
+            iconProps: { fontSize: "small", padding: 0 },
             render: rowData => {
               if (rowData.taskVerdict) {
                 return (

@@ -66,7 +66,7 @@ class App extends React.Component {
     return (
       <div className="App bg-white">
         <CssBaseline />
-        <Container fluid={true}>
+        <Container fluid={"true"}>
           <Grid container item xs={12}>
             <Grid container item xs={6}>
               <Image onPress={() => Linking.openURL('https://www.worldcomputerexchange.org')}

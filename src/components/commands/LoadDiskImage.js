@@ -271,15 +271,15 @@ export default class LoadDiskImage extends React.Component {
             </Grid>
             <Grid item xs={2}>
               <ButtonGroup>
-                <Button startIcon={<RefreshIcon />} size="sm" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
-                <Button startIcon={<CancelIcon />} size="sm" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
+                <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+                <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
               </ButtonGroup>
             </Grid>
 
-          <Grid item xs={12} spacing={0}>
+          <Grid item xs={12} >
             <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
-          <Grid item xs={12} spacing={0}>
+          <Grid item xs={12} >
             <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
           </Grid>
         </Grid>
