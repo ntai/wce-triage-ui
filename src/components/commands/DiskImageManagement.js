@@ -69,8 +69,8 @@ const StyledMenuItem = withStyles(theme => ({
 function OpMenu(props) {
   const myAppbar = appbarStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const expandCatsCB = props.expandAllCategories;
-  const selectFilesCB = props.selectAllFiles;
+  const propsExpandAllCatsCB = props.expandAllCatsCB;
+  const propsSelectAllFilesCB = props.selectAllFilesCB;
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -80,22 +80,22 @@ function OpMenu(props) {
     setAnchorEl(null);
   };
 
-  const expandAllCategories = (select) => {
+  const allCagetories = (select) => {
     setAnchorEl(null);
-    expandCatsCB(select);
+    propsExpandAllCatsCB(select);
   };
 
-  const collapseCategories = () => {
-    expandAllCategories(false);
+  const handleCollapseCategories = () => {
+    allCagetories(false);
   };
 
-  const expandCategories = () => {
-    expandAllCategories(true);
+  const handleExpandCategories = () => {
+    allCagetories(true);
   };
 
   const selectAllFiles = (select) => {
     setAnchorEl(null);
-    selectFilesCB(select);
+    propsSelectAllFilesCB(select);
   };
 
   const deselectAll = () => {
@@ -124,10 +124,10 @@ function OpMenu(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem onClick={expandCategories}>
+        <StyledMenuItem onClick={handleExpandCategories}>
           <ListItemText primary="Expand all categories" />
         </StyledMenuItem>
-        <StyledMenuItem onClick={collapseCategories}>
+        <StyledMenuItem onClick={handleCollapseCategories}>
           <ListItemText primary="Collapse all categories" />
         </StyledMenuItem>
         <StyledMenuItem onClick={selectAll}>
@@ -166,7 +166,6 @@ export default class DiskImageManagement extends React.Component {
     super();
     this.state = {
       /* Disk Image file selection */
-      imageFiles: [],
       imageFileSelection: [],
 
       /* target disks */
@@ -178,8 +177,8 @@ export default class DiskImageManagement extends React.Component {
       resetting: false,
       did_reset: false,
 
-      expandAllCategories: undefined,
-      selectAllFiles: undefined
+      expandCatsRequest: undefined,
+      selectAllFilesRequest: undefined
     };
 
     this.did_reset = this.did_reset.bind(this);
@@ -202,8 +201,13 @@ export default class DiskImageManagement extends React.Component {
     this.setState({targetDisks: newSelection});
   }
 
-  expandCats(expand) { this.setState( {expandAllCategories: expand}) }
-  selectAll(select) {this.setState( {selectAllFiles: select})}
+  expandCats(expand) { this.setState( {expandCatsRequest: expand}) }
+  selectAll(select) {this.setState( {selectAllFilesRequest: select})}
+
+  clearRequest() {
+    this.setState( {expandCatsRequest: undefined, selectAllFilesRequest: undefined} );
+  }
+
   did_reset() {this.setState({resetting: false});}
 
   componentDidMount() {
@@ -307,12 +311,18 @@ export default class DiskImageManagement extends React.Component {
       <div style={{ padding: 0 }}>
         <Grid container spacing={1}>
           <Grid container item xs={12}>
-            <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled} syncImages={this.syncImages.bind(this)} targetDisks={targetDisks} expandAllCategories={this.expandCats.bind(this)} selectAllFiles={this.selectAll.bind(this)} />
+            <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled}
+                              syncImages={this.syncImages.bind(this)} targetDisks={targetDisks}
+                              expandAllCatsCB={this.expandCats.bind(this)}
+                              selectAllFilesCB={this.selectAll.bind(this)} />
           </Grid>
           <Grid item xs={4}>
             <Box border={2} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
               <Typography>Disk Images</Typography>
-              <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)} expandCategories={this.state.expandAllCategories}/>
+              <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)}
+                                 expandCatsRequest={this.state.expandCatsRequest}
+                                 selectAllFilesRequest={this.state.selectAllFilesRequest}
+                                 clearRequest={this.clearRequest.bind(this)}/>
             </Box>
           </Grid>
           <Grid item xs={8}>

@@ -284,6 +284,42 @@ const diskImageViewStyle = makeStyles({
   },
 });
 
+/*
+
+function FileList(props) {
+  const { catType, catind, selChange, renameCB, deleteCB, selection} = props;
+  var files = [];
+  if (catind[catType] && catind[catType].length)
+    files = catind[catType];
+  return files.map(imageFile => {
+    return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange}
+                          selected={selection[imageFile.label]} handleItemRename={renameCB}
+                          handleItemDelete={deleteCB}/>
+  });
+}
+
+
+function CatalogList(props) {
+
+  const { cats, catind, selChange, renameCB, deleteCB, clickCB, selection } = props;
+  var files = [];
+
+  return (<div>
+    {
+      cats.map(function (catalog) {
+        if (!catalog.id) return null;
+        const catalog_id = catalog.id;
+        function clicked() { clickCB(catalog_id); }
+        return (
+          <StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label} onClick={clicked}>
+            <FileList catType={catalog.id} catind={catind} selChange={selChange} renameCB={renameCB} deleteCB={deleteCB} />
+           </StyledTreeItem>
+        )
+    } }
+    </div>);
+}
+ */
+
 export default function DiskImageTreeView(props) {
   const classes = diskImageViewStyle();
 
@@ -298,7 +334,9 @@ export default function DiskImageTreeView(props) {
   const [deleteDialogOpen, deleteDialogSetOpen] = React.useState(false);
   const [targetImageFile, setTargetImageFile] = React.useState(undefined);
 
-  const expandCatsRequest = props.expandCategories;
+  const expandCatsRequest = props.expandCatsRequest;
+  const selectAllFilesRequest = props.selectAllFilesRequest;
+  const clearRequest = props.clearRequest;
   const selectionChangedCB = props.selectionChanged;
 
   React.useEffect(() => {
@@ -439,10 +477,13 @@ export default function DiskImageTreeView(props) {
   }
 
 
-  function catalogList(cats, catind, selChange, renameCB, deleteCB) {
+  function catalogList(cats, catind, selChange, renameCB, deleteCB, clickCB) {
+
     return cats.map(function (catalog) {
       if (!catalog.id) return;
-      return (<StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label}>
+      const catalog_id = catalog.id;
+      function clicked() { clickCB(catalog_id); }
+      return (<StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label} onClick={clicked}>
           {fileList(catalog.id, catind, selChange, renameCB, deleteCB)}
         </StyledTreeItem>
       )
@@ -456,22 +497,55 @@ export default function DiskImageTreeView(props) {
 
   React.useEffect(() => {
     if (!catalogTypesLoading && catalogTypes) {
-      if (props.expandCategories === true) {
+      if (expandCatsRequest === true) {
         setExpandedCategories(catalogTypes.map(cat => cat.id));
       }
-      if (props.expandCategories === false) {
+      if (expandCatsRequest === false) {
         setExpandedCategories([]);
       }
     }
+    clearRequest();
   }, [expandCatsRequest]);
+
+
+  React.useEffect(() => {
+    if (!catalogTypesLoading && !sourcesLoading) {
+      var src;
+
+      if (selectAllFilesRequest === true) {
+        var newSelection = {};
+        for (src of sources)
+          newSelection[src.label] = true;
+        setSelection(newSelection);
+      }
+      if (selectAllFilesRequest === false) {
+        setSelection({});
+      }
+    }
+    clearRequest();
+  }, [selectAllFilesRequest]);
 
   function selectionChanged(event) {
     if (!sourcesLoading && !catalogTypesLoading) {
-      console.log(event.target);
       selection[event.target.value] = event.target.checked;
       setSelection(selection);
       if (selectionChangedCB)
         selectionChangedCB(selection);
+    }
+  }
+
+  function onCatalogClick(catalog_id) {
+    if (catalogTypes) {
+      const expanded = expandedCategories.filter(id => catalog_id === id).length === 1;
+
+      if (expanded) {
+        setExpandedCategories(expandedCategories.filter(id => catalog_id !== id));
+      }
+      else {
+        var newExpandedCategories = expandedCategories.map(id => id);
+        newExpandedCategories.push(catalog_id);
+        setExpandedCategories(newExpandedCategories);
+      }
     }
   }
 
@@ -485,7 +559,7 @@ export default function DiskImageTreeView(props) {
           defaultExpandIcon={<ArrowRightIcon/>}
           defaultEndIcon={<div style={{width: 24}}/>}
         >
-          {catalogList(catalogTypes, catalogIndex, selectionChanged, handleRenameRequest, handleDeleteRequest)}
+          {catalogList(catalogTypes, catalogIndex, selectionChanged, handleRenameRequest, handleDeleteRequest, onCatalogClick)}
         </TreeView>
         <RenameDialog open={renameDialogOpen} setOpen={renameDialogSetOpen} submitRename={submitRename}
                       filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
