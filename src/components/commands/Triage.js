@@ -5,13 +5,11 @@ import {sweetHome} from './../../looseend/home'
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 
 import PressPlay from "./PressPlay";
 import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
 import "./commands.css";
@@ -21,11 +19,9 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import PowerOffIcon from '@material-ui/icons/PowerOff';
 import LoopIcon from '@material-ui/icons/Loop';
 import StopIcon from '@material-ui/icons/Stop';
 import {Tooltip} from "@material-ui/core";
-import {triageTableStyle} from "./TriageTableTheme"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,8 +38,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function CPU_Info(props) {
-  const classes = useStyles();
+function CpuInfo(props) {
   const [loading, setLoading] = React.useState(true);
   const [cpu_info, set_cpu_info] = React.useState(undefined);
 
@@ -74,7 +69,7 @@ function CPU_Info(props) {
   }
 }
 
-function CPU_Rating(props) {
+function CpuRating(props) {
   const classes = useStyles();
   const [cpu_info, set_cpu_info] = React.useState(undefined);
 
@@ -98,7 +93,7 @@ function CPU_Rating(props) {
         </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-         <CPU_Info onMount={mounted} />
+         <CpuInfo onMount={mounted} />
       </ExpansionPanelDetails>
 
       </ExpansionPanel>
@@ -283,7 +278,7 @@ export default class Triage extends React.Component {
         </Grid>
 
         <Grid item xs={5}>
-          <CPU_Rating />
+          <CpuRating />
         </Grid>
 
         <Grid item xs={12}>

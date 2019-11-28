@@ -33,7 +33,7 @@ export default function WipeOption(props) {
   const wipeOptionChanged = props.wipeOptionChanged;
   const wipeOptionsChanged = props.wipeOptionsChanged;
 
-  function fetchWipeOptions(props) {
+  function fetchWipeOptions() {
     setWipeOptionsLoading(true);
 
     request({
@@ -54,10 +54,10 @@ export default function WipeOption(props) {
     });
   }
 
-  React.useEffect((props) => {
+  React.useEffect(() => {
     // setLabelWidth(inputLabel.current.offsetWidth);
     setLabelWidth(0);
-    fetchWipeOptions(props);
+    fetchWipeOptions();
   }, []);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {

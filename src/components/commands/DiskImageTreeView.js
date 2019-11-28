@@ -11,6 +11,7 @@ import {Checkbox} from "@material-ui/core";
 import {Menu, MenuItem} from "@material-ui/core";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import {Button, TextField} from "@material-ui/core";
+import cloneDeep from "lodash/cloneDeep";
 
 import CancelIcon from "@material-ui/icons/Cancel";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
@@ -18,7 +19,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 
 const useTreeItemStyles = makeStyles(theme => ({
   root: {
@@ -70,7 +70,7 @@ function StyledTreeItem(props) {
   var checkbox = null;
   if (value) {
     checkbox = <Checkbox
-      checked={selected}
+      checked={selected === undefined ? false : selected}
       onChange={handleChange}
       value={value}
       id={value}
@@ -112,6 +112,46 @@ function StyledTreeItem(props) {
   );
 }
 
+function AlertDialog(props) {
+  const [open, setOpen] = React.useState( false);
+  const title = props.title;
+  const message = props.message;
+  const closelabel = props.closelabel;
+
+  React.useEffect(() => {
+    if (message !== undefined)
+      setOpen(true);
+  }, [message]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            {closelabel}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  ) }
+
+
+
 StyledTreeItem.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
@@ -130,6 +170,8 @@ function ImageFileItem(props) {
   const selChange = props.selectionChanged;
   const selected = props.selected;
   const catalog = props.catalog;
+  const handleItemRename = props.handleItemRename;
+  const handleItemDelete = props.handleItemDelete;
 
   const handleItemClick = event => {
     event.preventDefault();
@@ -143,12 +185,12 @@ function ImageFileItem(props) {
 
   const handleMenuRaname = () => {
     setIsOpen(false);
-    props.handleItemRename(imageFile);
+    handleItemRename(imageFile);
   };
 
   const handleMenuDelete = () => {
     setIsOpen(false);
-    props.handleItemDelete(imageFile);
+    handleItemDelete(imageFile);
   };
 
   return (
@@ -174,6 +216,8 @@ function RenameDialog(props) {
   const targetImageFile = props.targetImageFile;
   const [value, setValue] = React.useState(filename);
   const setOpen = props.setOpen;
+  const submitRename = props.submitRename;
+  const is_open = props.open;
 
 
   const handleClose = () => {
@@ -182,7 +226,7 @@ function RenameDialog(props) {
 
   const handleRename = () => {
     setOpen(false);
-    props.submitRename(value, targetImageFile);
+    submitRename(value, targetImageFile);
   };
 
   const handleChange = (event) => {
@@ -191,7 +235,7 @@ function RenameDialog(props) {
 
   return (
     <div>
-      <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={is_open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Rename File</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -228,6 +272,7 @@ function DeleteDialog(props) {
   const targetImageFile = props.targetImageFile;
   const [value, setValue] = React.useState(filename);
   const setOpen = props.setOpen;
+  const submitDelete = props.submitDelete;
 
   const handleClose = () => {
     setOpen(false);
@@ -235,7 +280,7 @@ function DeleteDialog(props) {
 
   const handleDelete = () => {
     setOpen(false);
-    props.submitDelete(value, targetImageFile);
+    submitDelete(targetImageFile);
   };
 
   const handleChange = (event) => {
@@ -284,41 +329,39 @@ const diskImageViewStyle = makeStyles({
   },
 });
 
-/*
-
-function FileList(props) {
-  const { catType, catind, selChange, renameCB, deleteCB, selection} = props;
-  var files = [];
-  if (catind[catType] && catind[catType].length)
-    files = catind[catType];
-  return files.map(imageFile => {
-    return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange}
-                          selected={selection[imageFile.label]} handleItemRename={renameCB}
-                          handleItemDelete={deleteCB}/>
-  });
-}
-
 
 function CatalogList(props) {
 
-  const { cats, catind, selChange, renameCB, deleteCB, clickCB, selection } = props;
-  var files = [];
+  const { catalogTypes, catalogIndex, selectionChanged, handleRenameCommand, handleDeleteCommand, onCatalogClick, selection} = props;
+
+  function fileList(id) {
+    var files = [];
+    if (catalogIndex[id] && catalogIndex[id].length)
+      files = catalogIndex[id];
+    else
+      return null;
+    return files.map(imageFile => {
+      return <ImageFileItem catalog={id} imageFile={imageFile} selectionChanged={selectionChanged}
+                            selected={selection[imageFile.label]}
+                            handleItemRename={handleRenameCommand}
+                            handleItemDelete={handleDeleteCommand}/>
+    });
+  }
 
   return (<div>
     {
-      cats.map(function (catalog) {
+      catalogTypes.map(function (catalog) {
         if (!catalog.id) return null;
         const catalog_id = catalog.id;
-        function clicked() { clickCB(catalog_id); }
+        function clicked() { onCatalogClick(catalog_id); }
         return (
           <StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label} onClick={clicked}>
-            <FileList catType={catalog.id} catind={catind} selChange={selChange} renameCB={renameCB} deleteCB={deleteCB} />
+            {fileList(catalog.id)}
            </StyledTreeItem>
         )
-    } }
+    } ) }
     </div>);
 }
- */
 
 export default function DiskImageTreeView(props) {
   const classes = diskImageViewStyle();
@@ -333,10 +376,12 @@ export default function DiskImageTreeView(props) {
   const [renameDialogOpen, renameDialogSetOpen] = React.useState(false);
   const [deleteDialogOpen, deleteDialogSetOpen] = React.useState(false);
   const [targetImageFile, setTargetImageFile] = React.useState(undefined);
+  const [alertTitle, setAlertTitle] = React.useState(undefined);
+  const [alertMessage, setAlertMessage] = React.useState(undefined);
+  const [alertClose, setAlertClose] = React.useState(undefined);
 
-  const expandCatsRequest = props.expandCatsRequest;
-  const selectAllFilesRequest = props.selectAllFilesRequest;
-  const clearRequest = props.clearRequest;
+  const command = props.command;
+  const clearCommand = props.clearCommand;
   const selectionChangedCB = props.selectionChanged;
 
   React.useEffect(() => {
@@ -412,8 +457,9 @@ export default function DiskImageTreeView(props) {
     }
   }
 
-  function handleRenameRequest(imageFile) {
+  function handleRenameCommand(imageFile) {
     console.log(imageFile);
+    setAlertMessage(undefined);
     setTargetImageFile(imageFile);
     renameDialogSetOpen(true);
   }
@@ -433,21 +479,27 @@ export default function DiskImageTreeView(props) {
       }
     ).then(res => {
         console.log(res);
+        setAlertMessage(undefined);
         renameDialogSetOpen(false);
         fetchSources();
       }
-    );
+    ).catch(err => {
+      setAlertClose("Bummer");
+      setAlertTitle("Rename Failure");
+      setAlertMessage("Renaming " + filename + " failed.");
+    });
   }
 
-  function handleDeleteRequest(imageFile) {
+  function handleDeleteCommand(imageFile) {
     console.log(imageFile);
+    setAlertMessage(undefined);
     setTargetImageFile(imageFile);
     deleteDialogSetOpen(true);
   }
 
-  function submitDelete(filename, targetImageFile) {
-    if (targetImageFile.label !== filename)
-      return;
+  function submitDelete(targetImageFile) {
+    const filename = targetImageFile.label;
+    console.log( "Deleting " + filename);
 
     const url = encodeURI(sweetHome.backendUrl + "/dispatch/delete?name=" + filename + "&restoretype=" + targetImageFile.restoreType);
     request({
@@ -460,35 +512,18 @@ export default function DiskImageTreeView(props) {
       }
     ).then(res => {
       console.log(res);
+      setAlertMessage(undefined);
       deleteDialogSetOpen(false);
       fetchSources();
+    }
+    ).catch(err  => {
+      console.log(err);
+      setAlertClose("Bummer");
+      setAlertTitle("File Deletion Failure");
+      setAlertMessage("Deleting " + filename + " failed.");
     });
   }
 
-  function fileList(catType, catind, selChange, renameCB, deleteCB) {
-    var files = [];
-    if (catind[catType] && catind[catType].length)
-      files = catind[catType];
-    return files.map(imageFile => {
-      return <ImageFileItem catalog={catType} imageFile={imageFile} selectionChanged={selChange}
-                            selected={selection[imageFile.label]} handleItemRename={renameCB}
-                            handleItemDelete={deleteCB}/>
-    });
-  }
-
-
-  function catalogList(cats, catind, selChange, renameCB, deleteCB, clickCB) {
-
-    return cats.map(function (catalog) {
-      if (!catalog.id) return;
-      const catalog_id = catalog.id;
-      function clicked() { clickCB(catalog_id); }
-      return (<StyledTreeItem nodeId={catalog.id} labelText={catalog.name} labelIcon={Label} onClick={clicked}>
-          {fileList(catalog.id, catind, selChange, renameCB, deleteCB)}
-        </StyledTreeItem>
-      )
-    });
-  }
 
   React.useEffect(() => {
     updateCatalogIndex();
@@ -496,41 +531,42 @@ export default function DiskImageTreeView(props) {
 
 
   React.useEffect(() => {
-    if (!catalogTypesLoading && catalogTypes) {
-      if (expandCatsRequest === true) {
+    if (!catalogTypesLoading && !sourcesLoading && command !== undefined) {
+
+      if (command === "expand") {
         setExpandedCategories(catalogTypes.map(cat => cat.id));
       }
-      if (expandCatsRequest === false) {
+
+      if (command === "collapse") {
         setExpandedCategories([]);
       }
-    }
-    clearRequest();
-  }, [expandCatsRequest]);
 
-
-  React.useEffect(() => {
-    if (!catalogTypesLoading && !sourcesLoading) {
-      var src;
-
-      if (selectAllFilesRequest === true) {
+      if (command === "selectall") {
+        var src;
         var newSelection = {};
         for (src of sources)
           newSelection[src.label] = true;
         setSelection(newSelection);
+        if (selectionChangedCB)
+          selectionChangedCB(newSelection);
       }
-      if (selectAllFilesRequest === false) {
+
+      if (command === "deselectall") {
         setSelection({});
+        if (selectionChangedCB)
+          selectionChangedCB({});
       }
+      clearCommand();
     }
-    clearRequest();
-  }, [selectAllFilesRequest]);
+  }, [command]);
 
   function selectionChanged(event) {
     if (!sourcesLoading && !catalogTypesLoading) {
-      selection[event.target.value] = event.target.checked;
-      setSelection(selection);
+      var newSelection = cloneDeep(selection);
+      newSelection[event.target.value] = event.target.checked;
+      setSelection(newSelection);
       if (selectionChangedCB)
-        selectionChangedCB(selection);
+        selectionChangedCB(newSelection);
     }
   }
 
@@ -559,12 +595,19 @@ export default function DiskImageTreeView(props) {
           defaultExpandIcon={<ArrowRightIcon/>}
           defaultEndIcon={<div style={{width: 24}}/>}
         >
-          {catalogList(catalogTypes, catalogIndex, selectionChanged, handleRenameRequest, handleDeleteRequest, onCatalogClick)}
+          <CatalogList catalogTypes={catalogTypes}
+                       catalogIndex={catalogIndex}
+                       selectionChanged={selectionChanged}
+                       handleRenameCommand={handleRenameCommand}
+                       handleDeleteCommmand={handleDeleteCommand}
+                       onCatalogClick={onCatalogClick}
+                       selection={selection} />
         </TreeView>
         <RenameDialog open={renameDialogOpen} setOpen={renameDialogSetOpen} submitRename={submitRename}
                       filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
         <DeleteDialog open={deleteDialogOpen} setOpen={deleteDialogSetOpen} submitDelete={submitDelete}
                       filename={targetImageFile ? targetImageFile.label : ""} targetImageFile={targetImageFile}/>
+        <AlertDialog title={alertTitle} message={alertMessage} closelabel={alertClose} />
       </div>
     );
   } else {

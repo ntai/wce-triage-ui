@@ -177,8 +177,7 @@ export default class DiskImageManagement extends React.Component {
       resetting: false,
       did_reset: false,
 
-      expandCatsRequest: undefined,
-      selectAllFilesRequest: undefined
+      menuCommand: undefined,
     };
 
     this.did_reset = this.did_reset.bind(this);
@@ -201,11 +200,11 @@ export default class DiskImageManagement extends React.Component {
     this.setState({targetDisks: newSelection});
   }
 
-  expandCats(expand) { this.setState( {expandCatsRequest: expand}) }
-  selectAll(select) {this.setState( {selectAllFilesRequest: select})}
+  expandCats(expand) { this.setState( {menuCommand: expand ? "expand" : "collapse"}) }
+  selectAll(select) {this.setState( {menuCommand: select ? "selectall" : "deselectall"})}
 
-  clearRequest() {
-    this.setState( {expandCatsRequest: undefined, selectAllFilesRequest: undefined} );
+  clearCommand() {
+    this.setState( {menuCommand: undefined} );
   }
 
   did_reset() {this.setState({resetting: false});}
@@ -320,9 +319,8 @@ export default class DiskImageManagement extends React.Component {
             <Box border={2} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
               <Typography>Disk Images</Typography>
               <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)}
-                                 expandCatsRequest={this.state.expandCatsRequest}
-                                 selectAllFilesRequest={this.state.selectAllFilesRequest}
-                                 clearRequest={this.clearRequest.bind(this)}/>
+                                 command={this.state.menuCommand}
+                                 clearCommand={this.clearCommand.bind(this)}/>
             </Box>
           </Grid>
           <Grid item xs={8}>
