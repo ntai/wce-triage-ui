@@ -1,6 +1,6 @@
 {
   "name": "wce-triage-ui",
-  "version": "0.305.20191123",
+  "version": "0.306.20191126",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.7.0",

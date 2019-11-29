@@ -20,6 +20,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import request from "request-promise";
 import RunnerProgress from "./RunnerProgress";
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 const appbarStyles = makeStyles( theme => ({
   root: {
@@ -154,8 +156,12 @@ function DiskImageMenubar(props) {
             color={"secondary"}>
       <Toolbar variant="dense">
         <OpMenu {...props} />
-        <Button disabled={!syncImageEnabled} startIcon={<BuildIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => syncImages()} >Sync Images</Button>
-        <Button startIcon={<DeleteForeverIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => deleteImages()} disabled={!deleteImageEnabled}>Delete Images</Button>
+        <Tooltip title="Sync disk images to disk">
+          <Button aria-label="sync" disabled={!syncImageEnabled} startIcon={<BuildIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => syncImages()} >Sync Images</Button>
+        </Tooltip>
+        <Tooltip title="Delete disk images from disk">
+          <Button aria-label="delete" startIcon={<DeleteForeverIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => deleteImages()} disabled={!deleteImageEnabled}>Delete Images</Button>
+        </Tooltip>
       </Toolbar>
     </AppBar>
   )
@@ -245,8 +251,6 @@ export default class DiskImageManagement extends React.Component {
   }
 
   getDeleteImageUrl() {
-    return undefined;
-    /*
     // Make array rather than json object.
     const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
 
@@ -254,7 +258,7 @@ export default class DiskImageManagement extends React.Component {
       return undefined;
     }
 
-    var url = sweetHome.backendUrl + "/dispatch/clean?=";
+    var url = sweetHome.backendUrl + "/dispatch/clean?deviceNames=";
     var sep = "";
     var targetDisk;
     for (targetDisk of targetDiskList) {
@@ -262,13 +266,31 @@ export default class DiskImageManagement extends React.Component {
       sep = ",";
     }
     return url;
-
-     */
   }
 
 
   syncImages() {
     const url = this.getSyncImageUrl();
+    console.log(url);
+    if (url) {
+      console.log(url);
+      request({
+        "method":"POST",
+        "uri": url,
+        "json": true,
+        "headers": {
+          "User-Agent": "WCE Triage"
+        }}
+      ).then(res => {
+        this.setState({
+          isRunning: true
+        });
+      });
+    }
+  }
+
+  deleteImages() {
+    const url = this.getDeleteImageUrl();
     console.log(url);
     if (url) {
       console.log(url);
@@ -310,8 +332,11 @@ export default class DiskImageManagement extends React.Component {
       <div style={{ padding: 0 }}>
         <Grid container spacing={1}>
           <Grid container item xs={12}>
-            <DiskImageMenubar syncImageEnabled={syncImageEnabled} deleteImageEnabled={deleteImageEnabled}
-                              syncImages={this.syncImages.bind(this)} targetDisks={targetDisks}
+            <DiskImageMenubar syncImageEnabled={syncImageEnabled}
+                              deleteImageEnabled={deleteImageEnabled}
+                              syncImages={this.syncImages.bind(this)}
+                              deleteImages={this.deleteImages.bind(this)}
+                              targetDisks={targetDisks}
                               expandAllCatsCB={this.expandCats.bind(this)}
                               selectAllFilesCB={this.selectAll.bind(this)} />
           </Grid>
