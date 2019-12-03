@@ -17,10 +17,10 @@ export const sweetHome = (function() {
     // For deployment, backendUrl is same as baseUrl. Just a hack for now
 
     backendUrl: (process.env.NODE_ENV === 'development') ?
-    'http://192.168.56.101:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+    'http://wcedev:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
 
     websocketUrl: (process.env.NODE_ENV === 'development') ?
-      'ws://192.168.56.101:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+      'ws://wcedev:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
   };
 })();
 

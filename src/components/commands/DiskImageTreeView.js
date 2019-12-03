@@ -599,7 +599,7 @@ export default function DiskImageTreeView(props) {
                        catalogIndex={catalogIndex}
                        selectionChanged={selectionChanged}
                        handleRenameCommand={handleRenameCommand}
-                       handleDeleteCommmand={handleDeleteCommand}
+                       handleDeleteCommand={handleDeleteCommand}
                        onCatalogClick={onCatalogClick}
                        selection={selection} />
         </TreeView>
