@@ -1,15 +1,15 @@
 import React from "react";
 import request from 'request-promise';
-import {sweetHome} from './../../looseend/home';
+import {sweetHome} from '../../../looseend/home';
 import socketio from "socket.io-client";
-import RunnerProgress from "./RunnerProgress";
-import Disks from "./Disks";
-import Catalog from "./Catalog";
+import RunnerProgress from "../../parts/RunnerProgress";
+import Disks from "../../parts/Disks";
+import Catalog from "../../parts/Catalog";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 
-import "./commands.css";
+import "../commands.css";
 import cloneDeep from "lodash/cloneDeep";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CancelIcon from "@material-ui/icons/Cancel";

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import request from "request-promise";
-import {sweetHome} from "../../looseend/home";
+import {sweetHome} from "../../../looseend/home";
 import PropTypes from 'prop-types';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';

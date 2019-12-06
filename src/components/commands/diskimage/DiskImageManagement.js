@@ -8,10 +8,10 @@ import DiskImageTreeView from "./DiskImageTreeView";
 import Grid from "@material-ui/core/Grid";
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Disks from "./Disks";
+import Disks from "../../parts/Disks";
 import cloneDeep from "lodash/cloneDeep";
 import socketio from "socket.io-client";
-import {sweetHome} from "../../looseend/home";
+import {sweetHome} from "../../../looseend/home";
 import Button from "@material-ui/core/Button";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -19,7 +19,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import request from "request-promise";
-import RunnerProgress from "./RunnerProgress";
+import RunnerProgress from "../../parts/RunnerProgress";
 import Tooltip from '@material-ui/core/Tooltip';
 
 

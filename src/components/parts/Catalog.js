@@ -1,8 +1,8 @@
 import React from "react";
 
 import request from 'request-promise';
-import {sweetHome} from './../../looseend/home';
-import "./commands.css";
+import {sweetHome} from '../../looseend/home';
+import "../commands/commands.css";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';

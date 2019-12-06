@@ -5,7 +5,7 @@ import {sweetHome} from "../../looseend/home";
 import MaterialTable from "material-table";
 import {tableIcons, triageTableStyle, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
-import './commands.css';
+import '../commands/commands.css';
 
 const runnerIconButtonStyles = {
   root: {

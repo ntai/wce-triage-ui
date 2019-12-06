@@ -1,7 +1,7 @@
 import React from "react";
 //
 import request from 'request-promise';
-import {sweetHome} from './../../looseend/home'
+import {sweetHome} from '../../../looseend/home'
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ import socketio from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
 import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
-import "./commands.css";
+import "../commands.css";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';

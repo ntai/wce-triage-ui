@@ -1,5 +1,5 @@
 import React from "react";
-import "./commands.css";
+import "../commands.css";
 import { Grid, Button } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip';
 

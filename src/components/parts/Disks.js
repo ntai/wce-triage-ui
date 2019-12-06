@@ -1,8 +1,8 @@
 import React from "react";
 import request from 'request-promise';
-import {sweetHome} from './../../looseend/home';
+import {sweetHome} from '../../looseend/home';
 import cloneDeep from "lodash/cloneDeep";
-import "./commands.css";
+import "../commands/commands.css";
 import MaterialTable from "material-table";
 import {tableTheme, tableIcons} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';

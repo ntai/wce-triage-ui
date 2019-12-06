@@ -5,10 +5,10 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
 //
 import request from 'request-promise';
-import {sweetHome} from './../../looseend/home';
-import Disks from "./Disks";
-import '../../bootstrap.min.css';
-import "./commands.css";
+import {sweetHome} from '../../../looseend/home';
+import Disks from "../../parts/Disks";
+import '../../../bootstrap.min.css';
+import "../commands.css";
 import socketio from "socket.io-client";
 import DeleteIcon from '@material-ui/icons/Delete';
 import RefreshIcon from "@material-ui/icons/Refresh";

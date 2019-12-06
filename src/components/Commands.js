@@ -1,10 +1,10 @@
 import React from 'react';
-import Triage from './commands/Triage';
-import LoadDiskImage from './commands/LoadDiskImage';
-import SaveDiskImage from './commands/SaveDiskImage';
+import Triage from './commands/triage/Triage';
+import LoadDiskImage from './commands/load/LoadDiskImage';
+import SaveDiskImage from './commands/save/SaveDiskImage';
 // import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
-import WipeDisk from "./commands/WipeDisk";
+import WipeDisk from "./commands/wipe/WipeDisk";
 import TriageAppSettings from "./settings/TriageAppSettings";
 
 
@@ -15,7 +15,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import DiskImageManagement from "./commands/DiskImageManagement";
+import DiskImageManagement from "./commands/diskimage/DiskImageManagement";
 
 
 class TabPanel extends React.Component {
@@ -80,27 +80,27 @@ export default class Commands extends React.Component {
             </Tabs>
           </AppBar>
           <TabPanel value={selectedTab} index={0} visible={selectedTab === 0} title="Triage">
-            <Triage wock={this.props.wock}/>
+            <Triage/>
           </TabPanel>
           <TabPanel value={selectedTab} index={1} visible={selectedTab === 1} title="Load">
-            <LoadDiskImage wock={this.props.wock}/>
+            <LoadDiskImage/>
           </TabPanel>
           <TabPanel value={selectedTab} index={2} visible={selectedTab === 2} title="Save">
-            <SaveDiskImage wock={this.props.wock}/>
+            <SaveDiskImage/>
           </TabPanel>
           <TabPanel value={selectedTab} index={3} visible={selectedTab === 3} title="Wipe">
-            <WipeDisk wock={this.props.wock}/>
+            <WipeDisk/>
           </TabPanel>
           <TabPanel value={selectedTab} index={4} visible={selectedTab === 4} title="Disk Images">
-            <DiskImageManagement wock={this.props.wock}/>
+            <DiskImageManagement/>
           </TabPanel>
           {/*
           <Tab key="settings" eventKey="settings" title="Settings" disabled={!this.state.settings}>
-            <TriageAppSettings wock={this.props.wock}/>
+            <TriageAppSettings/>
           </Tab>
 */}
         </div>
-        <Messages wock={this.props.wock}/>
+        <Messages/>
       </div>
     );
   }
