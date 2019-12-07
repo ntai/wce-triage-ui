@@ -186,7 +186,7 @@ export default class Triage extends React.Component {
 
     for (row of rows) {
       if (row.component === "Sound") {
-        row.result = true
+        row.result = true;
         break;
       }
     }

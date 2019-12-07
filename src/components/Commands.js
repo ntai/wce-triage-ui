@@ -65,7 +65,7 @@ export default class Commands extends React.Component {
 
   render() {
     const selectedTab = this.state.selectedTab;
-    console.log( "selectedTab: " + selectedTab)
+    console.log( "selectedTab: " + selectedTab);
 
     return (
       <div>

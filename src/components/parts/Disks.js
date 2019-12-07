@@ -4,7 +4,7 @@ import {sweetHome} from '../../looseend/home';
 import cloneDeep from "lodash/cloneDeep";
 import "../commands/commands.css";
 import MaterialTable from "material-table";
-import {tableTheme, tableIcons} from "./TriageTableTheme";
+import {tableIcons} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import DiskDetails from "./DiskDetails";
 
@@ -80,7 +80,7 @@ export default class Disks extends React.Component {
         }
       }
     ).then(res => {
-      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}))
+      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}));
       this.setState({wipeOptions: wipeOptions, wipeOptionsLoading: false});
     });
   }
@@ -168,7 +168,7 @@ export default class Disks extends React.Component {
             if (this.props.runningStatus.runStatus === "Preflight")
               disk.progress = 0;
             if (this.props.runningStatus.runStatus === "Running")
-              disk.progress = Math.max(runTime > 0 ? 1 : 0, Math.min(99, Math.round(runTime / runEstimate * 100)))
+              disk.progress = Math.max(runTime > 0 ? 1 : 0, Math.min(99, Math.round(runTime / runEstimate * 100)));
             if (this.props.runningStatus.runStatus === "Success")
               disk.progress = 100;
             if (this.props.runningStatus.runStatus === "Failed")
@@ -206,7 +206,7 @@ export default class Disks extends React.Component {
 
 
   render() {
-    const { disks, diskStatusLoading, wipeOptions } = this.state;
+    const { disks, diskStatusLoading } = this.state;
 
     return (
       <div>

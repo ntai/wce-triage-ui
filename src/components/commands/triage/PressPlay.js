@@ -1,23 +1,19 @@
 import React from "react";
 import "../commands.css";
-import { Grid, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip';
 
 
 // stub to run optical test
 class OpticalDriveTest {
-  constructor() {
-  }
-
-  play() {
-  }
+  play() {}
   pause() {}
 }
 
 class PressPlay extends React.Component {
   state = {
     play: false
-  }
+  };
   player = undefined;
 
   togglePlay = () => {
@@ -27,7 +23,7 @@ class PressPlay extends React.Component {
         this.player = this.props.kind === "mp3" ? new Audio(this.props.url) : new OpticalDriveTest();
       this.state.play ? this.player.play() : this.player.pause();
     });
-  }
+  };
 
   render() {
     return (

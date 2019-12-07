@@ -3,26 +3,9 @@ import cloneDeep from "lodash/cloneDeep";
 import request from "request-promise";
 import {sweetHome} from "../../looseend/home";
 import MaterialTable from "material-table";
-import {tableIcons, triageTableStyle, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
+import {tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import '../commands/commands.css';
-
-const runnerIconButtonStyles = {
-  root: {
-    padding: 0,
-    style: {padding: 0}
-
-  },
-  MuiIconButton: {
-    root: {
-      padding: 0,
-      style: {padding: 0}
-    },
-    padding: 0,
-    style: {padding: 0}
-  }
-};
-
 
 export default class RunnerProgress extends React.Component {
   constructor() {
@@ -66,7 +49,7 @@ export default class RunnerProgress extends React.Component {
 
     if (this.props.runningStatus.step !== undefined) {
       if (this.state.tasks !== undefined) {
-        console.log( this.props.runningStatus)
+        console.log( this.props.runningStatus);
         var tasks = cloneDeep(this.state.tasks);
         const step_no = this.props.runningStatus.step;
         const task = this.props.runningStatus.task;
@@ -105,8 +88,6 @@ export default class RunnerProgress extends React.Component {
 
   render() {
     const {tasks, tasksLoading, fontSize } = this.state;
-    var elem = null;
-    var index = null;
 
     return (
       <div>

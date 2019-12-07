@@ -9,7 +9,6 @@ import request from "request-promise";
 import {sweetHome} from "./looseend/home";
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {Typography} from '@material-ui/core'
 
 const styles = StyleSheet.create({
   WCE: {
@@ -53,7 +52,7 @@ class App extends React.Component {
         "User-Agent": "WCE Triage"
       }}
     ).then(res => {
-      console.log(res)
+      console.log(res);
       this.setState({
         // marshall this for ReactSelect
         backendVersion: res.version.backend,

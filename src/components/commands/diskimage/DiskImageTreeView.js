@@ -414,7 +414,7 @@ export default function DiskImageTreeView(props) {
       setSources(srcs);
       setSourcesLoading(false);
     });
-  };
+  }
 
   function fetchCatalogTypes() {
     setCatalogTypesLoading(true);
@@ -440,9 +440,9 @@ export default function DiskImageTreeView(props) {
     if (!sourcesLoading && !catalogTypesLoading) {
       var catind = {};
       var src = undefined;
-      var cat = undefined;
 
       if (catalogTypes) {
+        var cat;
         for (cat of catalogTypes)
           catind[cat.id] = [];
       }
@@ -527,7 +527,7 @@ export default function DiskImageTreeView(props) {
 
   React.useEffect(() => {
     updateCatalogIndex();
-  }, [sourcesLoading, catalogTypesLoading]);
+  }, [sourcesLoading, catalogTypesLoading, catalogTypes, sources]);
 
 
   React.useEffect(() => {

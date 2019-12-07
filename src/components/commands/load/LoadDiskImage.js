@@ -14,7 +14,6 @@ import DiskImageSelector from '../diskimage/DiskImageSelector';
 import "../commands.css";
 import cloneDeep from "lodash/cloneDeep";
 import BuildIcon from '@material-ui/icons/Build';
-import RestoreIcon from '@material-ui/icons/Restore';
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CancelIcon from "@material-ui/icons/Cancel";
 
@@ -130,7 +129,7 @@ export default class LoadDiskImage extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchSources()
+    this.fetchSources();
     const loadWock = socketio.connect(sweetHome.websocketUrl);
     loadWock.on("loadimage", this.onRunnerUpdate.bind(this));
   }
@@ -250,7 +249,7 @@ export default class LoadDiskImage extends React.Component {
   }
 
   render() {
-    const { sources, subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks, restoreTypes } = this.state;
+    const { subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks, restoreTypes } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (

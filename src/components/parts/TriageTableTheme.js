@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme} from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -83,7 +83,7 @@ function value_to_color(value) {
     : value === 100 ? '#00ef0f'
       : value > 0 ? '#5f8fff'
         : '#dadada';
-};
+}
 
 
 function value_to_bgcolor(value) {
@@ -91,7 +91,7 @@ function value_to_bgcolor(value) {
     : value === 100 ? '#EEFFEE'
       : value > 0 ? '#EEEEFF'
         : '#EEEEEE';
-};
+}
 
 
 export { tableTheme, tableIcons, value_to_color, value_to_bgcolor, triageTableStyle }

@@ -10,7 +10,6 @@ import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 
 import "../commands.css";
-import cloneDeep from "lodash/cloneDeep";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CancelIcon from "@material-ui/icons/Cancel";
 

@@ -19,13 +19,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function DiskImageSelector(props) {
   const classes = useStyles();
-  const inputLabel = React.useRef<HTMLLabelElement>(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-
-  React.useEffect(() => {
-    // setLabelWidth(inputLabel.current.offsetWidth);
-    setLabelWidth(0);
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     props.setSource(event.target.value);

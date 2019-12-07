@@ -28,8 +28,6 @@ export default function WipeOption(props) {
   const [wipeOptions, setWipeOptions] = React.useState([]);
   const [wipeOption, setWipeOption] = React.useState(undefined);
 
-  const inputLabel = React.useRef<HTMLLabelElement>(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
   const wipeOptionChanged = props.wipeOptionChanged;
   const wipeOptionsChanged = props.wipeOptionsChanged;
 
@@ -45,7 +43,7 @@ export default function WipeOption(props) {
       }}
     ).then(res => {
       console.log(res.wipeTypes);
-      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}))
+      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}));
       setWipeOptions(wipeOptions);
       setWipeOption(undefined);
       setWipeOptionsLoading(false);
@@ -55,8 +53,7 @@ export default function WipeOption(props) {
   }
 
   React.useEffect(() => {
-    // setLabelWidth(inputLabel.current.offsetWidth);
-    setLabelWidth(0);
+    console.log("loading wipe options");
     fetchWipeOptions();
   }, []);
 

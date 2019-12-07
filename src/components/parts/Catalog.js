@@ -28,9 +28,6 @@ export default function Catalog(props) {
   const [catalogTypesLoading, setCatalogTypesLoading] = React.useState(true);
   const [catalogTypes, setCatalogTypes] = React.useState([]);
 
-  const inputLabel = React.useRef<HTMLLabelElement>(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-
   const title = props.title;
   const catalogType = props.catalogType;
   const catalogTypeChanged = props.catalogTypeChanged;
@@ -57,8 +54,6 @@ export default function Catalog(props) {
   }
 
   React.useEffect(() => {
-    // setLabelWidth(inputLabel.current.offsetWidth);
-    setLabelWidth(0);
     fetchCatalogTypes();
   }, []);
 

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 
 export default class Messages extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       messages: []
     }

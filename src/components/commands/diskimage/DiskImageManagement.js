@@ -152,7 +152,7 @@ function DiskImageMenubar(props) {
   const deleteImageEnabled = props.deleteImageEnabled;
 
   return (
-    <AppBar classes={{root: myAppbar.root}, {colorSecondary: myAppbar.colorSecondary}} position="static"
+    <AppBar classes={{root: myAppbar.root, colorSecondary: myAppbar.colorSecondary}} position="static"
             color={"secondary"}>
       <Toolbar variant="dense">
         <OpMenu {...props} />
@@ -223,7 +223,7 @@ export default class DiskImageManagement extends React.Component {
   getSyncImageUrl() {
     // Make array rather than json object.
     const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
-    const imageFiles = Object.keys(this.state.imageFileSelection).filter( filename => this.state.imageFileSelection[filename])
+    const imageFiles = Object.keys(this.state.imageFileSelection).filter( filename => this.state.imageFileSelection[filename]);
 
     if (targetDiskList.length === 0 || imageFiles.length === 0) {
       return undefined;

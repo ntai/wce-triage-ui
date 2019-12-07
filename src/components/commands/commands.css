@@ -1,6 +1,6 @@
 .ReactTable input.checkbox {
     -webkit-appearance: checkbox;
-    appearance: checkbox;
+    appearance: auto;
 }
 
 .react-resizable{

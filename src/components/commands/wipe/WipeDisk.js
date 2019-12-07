@@ -1,7 +1,6 @@
 import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
 //
 import request from 'request-promise';
@@ -102,10 +101,6 @@ export default class WipeDisk extends React.Component {
     }
 
     console.log(wipeUrl);
-
-    // time to make donuts
-    const targetDiskDevices = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
-
     request({
       "method":"POST",
       "uri": wipeUrl,
