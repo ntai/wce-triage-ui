@@ -126,15 +126,14 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
   }
 
   componentDidUpdate() {
-    var disk;
-    var disks = undefined;
-    var target_update = false;
-
+    let disk : DiskType;
+    let disks: DiskType[] = JSON.parse(JSON.stringify(this.state.disks));
+    let target_update = false;
 
     if (this.props.resetting)
       this.onReset();
 
-    for (disk of this.state.disks) {
+    for (disk of disks) {
       const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
       if (disk['target'] !== is_target) {
         target_update = true;
@@ -143,7 +142,6 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
     }
 
     if (target_update) {
-      disks = JSON.parse(JSON.stringify(this.state.disks));
       for (disk of disks) {
         const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
         disk['target'] = is_target;
@@ -159,8 +157,6 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
         return;
 
       this.setState({sequenceNumber: this.props.runningStatus._sequence_});
-
-      disks = Object.assign({}, this.state.disks);
 
       if (this.props.runningStatus.device && this.props.runningStatus.runEstimate && this.props.runningStatus.runTime) {
         const devname = this.props.runningStatus.device;
@@ -187,7 +183,6 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
           }
         }
       }
-
       this.setState({disks: disks});
     }
   }
