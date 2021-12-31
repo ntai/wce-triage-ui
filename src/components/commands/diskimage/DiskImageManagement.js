@@ -1,5 +1,5 @@
 import React from 'react';
-import {makeStyles, Theme, withStyles} from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -18,15 +18,14 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import request from "request-promise";
 import RunnerProgress from "../../parts/RunnerProgress";
 import Tooltip from '@material-ui/core/Tooltip';
 
 
 const appbarStyles = makeStyles( theme => ({
   root: {
-    height: 32,
-    minHeight: 32,
+    height: 46,
+    minHeight: 46,
   },
   colorSecondary: {
     backgroundColor: '#208040'
@@ -232,16 +231,16 @@ export default class DiskImageManagement extends React.Component {
     // time to make donuts
     console.log(targetDiskList);
 
-    var url = sweetHome.backendUrl + "/dispatch/sync?deviceNames=";
-    var sep = "";
+    let url = sweetHome.backendUrl + "/dispatch/sync?deviceNames=";
+    let sep = "";
     var targetDisk;
     for (targetDisk of targetDiskList) {
       url = url + sep + targetDisk;
       sep = ",";
     }
     url = url + "&sources=";
-    var imageFile;
-    var imageFileList = "";
+    let imageFile;
+    let imageFileList = "";
     sep = "";
     for (imageFile of imageFiles) {
       url = url + sep + imageFile;
@@ -274,14 +273,7 @@ export default class DiskImageManagement extends React.Component {
     console.log(url);
     if (url) {
       console.log(url);
-      request({
-        "method":"POST",
-        "uri": url,
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }}
-      ).then(res => {
+      fetch(url, {"method":"POST"}).then(_ => {
         this.setState({
           isRunning: true
         });
@@ -294,14 +286,7 @@ export default class DiskImageManagement extends React.Component {
     console.log(url);
     if (url) {
       console.log(url);
-      request({
-        "method":"POST",
-        "uri": url,
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }}
-      ).then(res => {
+      fetch(url, {"method":"POST"}).then(_ => {
         this.setState({
           isRunning: true
         });

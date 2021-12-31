@@ -1,25 +1,12 @@
 import React, { Component } from 'react';
-import {ScrollView, Text, StyleSheet} from 'react-native-web';
-
-import {sweetHome} from './../looseend/home'
-import request from "request-promise";
-
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import {sweetHome} from '../looseend/home'
 import * as io from 'socket.io-client';
 
-
-const styles = StyleSheet.create({
-  baseText: {
-    fontFamily: 'Arial',
-    textAlign: 'left'
-  },
-});
-
-
-
-
 export default class Messages extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       messages: []
     }
@@ -32,14 +19,7 @@ export default class Messages extends Component {
   /* Initial message loading */
   fetchMessages() {
     // Request the data however you want.
-    request({
-      "method":"GET",
-      'uri': sweetHome.backendUrl + '/dispatch/messages',
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
+    fetch(sweetHome.backendUrl + '/dispatch/messages').then( rep => rep.json()).then(res => {
       this.setState({messages: res.messages});
     });
   }
@@ -60,11 +40,13 @@ export default class Messages extends Component {
     const messages = this.state.messages;
 
     return (
-      <ScrollView>
-        {messages.map((msg) => {
-          return <Text style={styles.baseText}>{msg}</Text>
-        })}
-      </ScrollView>
+      <Grid style={{ display: "flex", flex: 1 }} container >
+        <Grid style={{ display: "flex", flex: 1 }} item xs={12}>
+          <Box overflow="auto" id="scroll" flex={1} bgcolor="white" height="400px" className="message-font">
+            {messages.map(line => {return (<div>{line}</div>)})}
+          </Box>
+        </Grid>
+      </Grid>
     );
   }
 }

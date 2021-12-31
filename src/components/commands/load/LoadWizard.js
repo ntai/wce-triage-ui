@@ -2,7 +2,9 @@ import React from "react";
 import "../commands.css";
 
 class LoadWizard extends React.Component {
-  constructor() {
+  constructor(props) {
+    super(props);
+
     this.state = {
       currentStep: 1
     };
@@ -39,16 +41,17 @@ class LoadWizard extends React.Component {
   }
 
   render() {
-    return (
-      <div>
+    /*
         <ChooseImageSource currentStep={currentStep}/>
         <ChooseDisk currentStep={currentStep}/>
         <LoadDetails currentStep={currentStep}/>
         <button onClick={this._next}>Next</button>
         <button onClick={this._prev}>Prev</button>
+     */
+    return (
+      <div>
       </div>
     );
   }
 }
-
 

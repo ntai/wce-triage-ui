@@ -1,27 +1,38 @@
 import React from "react";
-import cloneDeep from 'lodash/cloneDeep';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 //
-import request from 'request-promise';
 import {sweetHome} from '../../../looseend/home';
 import Disks from "../../parts/Disks";
-import '../../../bootstrap.min.css';
 import "../commands.css";
-import socketio from "socket.io-client";
+import {io} from "socket.io-client";
 import DeleteIcon from '@material-ui/icons/Delete';
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CancelIcon from "@material-ui/icons/Cancel";
+import ErrorMessageModal from "../../ErrorMessageDialog";
+import {DeviceSelectionType, DiskType, RunReportType} from "../../common/types";
 
-export default class WipeDisk extends React.Component {
-  constructor() {
-    super();
+type WipeDiskStateType = {
+  /* target disks */
+  targetDisks: DeviceSelectionType<DiskType>;
+  diskWiping: boolean;
+  runningStatus?: RunReportType;
+
+  /* Error message modal dialog */
+  modaling: boolean;
+  errorMessage: string;
+  errorTitle: string;
+  resetting : boolean;
+};
+
+
+export default class WipeDisk extends React.Component<any, WipeDiskStateType> {
+  constructor(props:any) {
+    super(props);
     this.state = {
       /* target disks */
       targetDisks: {},
       diskWiping: false,
-
-      runningStatus: undefined,
 
       /* Error message modal dialog */
       modaling: false,
@@ -36,27 +47,30 @@ export default class WipeDisk extends React.Component {
   }
 
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("zerowipe", this.onRunnerUpdate.bind(this));
   }
 
-  onRunnerUpdate(update) {
+  onRunnerUpdate(update: RunReportType) {
     this.setState({runningStatus: update, diskWiping: update.device !== ''});
   }
 
-  diskSelectionChanged(selectedDisks, clicked) {
+  diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
     if (!clicked)
       return;
-    var newSelection = cloneDeep(this.state.targetDisks);
 
     if (this.state.targetDisks[clicked.deviceName]) {
-      newSelection[clicked.deviceName] = false;
+      let targetDisks = Object.assign( {}, this.state.targetDisks);
+      delete targetDisks[clicked.deviceName];
+      this.setState({targetDisks});
     }
     else {
-      if (!clicked.mounted)
-        newSelection[clicked.deviceName] = clicked;
+      if (!clicked.mounted) {
+        let targetDisks = Object.assign({}, this.state.targetDisks);
+        targetDisks[clicked.deviceName] = clicked;
+        this.setState({targetDisks});
+      }
     }
-    this.setState( {targetDisks: newSelection});
   }
 
   did_reset() {
@@ -76,9 +90,9 @@ export default class WipeDisk extends React.Component {
     }
 
     if (targetDisks.length > 1) {
-      var url = sweetHome.backendUrl + "/dispatch/wipe?deviceNames=";
-      var sep = "";
-      var targetDisk;
+      let url = sweetHome.backendUrl + "/dispatch/wipe?deviceNames=";
+      let sep = "";
+      let targetDisk;
       for (targetDisk of targetDisks) {
         url = url + sep + targetDisk;
         sep = ",";
@@ -96,19 +110,12 @@ export default class WipeDisk extends React.Component {
     const wipeUrl = this.getWipeUrl();
 
     if (wipeUrl === undefined) {
-      this.showErrorMessageModal("Please select...", "No disk, source or restore type targetDisks.");
+      ErrorMessageModal("Please select...", "No disk, source or restore type targetDisks.");
       return;
     }
 
     console.log(wipeUrl);
-    request({
-      "method":"POST",
-      "uri": wipeUrl,
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
+    fetch(wipeUrl, {"method":"POST"}).then(_ => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({diskWiping: true});
     });
@@ -116,14 +123,7 @@ export default class WipeDisk extends React.Component {
 
 
   onAbort() {
-    request({
-      "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/stop-wipe",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/stop-wipe", {"method":"POST"}).then(_ => {
       this.setState({
         diskWiping: false,
       });
@@ -148,7 +148,7 @@ export default class WipeDisk extends React.Component {
               <Button startIcon={<RefreshIcon />} variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
           </Grid>
           <Grid item xs={12}>
-            <Disks runner={"zerowipe"} runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} />
+            <Disks runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} running={diskWiping}/>
           </Grid>
 	    </Grid>
       </div>

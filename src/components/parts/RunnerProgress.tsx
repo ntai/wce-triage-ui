@@ -1,15 +1,27 @@
 import React from 'react';
-import cloneDeep from "lodash/cloneDeep";
-import request from "request-promise";
 import {sweetHome} from "../../looseend/home";
 import MaterialTable from "material-table";
 import {tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import '../commands/commands.css';
+import {TaskInfo, RunReportType} from "../common/types";
 
-export default class RunnerProgress extends React.Component {
-  constructor() {
-    super();
+type RunnerPropsType = {
+  runningStatus: undefined | RunReportType;
+  statuspath: string;
+}
+
+type RunnerStateType = {
+  sequenceNumber: number | undefined;
+  tasks: TaskInfo[];
+  taskPages: number;
+  tasksLoading: boolean;
+  fontSize: number;
+}
+
+export default class RunnerProgress extends React.Component<RunnerPropsType, RunnerStateType> {
+  constructor(props: any) {
+    super(props);
     this.state = {
       /* Status update sequence number */
       sequenceNumber: undefined,
@@ -50,10 +62,9 @@ export default class RunnerProgress extends React.Component {
     if (this.props.runningStatus.step !== undefined) {
       if (this.state.tasks !== undefined) {
         console.log( this.props.runningStatus);
-        var tasks = cloneDeep(this.state.tasks);
+        const tasks = JSON.parse(JSON.stringify(this.state.tasks));
         const step_no = this.props.runningStatus.step;
-        const task = this.props.runningStatus.task;
-        tasks[step_no] = task;
+        tasks[step_no] = this.props.runningStatus.task;
         this.setState({tasks: tasks})
       }
       else {
@@ -62,32 +73,30 @@ export default class RunnerProgress extends React.Component {
     }
   }
 
-  fetchTasks(state, instance) {
+  fetchTasks() {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({ tasksLoading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-    request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + this.props.statuspath, // "/dispatch/disk-load-status.json"
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
-      this.setState({
-        tasks: res.tasks,
-        taskPages: res.pages,
-        tasksLoading: false
+    fetch(sweetHome.backendUrl + this.props.statuspath) // "/dispatch/disk-load-status.json"
+      .then(reply => reply.json())
+      .then(res => {
+        // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
+        if (res.tasks) {
+          this.setState({
+            tasks: res.tasks,
+            taskPages: res.pages,
+            tasksLoading: false
+          });
+        }
       });
-    });
   }
-
 
   render() {
     const {tasks, tasksLoading, fontSize } = this.state;
+    if (tasks === undefined)
+        return null;
 
     return (
       <div>
@@ -98,29 +107,27 @@ export default class RunnerProgress extends React.Component {
           columns={[
             {
               title: "Step",
-              cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               field: "taskCategory",
-              headerStyle: {
-                width: 300,
-              },
+              cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
+              headerStyle: { width: 300, },
             },
             {
               title: "Estimate",
+              field: "taskEstimate",
               cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               headerStyle: {
                 minWidth: 80,
                 maxWidth: 120
               },
-              field: "taskEstimate"
             },
             {
               title: "Elapsed",
+              field: "taskElapse",
               cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
               headerStyle: {
                 minWidth: 80,
                 maxWidth: 120
               },
-              field: "taskElapse"
             },
             {
               title: 'Status',
@@ -171,7 +178,7 @@ export default class RunnerProgress extends React.Component {
                 width: 350,
               },
               field: "taskMessage",
-              style: {textAlign: "left"},
+              // style: {textAlign: "left"},
             }
           ]}
           data={tasks}
@@ -185,25 +192,30 @@ export default class RunnerProgress extends React.Component {
               search: false,
               showTitle: false,
               detailPanelColumnAlignment: "left",
-              padding: "small",
+              padding: "dense",
               rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress), paddingTop: 0, paddingBottom: 0, paddingLeft: 8, paddingRight: 8 } },
               headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }
             }
           }
           detailPanel={[{
             tooltip: "Show task details",
+            // This is a bug in type description. iconProps must exist.
+            // @ts-ignore
             iconProps: { size: "small" },
             render: rowData => {
               if (rowData.taskVerdict) {
                 return (
                   <div className="preformat"
                        style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 2}}>
+                    {rowData.taskExplain}
                     {rowData.taskVerdict.map(elem => <p>{elem}</p>)}
                   </div>
                 )
               } else {
                 return (
-                  <div>None</div>
+                  <div className="preformat">
+                    {rowData.taskExplain}
+                  </div>
                 )
               }
             },

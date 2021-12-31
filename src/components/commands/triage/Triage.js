@@ -1,6 +1,5 @@
 import React from "react";
 //
-import request from 'request-promise';
 import {sweetHome} from '../../../looseend/home'
 
 import Grid from '@material-ui/core/Grid';
@@ -43,14 +42,7 @@ function CpuInfo(props) {
   const [cpu_info, set_cpu_info] = React.useState(undefined);
 
   React.useEffect(() => {
-    request({
-      "method": "GET",
-      'uri': sweetHome.backendUrl + '/dispatch/cpu_info.json',
-      "json": true,
-      "headers": {
-	 "User-Agent": "WCE Triage"
-      }
-    }).then(res => {
+    fetch(sweetHome.backendUrl + '/dispatch/cpu_info.json').then(rep => rep.json()).then(res => {
       set_cpu_info(res.cpu_info);
       props.onMount(res.cpu_info);
       setLoading(false);
@@ -123,15 +115,7 @@ export default class Triage extends React.Component {
 
   fetchTriage(state, instance) {
     this.setState({loading: true, triageResult: []});
-    request({
-        "method": "GET",
-        'uri': sweetHome.backendUrl + '/dispatch/triage.json',
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
+    fetch(sweetHome.backendUrl + '/dispatch/triage.json').then(rep => rep.json()).then(res => {
       // Now just get the rows of triage results
       this.setState({
         triageResult: res.components,
@@ -152,31 +136,15 @@ export default class Triage extends React.Component {
 
 
   onShutdown() {
-    request({
-        "method": "POST",
-        'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff',
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      // Now just get the rows of triage results
+    fetch(sweetHome.backendUrl + '/dispatch/shutdown?mode=poweroff', {"method": "POST"}).then( _ => {
+      console.log("power off");
     });
   }
 
 
   onReboot() {
-    request({
-        "method": "POST",
-        'uri': sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot',
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      // Now just get the rows of triage results
+    fetch(sweetHome.backendUrl + '/dispatch/shutdown?mode=reboot', {"method": "POST"}).then(_ => {
+      console.log("reboot");
     });
   }
 
@@ -195,16 +163,8 @@ export default class Triage extends React.Component {
   }
 
   onOpticalTest() {
-    request({
-        "method": "POST",
-        'uri': sweetHome.backendUrl + '/dispatch/opticaldrivetest',
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      //
+    fetch(sweetHome.backendUrl + '/dispatch/opticaldrivetest', {"method": "POST"}).then(_ => {
+      console.log("optical drive test");
     });
   }
 

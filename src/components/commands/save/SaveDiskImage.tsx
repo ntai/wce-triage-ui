@@ -1,7 +1,6 @@
 import React from "react";
-import request from 'request-promise';
 import {sweetHome} from '../../../looseend/home';
-import socketio from "socket.io-client";
+import {io} from "socket.io-client";
 import RunnerProgress from "../../parts/RunnerProgress";
 import Disks from "../../parts/Disks";
 import Catalog from "../../parts/Catalog";
@@ -12,13 +11,29 @@ import SaveIcon from '@material-ui/icons/Save';
 import "../commands.css";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CancelIcon from "@material-ui/icons/Cancel";
+import {ItemType, RunReportType, DiskType, DeviceSelectionType} from "../../common/types";
 
 
-export default class SaveDiskImage extends React.Component {
-  constructor() {
-    super();
+type SaveDiskImageStateType = {
+  imageTypes: ItemType[];
+  imageType?: string;
+
+  makingImage: boolean;
+  sourceDisk?: string;
+  runningStatus?: RunReportType;
+
+  /* Selected disks */
+  selectedDisks: DeviceSelectionType<DiskType>;
+
+  resetting: boolean;
+};
+
+
+export default class SaveDiskImage extends React.Component<any,SaveDiskImageStateType> {
+  constructor(props: any) {
+    super(props);
     this.state = {
-      /* Selected disk image destination. Because the selection can be multiple by original implementation, the value her is always a single elemnt array. */
+      /* Selected disk image destination. Because the selection can be multiple by original implementation, the value her is always a single element array. */
       imageTypes: [],
       imageType: undefined,
 
@@ -37,20 +52,20 @@ export default class SaveDiskImage extends React.Component {
   }
 
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("saveimage", this.onRunnerUpdate.bind(this));
   }
 
-  onRunnerUpdate(update) {
+  onRunnerUpdate(update: RunReportType) {
     this.setState({runningStatus: update, makingImage: true})
   }
 
-  setImageType(selected) {
+  setImageType(selected?: string) {
     console.log(selected);
     this.setState({imageType: selected})
   }
 
-  setImageTypes(catalog) {
+  setImageTypes(catalog: ItemType[]) {
     console.log(catalog);
     this.setState({imageTypes: catalog, imageType: undefined})
   }
@@ -65,37 +80,28 @@ export default class SaveDiskImage extends React.Component {
 
     // time to make donuts
     const sourceDisk = selectedDevices[0];
-    return sweetHome.backendUrl + "/dispatch/save?deviceName=" + sourceDisk + "&type=" + imagingType.value;
+    return sweetHome.backendUrl + "/dispatch/save?deviceName=" + sourceDisk + "&type=" + imagingType;
   }
 
   onSave() {
     const savingUrl = this.getImagingUrl();
     console.log(savingUrl);
+    if (savingUrl === undefined)
+        return;
 
-    request({
-      "method":"POST",
-      "uri": savingUrl,
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
+    fetch(savingUrl, {"method":"POST"}).then(_ => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
       this.setState({ makingImage: true });
     });
   }
 
   onReset() {
-    this.setState( {resetting: true, destination: undefined});
+    this.setState( {resetting: true, selectedDisks: {}});
   }
 
-  diskSelectionChanged(selectedDisks, clicked) {
-    if (!clicked) return;
-    var newSelection = {};
-
-    if (!clicked.mounted) {
-      newSelection[clicked.deviceName] = clicked;
-      this.setState( {selectedDisks: newSelection});
+  diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
+    if (clicked && !clicked.mounted) {
+      this.setState( {selectedDisks: {[clicked.deviceName]: clicked}});
     }
   }
 
@@ -104,14 +110,7 @@ export default class SaveDiskImage extends React.Component {
   }
 
   onAbort() {
-    request({
-      "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/stop-save",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/stop-save", {"method":"POST"}).then(res => {
       this.setState({
         makingImage: false,
       });
@@ -141,7 +140,7 @@ export default class SaveDiskImage extends React.Component {
           </Grid>
 
           <Grid item xs={12}>
-          <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+            <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
 
           <Grid item xs={12}>

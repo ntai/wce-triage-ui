@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import request from "request-promise";
 import {sweetHome} from "../../../looseend/home";
 import PropTypes from 'prop-types';
 import TreeView from '@material-ui/lab/TreeView';
@@ -392,16 +391,8 @@ export default function DiskImageTreeView(props) {
   function fetchSources() {
     setSourcesLoading(true);
 
-    request({
-        "method": "GET",
-        "uri": sweetHome.backendUrl + "/dispatch/disk-images.json",
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      var index = 10000;
+    fetch(sweetHome.backendUrl + "/dispatch/disk-images.json").then( rep => rep.json()).then(res => {
+      let index = 10000;
       const srcs = res.sources.map(src => ({
         value: src.fullpath,
         label: src.name,
@@ -419,16 +410,8 @@ export default function DiskImageTreeView(props) {
   function fetchCatalogTypes() {
     setCatalogTypesLoading(true);
 
-    request({
-        "method": "GET",
-        "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      var index = 0;
+    fetch(sweetHome.backendUrl + "/dispatch/restore-types.json").then(rep => rep.json()).then(res => {
+      let index = 0;
       const srcs = res.restoreTypes.map(src => ({index: index++, ...src}));
       setCatalogTypes(srcs);
       setCatalogTypesLoading(false);
@@ -469,21 +452,12 @@ export default function DiskImageTreeView(props) {
     console.log(targetImageFile);
 
     const url = encodeURI(sweetHome.backendUrl + "/dispatch/rename?to=" + filename + "&restoretype=" + targetImageFile.restoreType + "&from=" + targetImageFile.label);
-    request({
-        "method": "POST",
-        "uri": url,
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-        console.log(res);
-        setAlertMessage(undefined);
-        renameDialogSetOpen(false);
-        fetchSources();
-      }
-    ).catch(err => {
+    fetch(url, {"method": "POST"}).then(rep => rep.json()).then(res => {
+      console.log(res);
+      setAlertMessage(undefined);
+      renameDialogSetOpen(false);
+      fetchSources();
+    }).catch(err => {
       setAlertClose("Bummer");
       setAlertTitle("Rename Failure");
       setAlertMessage("Renaming " + filename + " failed.");
@@ -502,16 +476,8 @@ export default function DiskImageTreeView(props) {
     console.log( "Deleting " + filename);
 
     const url = encodeURI(sweetHome.backendUrl + "/dispatch/delete?name=" + filename + "&restoretype=" + targetImageFile.restoreType);
-    request({
-        "method": "POST",
-        "uri": url,
-        "json": true,
-        "headers": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      console.log(res);
+    fetch(url, {"method": "POST"}).then( rep => rep.json()).then(res => {
+        console.log(res);
       setAlertMessage(undefined);
       deleteDialogSetOpen(false);
       fetchSources();

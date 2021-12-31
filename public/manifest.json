@@ -1,16 +1,16 @@
 {
-    "theme_color": "#000000", 
-    "version": "0.306.20191126", 
-    "name": "WCE Triage Kiosk user interface by React.js", 
-    "short_name": "WCE Triage UI", 
+    "short_name": "WCE Triage UI",
+    "name": "WCE Triage Kiosk user interface by React.js",
+    "version": "0.401.20211229",
     "icons": [
         {
-            "src": "favicon.ico", 
-            "type": "image/x-icon", 
-            "sizes": "64x64 32x32 24x24 16x16"
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
         }
-    ], 
-    "start_url": ".", 
-    "background_color": "#ffffff", 
-    "display": "standalone"
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
 }
