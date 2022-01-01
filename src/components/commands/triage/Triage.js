@@ -8,7 +8,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import PressPlay from "./PressPlay";
 import {io} from "socket.io-client";
-import cloneDeep from "lodash/cloneDeep";
 import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
 import "../commands.css";
@@ -113,7 +112,7 @@ export default class Triage extends React.Component {
     this.fetchTriage = this.fetchTriage.bind(this);
   }
 
-  fetchTriage(state, instance) {
+  fetchTriage() {
     this.setState({loading: true, triageResult: []});
     fetch(sweetHome.backendUrl + '/dispatch/triage.json').then(rep => rep.json()).then(res => {
       // Now just get the rows of triage results
@@ -149,8 +148,8 @@ export default class Triage extends React.Component {
   }
 
   onMusicPlay() {
-    var rows = cloneDeep(this.state.triageResult);
-    var row;
+    let rows = JSON.parse(JSON.stringify(this.state.triageResult));
+    let row;
 
     for (row of rows) {
       if (row.component === "Sound") {
@@ -175,9 +174,9 @@ export default class Triage extends React.Component {
 
   onTriageUpdate(update) {
     console.log(update);
-    var rows = cloneDeep(this.state.triageResult);
-    var row;
-    var updated;
+    let rows = JSON.parse(JSON.stringify(this.state.triageResult));
+    let row;
+    let updated;
 
     for (row of rows) {
       if (row.component === update.component) {

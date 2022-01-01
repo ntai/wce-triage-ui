@@ -8,7 +8,7 @@ import WipeOption from "../../parts/WipeOption";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import DiskImageSelector, {SourceType} from '../diskimage/DiskImageSelector';
+import DiskImageSelector, {SourceType, ToDiskSources} from '../diskimage/DiskImageSelector';
 import "../commands.css";
 import BuildIcon from '@material-ui/icons/Build';
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -243,8 +243,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
     fetch(sweetHome.backendUrl + "/dispatch/disk-images.json").then(reply => reply.json()).then(res => {
-      const sources: DiskImageType[] = res.sources as any;
-      const srcs: SourceType[] = sources.map( (src) => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType}));
+      const srcs = ToDiskSources(res.sources as any);
       let src = undefined;
       let restoreType: string|undefined = undefined;
       // if there is only one image source, pick it.
@@ -257,14 +256,13 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
         sources: srcs,
         subsetSources: srcs,
         source: src,
-        restoreType: restoreType,
-        sourcesLoading: false,
+        restoreType: restoreType
       });
-    });
+    }).finally( () => { this.setState( {sourcesLoading: false}); });
   }
 
   render() {
-    const { subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks, restoreTypes } = this.state;
+    const { subsetSources, source, wipeOption, restoreType, diskRestoring, resetting, runningStatus, targetDisks } = this.state;
     const restoringUrl = this.getRestoringUrl();
 
     return (

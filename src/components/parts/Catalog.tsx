@@ -6,7 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import {ItemType} from "../common/types";
+import {ImageMetaType, ItemType} from "../common/types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,13 +38,12 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
     setCatalogTypesLoading(true);
 
     fetch(sweetHome.backendUrl + "/dispatch/restore-types.json").then(reply => reply.json()).then(res => {
-        const restoreTypes = res.restoreTypes as any[];
+        const restoreTypes = res.restoreTypes as ImageMetaType[];
         const cats: ItemType[] = restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
         setCatalogTypesLoading(false);
         setCatalogTypes(cats);
         catalogTypesChanged(cats);
-        console.log("Setting catalog types");
-        console.log(cats);
+        console.log("Setting catalog types\n" + cats);
     }).finally(() => {
         setCatalogTypesLoading(false);
     });

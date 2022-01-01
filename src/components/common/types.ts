@@ -83,3 +83,18 @@ export type WipeType = {
 }
 
 export type DeviceSelectionType<T> = { [deviceName: string]: T };
+
+// .disk_image_type.json format
+export type ImageMetaType = {
+    id: string; // restoreType on source type
+    filestem: string;
+    name: string;
+    media?: string;
+    timestamp: boolean;
+    efi_image?: string;
+    wce_share_url?: string;
+    partition_map: string; // gpt, mbr
+    randomize_hostname: boolean;
+    cmdline: object;
+    index: number;
+}

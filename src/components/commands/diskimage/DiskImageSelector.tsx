@@ -4,7 +4,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import {ItemType} from "../../common/types";
+import {ItemType, DiskImageType} from "../../common/types";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -19,12 +19,19 @@ const useStyles = makeStyles((theme) =>
 );
 
 // This is internally used.
+// This exists so that you can feed this to menu items.
 export type SourceType = ItemType & {
     // label: string;
     // value: string; // url - "http://horus:8312/wce/wce-disk-images/wce-20/wce-20-2021-10-10.ext4.partclone.gz"
     filesize: number;
     mtime: string; // timestamp
     restoreType: string; // "wce-20", etc.
+    index: number;
+}
+
+export function ToDiskSources( diskImages: DiskImageType[], start?: number) : SourceType[] {
+    const base = start ? start : 0;
+    return diskImages.map( (src, index) => ({value: src.fullpath, label: src.name, filesize: src.size, mtime: src.mtime, restoreType: src.restoreType, index: index + base}));
 }
 
 // <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />

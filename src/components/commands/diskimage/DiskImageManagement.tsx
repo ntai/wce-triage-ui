@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import DiskImageTreeView from "./DiskImageTreeView";
+import DiskImageTreeView, {DiskImageOperationType} from "./DiskImageTreeView";
 import Grid from "@material-ui/core/Grid";
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -176,8 +176,8 @@ function DiskImageMenubar(props : DiskImageMenubarProps & OpMenuProps) {
 }
 
 type DiskImageManagementStateType = {
-  /* Disk Image file selection */
-  imageFileSelection: DiskImageType[];
+  /* Disk Image file selection - key is the image file */
+  imageFileSelection: DeviceSelectionType<boolean>;
 
   /* target disks */
   targetDisks: DeviceSelectionType<DiskType>;
@@ -187,7 +187,7 @@ type DiskImageManagementStateType = {
 
   resetting: boolean;
 
-  menuCommand?: string;
+  menuCommand?: DiskImageOperationType;
 };
 
 
@@ -196,7 +196,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     super(props);
     this.state = {
       /* Disk Image file selection */
-      imageFileSelection: [],
+      imageFileSelection: {},
 
       /* target disks */
       targetDisks: {},
@@ -204,13 +204,13 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
       isRunning: false,
       runningStatus: undefined,
 
-      resetting: false
+      resetting: false,
     };
 
     this.did_reset = this.did_reset.bind(this);
   }
 
-  imageFileSelection(selectedImages: DiskImageType[]) {
+  imageFileSelection(selectedImages: DeviceSelectionType<boolean>) {
     this.setState( { imageFileSelection: selectedImages });
   }
 
@@ -244,7 +244,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
   getSyncImageUrl() {
     // Make array rather than json object.
     const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
-    const imageFiles = this.state.imageFileSelection;
+    const imageFiles = Object.keys(this.state.imageFileSelection).filter( filename => this.state.imageFileSelection[filename]);
 
     if (targetDiskList.length === 0 || imageFiles.length === 0) {
       return undefined;
@@ -346,7 +346,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
           <Grid item xs={4}>
             <Box border={2} borderColor="grey.500"  borderRadius={4}>
               <Typography>Disk Images</Typography>
-              <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)}
+              <DiskImageTreeView selectionChangedCB={this.imageFileSelection.bind(this)}
                                  command={this.state.menuCommand}
                                  clearCommand={this.clearCommand.bind(this)}/>
             </Box>
