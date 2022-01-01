@@ -2,7 +2,6 @@ import React from 'react';
 import Triage from './commands/triage/Triage';
 import LoadDiskImage from './commands/load/LoadDiskImage';
 import SaveDiskImage from './commands/save/SaveDiskImage';
-// import { Tab, Tabs } from 'react-bootstrap';
 import Messages from './Messages';
 import WipeDisk from "./commands/wipe/WipeDisk";
 import TriageAppSettings from "./settings/TriageAppSettings";
@@ -65,7 +64,6 @@ export default class Commands extends React.Component {
 
   render() {
     const selectedTab = this.state.selectedTab;
-    console.log( "selectedTab: " + selectedTab);
 
     return (
       <div>

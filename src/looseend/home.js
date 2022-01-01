@@ -1,26 +1,24 @@
-import process from 'process';
-import url from 'url';
 
 export const sweetHome = (function() {
   const href = document.location.href;
-  const urlObj = url.parse(href, true);
-  if (urlObj.port === "3000") process.env.NODE_ENV = "development";
+  const urlObj = new URL(href);
+  const is_dev = urlObj.port === "3000";
 
   return {
     href,
     urlObj,
     getQueryStringValue: (key) => {
-      let value = ((urlObj && urlObj.query) && urlObj.query[key]) || null;
+      let value = ((urlObj && urlObj.search) && urlObj.searchParams.get(key)) || null;
       return value;
     },
     baseUrl: urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
     // For deployment, backendUrl is same as baseUrl. Just a hack for now
 
-    backendUrl: (process.env.NODE_ENV === 'development') ?
-    'http://wcedev:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+    backendUrl: is_dev ?
+      'http://localhost:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
 
-    websocketUrl: (process.env.NODE_ENV === 'development') ?
-      'ws://wcedev:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+    websocketUrl: is_dev ?
+      'ws://localhost:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
   };
 })();
 

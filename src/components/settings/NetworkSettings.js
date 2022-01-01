@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {sweetHome} from '../../looseend/home';
-import socketio from "socket.io-client";
+import {io} from "socket.io-client";
 
 import "../commands/commands.css";
 
@@ -13,7 +13,7 @@ export default class NetworkSettings extends Component {
     };
   }
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("networksettings", this.onNetworkSettingsUpdate.bind(this));
   }
 

@@ -1,6 +1,4 @@
 import React from "react";
-
-import request from 'request-promise';
 import {sweetHome} from '../../looseend/home';
 import "../commands/commands.css";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -8,6 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {ImageMetaType, ItemType} from "../common/types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,35 +20,32 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
 // <Catalog title={"Restore type"} catalogType={restoreType} catalogTypeChanged={this.setRestoreType} catalogTypesChanged={this.setRestoreTypes} />
-export default function Catalog(props) {
+// <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
+
+export default function Catalog( {title, catalogType, catalogTypeChanged, catalogTypesChanged } :
+                                     {
+                                       title: string,
+                                       catalogType?: string,
+                                       catalogTypeChanged: (cat?: string) => void,
+                                       catalogTypesChanged: (cats: ItemType[]) => void
+                                     }) {
   const classes = useStyles();
   const [catalogTypesLoading, setCatalogTypesLoading] = React.useState(true);
-  const [catalogTypes, setCatalogTypes] = React.useState([]);
-
-  const title = props.title;
-  const catalogType = props.catalogType;
-  const catalogTypeChanged = props.catalogTypeChanged;
-  const catalogTypesChanged = props.catalogTypesChanged;
+  const [catalogTypes, setCatalogTypes] = React.useState<ItemType[]>([]);
 
   function fetchCatalogTypes() {
     setCatalogTypesLoading(true);
 
-    request({
-      "method":"GET",
-      "uri": sweetHome.backendUrl + "/dispatch/restore-types.json",
-      "json": true,
-      "headers": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      const cats = res.restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
-      setCatalogTypesLoading(false);
-      setCatalogTypes(cats);
-      catalogTypesChanged(cats);
-      console.log("Setting catalog types");
-      console.log(cats);
+    fetch(sweetHome.backendUrl + "/dispatch/restore-types.json").then(reply => reply.json()).then(res => {
+        const restoreTypes = res.restoreTypes as ImageMetaType[];
+        const cats: ItemType[] = restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
+        setCatalogTypesLoading(false);
+        setCatalogTypes(cats);
+        catalogTypesChanged(cats);
+        console.log("Setting catalog types\n" + cats.map( (cat) => JSON.stringify(cat)).join("\n"));
+    }).finally(() => {
+        setCatalogTypesLoading(false);
     });
   }
 
@@ -57,7 +53,7 @@ export default function Catalog(props) {
     fetchCatalogTypes();
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
     catalogTypeChanged(event.target.value);
   };
 
@@ -68,9 +64,10 @@ export default function Catalog(props) {
         <Select
           labelId="wipe-option-select-label"
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
+          key={catalogType}
           value={catalogType || ''}
           style={{fontSize: 14, textAlign: "left"}}
-          children={catalogTypes.map( item => <MenuItem value={item}>{item.label}</MenuItem>)}
+          children={catalogTypes.map(item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />
       </FormControl>

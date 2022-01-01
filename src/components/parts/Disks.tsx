@@ -1,22 +1,51 @@
 import React from "react";
-import request from 'request-promise';
 import {sweetHome} from '../../looseend/home';
-import cloneDeep from "lodash/cloneDeep";
 import "../commands/commands.css";
 import MaterialTable from "material-table";
 import {tableIcons} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import DiskDetails from "./DiskDetails";
+import {DeviceSelectionType, DiskType, ItemType, RunReportType, WipeType} from "../common/types";
 
 
-export default class Disks extends React.Component {
-  constructor(props) {
+type DisksPropsType = {
+  diskSelectionChanged: (selected: DeviceSelectionType<DiskType>, clicked?: DiskType) => void;
+  running: boolean;
+  resetting: boolean;
+  did_reset: () => void;
+  selected: DeviceSelectionType<DiskType>;
+  runningStatus?: RunReportType;
+};
+
+type DisksStateType = {
+  /* Raw disks */
+  disks: DiskType[];
+  /* Disk table - page 1 always */
+  diskPages: number;
+  /* Fetching list of disks */
+  diskStatusLoading: boolean;
+
+  /* disk loading update sequence number */
+  sequenceNumber?: number;
+
+  /* Mounted disks */
+  mounted: DeviceSelectionType<boolean>;
+
+  /* Wipe options */
+  wipeOptions: ItemType[];
+  wipeOptionsLoading: boolean;
+};
+
+
+export default class Disks extends React.Component<DisksPropsType, DisksStateType> {
+  constructor(props: any) {
     super(props);
     this.state = {
       /* Raw disks */
       disks: [],
       /* Disk table - page 1 always */
-      diskPages: null,
+      diskPages: 1,
+
       /* Fetching list of disks */
       diskStatusLoading: true,
 
@@ -35,64 +64,41 @@ export default class Disks extends React.Component {
   }
 
 
-  fetchDisks(state, instance) {
+  fetchDisks() {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({diskStatusLoading: true});
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-    request({
-        "method": "GET",
-        "uri": sweetHome.backendUrl + "/dispatch/disks.json",
-        "json": true,
-        "titles": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      var mounted = {};
-      var selected = {};
-      var disk;
-      for (disk of res.disks) {
-        mounted[disk.deviceName] = disk.mounted;
-        selected[disk.deviceName] = false;
-      }
-      this.setState({
-        disks: res.disks,
-        diskStatusLoading: false,
-        mounted: mounted
-      });
-      this.props.diskSelectionChanged(selected);
-    });
+    fetch(sweetHome.backendUrl + "/dispatch/disks.json")
+        .then( reply => reply.json())
+        .then(res => {
+          // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
+          let mounted: DeviceSelectionType<boolean> = {};
+          let selected: DeviceSelectionType<DiskType> = {};
+          let disk: DiskType;
+          for (disk of res.disks) {
+            mounted[disk.deviceName] = disk.mounted;
+          }
+          this.setState({
+            disks: res.disks,
+            mounted: mounted
+          });
+          this.props.diskSelectionChanged(selected);
+        })
+        .finally(() => {this.setState({diskStatusLoading: false})});
   }
 
-  fetchWipeOptions(state, instance) {
+  fetchWipeOptions() {
     this.setState({wipeOptionsLoading: true});
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-    request({
-        "method": "GET",
-        "uri": sweetHome.backendUrl + "/dispatch/wipe-types.json",
-        "json": true,
-        "titles": {
-          "User-Agent": "WCE Triage"
-        }
-      }
-    ).then(res => {
-      const wipeOptions = res.wipeTypes.map(rt => ({label: rt.name, value: rt.id}));
-      this.setState({wipeOptions: wipeOptions, wipeOptionsLoading: false});
-    });
-  }
-
-  resetDiskWipeOption() {
-    var disks = cloneDeep(this.state.disks);
-    var disk;
-
-    for (disk of disks) {
-      disk.wipe = this.wipeOptions[0];
-    }
-    this.setState({disks: disks})
+    fetch(sweetHome.backendUrl + "/dispatch/wipe-types.json")
+      .then(reply => reply.json())
+      .then(res => {
+        const wipeOptions = res.wipeTypes.map((rt: WipeType) => ({label: rt.name, value: rt.id}));
+        this.setState({wipeOptions: wipeOptions, wipeOptionsLoading: false});
+      });
   }
 
 
@@ -120,15 +126,14 @@ export default class Disks extends React.Component {
   }
 
   componentDidUpdate() {
-    var disk;
-    var disks = undefined;
-    var target_update = false;
-
+    let disk : DiskType;
+    let disks: DiskType[] = JSON.parse(JSON.stringify(this.state.disks));
+    let target_update = false;
 
     if (this.props.resetting)
       this.onReset();
 
-    for (disk of this.state.disks) {
+    for (disk of disks) {
       const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
       if (disk['target'] !== is_target) {
         target_update = true;
@@ -137,7 +142,6 @@ export default class Disks extends React.Component {
     }
 
     if (target_update) {
-      disks = cloneDeep(this.state.disks);
       for (disk of disks) {
         const is_target = this.props.selected[disk.deviceName] ? 1 : 0;
         disk['target'] = is_target;
@@ -153,8 +157,6 @@ export default class Disks extends React.Component {
         return;
 
       this.setState({sequenceNumber: this.props.runningStatus._sequence_});
-
-      disks = cloneDeep(this.state.disks);
 
       if (this.props.runningStatus.device && this.props.runningStatus.runEstimate && this.props.runningStatus.runTime) {
         const devname = this.props.runningStatus.device;
@@ -174,36 +176,34 @@ export default class Disks extends React.Component {
             if (this.props.runningStatus.runStatus === "Failed")
               disk.progress = 999;
 
-            disk.runEstiamte = runEstimate;
+            disk.runEstimate = runEstimate;
             disk.runTime = runTime;
             disk.runMessage = runMessage;
             break;
           }
         }
       }
-
       this.setState({disks: disks});
     }
   }
 
-  setNewSelection(newSelection, clicked) {
-    this.props.diskSelectionChanged(newSelection, clicked);
+  setNewSelection(newSelection: DiskType[], clicked?: DiskType) {
+    let selection: DeviceSelectionType<DiskType> = {};
+    let disk: DiskType;
+    for (disk of newSelection) {
+      selection[disk.deviceName] = disk;
+    }
+    this.props.diskSelectionChanged(selection, clicked);
   }
 
-  requestUnmountDisk(deviceName, mountState) {
+  requestUnmountDisk(deviceName: string, mountState: boolean) {
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
-    request({
-      "method":"POST",
-      "uri": sweetHome.backendUrl + "/dispatch/unmount?deviceName=" + deviceName + "&mount=" + mountState,
-      "json": true,
-      "titles": {
-        "User-Agent": "WCE Triage"
-      }}
-    ).then(res => {
-      this.onReset();
-    });
+    fetch(sweetHome.backendUrl + "/dispatch/unmount?deviceName=" + deviceName + "&mount=" + mountState,
+      { method: "POST" })
+      .then( reply => {
+        this.onReset();
+      });
   }
-
 
   render() {
     const { disks, diskStatusLoading } = this.state;
@@ -213,7 +213,6 @@ export default class Disks extends React.Component {
         <MaterialTable
           icons={tableIcons}
           style={ {marginTop: 1, marginBottom: 1, marginLeft: 0, marginRight: 0} }
-          disabled={diskStatusLoading || this.props.running}
           onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
             {
@@ -222,6 +221,7 @@ export default class Disks extends React.Component {
               cellStyle: {
                 backgroundColor: '#eeeeee',
                 width: 120,
+                maxWidth: 120,
                 paddingTop: 2, paddingBottom: 2, 
               },
               headerStyle: {
@@ -231,7 +231,7 @@ export default class Disks extends React.Component {
             {
               title: "Mounted",
               field: "mounted",
-              cellStyle: { width: 30,
+              cellStyle: { width: 30, maxWidth: 30,
                 paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 maxWidth: 75,
@@ -247,16 +247,16 @@ export default class Disks extends React.Component {
             {
               title: "Bus",
               field: "bus",
-              cellStyle: { width: 40,
+              cellStyle: { width: 40, maxWidth: 40,
                 paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
-                maxWidth: 60,
+                maxWidth: 40,
               },
             },
             {
               title: "Model",
               field: "model",
-              cellStyle: { width: 300,
+              cellStyle: { width: 300, maxWidth: 300,
                 paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 width: 300,
@@ -265,7 +265,7 @@ export default class Disks extends React.Component {
             {
               title: "Estimate",
               field: "runEstiamte",
-              cellStyle: { width: 80, textAlign: 'center',
+              cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
                 paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 maxWidth: 80,
@@ -274,7 +274,7 @@ export default class Disks extends React.Component {
             {
               title: "Elapsed",
               field: "runTime",
-              cellStyle: { width: 80, textAlign: 'center',
+              cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
                 paddingTop: 2, paddingBottom: 2,   },
               headerStyle: {
                 maxWidth: 80,
@@ -309,15 +309,17 @@ export default class Disks extends React.Component {
           isLoading={diskStatusLoading} // Display the loading overlay when we need it
           options={{
             selection: true,
-            selectionProps: rowData => ( { disabled: rowData.mounted, checked: rowData.target ? true : false } ),
-            rowStyle: rowData => ({ backgroundColor: rowData.tableData.checked ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2, }),
+            // @ts-ignore
+            selectionProps: (rowData) => ({disabled: rowData.mounted, checked: rowData.target ? true : false }),
+            // @ts-ignore
+            rowStyle: (rowData) => ({backgroundColor: rowData.tableData.checked ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2,}),
             paging: false,
             draggable: false,
             toolbar: false,
             search: false,
             showTitle: false,
             detailPanelColumnAlignment: "left",
-            padding: "small",
+            padding: "dense",
           }}
           detailPanel={rowData => <DiskDetails disk={rowData} />}
         />

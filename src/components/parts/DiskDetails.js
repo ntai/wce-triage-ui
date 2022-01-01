@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import NumberFormat from 'react-number-format';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
