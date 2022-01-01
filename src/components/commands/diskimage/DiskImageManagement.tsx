@@ -9,17 +9,17 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Disks from "../../parts/Disks";
-import cloneDeep from "lodash/cloneDeep";
-import socketio from "socket.io-client";
+import {io} from "socket.io-client";
 import {sweetHome} from "../../../looseend/home";
 import Button from "@material-ui/core/Button";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Menu from '@material-ui/core/Menu';
+import Menu, {MenuProps} from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import RunnerProgress from "../../parts/RunnerProgress";
 import Tooltip from '@material-ui/core/Tooltip';
+import {DeviceSelectionType, DiskImageType, DiskType, RunReportType} from "../../common/types";
 
 
 const appbarStyles = makeStyles( theme => ({
@@ -40,7 +40,7 @@ const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
   },
-})(props => (
+})((props:MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
@@ -67,23 +67,28 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-function OpMenu(props) {
-  const myAppbar = appbarStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const propsExpandAllCatsCB = props.expandAllCatsCB;
-  const propsSelectAllFilesCB = props.selectAllFilesCB;
+interface OpMenuProps {
+  expandAllCatsCB: (sel: boolean) => void;
+  selectAllFilesCB: (all: boolean) => void;
+}
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+function OpMenu({ expandAllCatsCB, selectAllFilesCB} : OpMenuProps) {
+  const myAppbar = appbarStyles();
+  const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement|null>(null);
+
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    const currentTarget = event.currentTarget;
+    if (event?.currentTarget)
+      setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const allCagetories = (select) => {
+  const allCagetories = (select: boolean) => {
     setAnchorEl(null);
-    propsExpandAllCatsCB(select);
+    expandAllCatsCB(select);
   };
 
   const handleCollapseCategories = () => {
@@ -94,9 +99,9 @@ function OpMenu(props) {
     allCagetories(true);
   };
 
-  const selectAllFiles = (select) => {
+  const selectAllFiles = (select: boolean) => {
     setAnchorEl(null);
-    propsSelectAllFilesCB(select);
+    selectAllFilesCB(select);
   };
 
   const deselectAll = () => {
@@ -110,7 +115,7 @@ function OpMenu(props) {
   return (
     <div>
       <IconButton
-        edge="start" className={myAppbar.menuButton} color="inherit"
+        edge="start" className={myAppbar.commandButton} color="inherit"
         aria-label="menu"
         aria-controls="customized-menu"
         aria-haspopup="true"
@@ -142,13 +147,17 @@ function OpMenu(props) {
   );
 }
 
+interface DiskImageMenubarProps {
+  syncImages: () => void;
+  deleteImages: () => void;
+  syncImageEnabled: boolean;
+  deleteImageEnabled: boolean;
+}
 
-function DiskImageMenubar(props) {
+
+function DiskImageMenubar(props : DiskImageMenubarProps & OpMenuProps) {
   const myAppbar = appbarStyles();
-  const syncImages = props.syncImages;
-  const deleteImages = props.deleteImages;
-  const syncImageEnabled = props.syncImageEnabled;
-  const deleteImageEnabled = props.deleteImageEnabled;
+  const {syncImages, deleteImages, syncImageEnabled, deleteImageEnabled} = props;
 
   return (
     <AppBar classes={{root: myAppbar.root, colorSecondary: myAppbar.colorSecondary}} position="static"
@@ -166,9 +175,25 @@ function DiskImageMenubar(props) {
   )
 }
 
-export default class DiskImageManagement extends React.Component {
-  constructor() {
-    super();
+type DiskImageManagementStateType = {
+  /* Disk Image file selection */
+  imageFileSelection: DiskImageType[];
+
+  /* target disks */
+  targetDisks: DeviceSelectionType<DiskType>;
+
+  isRunning: boolean;
+  runningStatus?: RunReportType;
+
+  resetting: boolean;
+
+  menuCommand?: string;
+};
+
+
+export default class DiskImageManagement extends React.Component<any, DiskImageManagementStateType> {
+  constructor(props: any) {
+    super(props);
     this.state = {
       /* Disk Image file selection */
       imageFileSelection: [],
@@ -179,34 +204,31 @@ export default class DiskImageManagement extends React.Component {
       isRunning: false,
       runningStatus: undefined,
 
-      resetting: false,
-      did_reset: false,
-
-      menuCommand: undefined,
+      resetting: false
     };
 
     this.did_reset = this.did_reset.bind(this);
   }
 
-  imageFileSelection(selectedImages) {
+  imageFileSelection(selectedImages: DiskImageType[]) {
     this.setState( { imageFileSelection: selectedImages });
   }
 
-  diskSelectionChanged(selectedDisks, clicked) {
+  diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
     if (!clicked) return;
-    var newSelection = cloneDeep(this.state.targetDisks);
+    let targetDisks = Object.assign({}, this.state.targetDisks);
 
-    if (this.state.targetDisks[clicked.deviceName]) {
-      newSelection[clicked.deviceName] = false;
+    if (targetDisks[clicked.deviceName]) {
+      delete targetDisks[clicked.deviceName];
     } else {
       if (!clicked.mounted)
-        newSelection[clicked.deviceName] = clicked;
+        targetDisks[clicked.deviceName] = clicked;
     }
-    this.setState({targetDisks: newSelection});
+    this.setState({targetDisks});
   }
 
-  expandCats(expand) { this.setState( {menuCommand: expand ? "expand" : "collapse"}) }
-  selectAll(select) {this.setState( {menuCommand: select ? "selectall" : "deselectall"})}
+  expandCats(expand: boolean) { this.setState( {menuCommand: expand ? "expand" : "collapse"}) }
+  selectAll(select: boolean) {this.setState( {menuCommand: select ? "selectall" : "deselectall"})}
 
   clearCommand() {
     this.setState( {menuCommand: undefined} );
@@ -215,14 +237,14 @@ export default class DiskImageManagement extends React.Component {
   did_reset() {this.setState({resetting: false});}
 
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("diskimage", this.onRunnerUpdate.bind(this));
   }
 
   getSyncImageUrl() {
     // Make array rather than json object.
     const targetDiskList = Object.keys(this.state.targetDisks).filter( devName => this.state.targetDisks[devName]);
-    const imageFiles = Object.keys(this.state.imageFileSelection).filter( filename => this.state.imageFileSelection[filename]);
+    const imageFiles = this.state.imageFileSelection;
 
     if (targetDiskList.length === 0 || imageFiles.length === 0) {
       return undefined;
@@ -294,22 +316,19 @@ export default class DiskImageManagement extends React.Component {
     }
   }
 
-  onRunnerUpdate(update) {this.setState({runningStatus: update, isRunning: update.device !== ''});}
+  onRunnerUpdate(update: RunReportType) {this.setState({runningStatus: update, isRunning: update.device !== ''});}
 
   onReset() {
     this.setState({
       resetting: true,
-      source: undefined,
-      sources: [],
-      subsetSources: [],
       targetDisks: {}
     });
-    this.fetchSources();
+    // this.fetchSources();
     // this.setState( {wipeOption: undefined})
   }
 
   render() {
-    const {isRunning, resetting, did_reset, runningStatus, targetDisks} = this.state;
+    const {isRunning, resetting, runningStatus, targetDisks} = this.state;
     const syncImageEnabled = this.getSyncImageUrl() !== undefined;
     const deleteImageEnabled = this.getDeleteImageUrl() !== undefined;
 
@@ -321,12 +340,11 @@ export default class DiskImageManagement extends React.Component {
                               deleteImageEnabled={deleteImageEnabled}
                               syncImages={this.syncImages.bind(this)}
                               deleteImages={this.deleteImages.bind(this)}
-                              targetDisks={targetDisks}
                               expandAllCatsCB={this.expandCats.bind(this)}
                               selectAllFilesCB={this.selectAll.bind(this)} />
           </Grid>
           <Grid item xs={4}>
-            <Box border={2} borderColor="grey.500"  borderRadius={4} fixed={"true"} >
+            <Box border={2} borderColor="grey.500"  borderRadius={4}>
               <Typography>Disk Images</Typography>
               <DiskImageTreeView selectionChanged={this.imageFileSelection.bind(this)}
                                  command={this.state.menuCommand}
@@ -334,10 +352,10 @@ export default class DiskImageManagement extends React.Component {
             </Box>
           </Grid>
           <Grid item xs={8}>
-            <Box border={2} borderColor="grey.500" borderRadius={4} fixed={"true"} >
+            <Box border={2} borderColor="grey.500" borderRadius={4}>
               <Typography>Destination Disks</Typography>
               <Disks running={isRunning} selected={targetDisks} runningStatus={runningStatus} resetting={resetting}
-                   did_reset={did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)}/>
+                     did_reset={this.did_reset.bind(this)} diskSelectionChanged={this.diskSelectionChanged.bind(this)}/>
             </Box>
           </Grid>
         </Grid>

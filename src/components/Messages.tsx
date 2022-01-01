@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import {sweetHome} from '../looseend/home'
-import * as io from 'socket.io-client';
+import {io} from 'socket.io-client';
 
-export default class Messages extends Component {
-  constructor(props) {
+type MessagesStateType = {
+  messages: string[];
+}
+
+export default class Messages extends Component<any, MessagesStateType> {
+  constructor(props:any) {
     super(props);
     this.state = {
       messages: []
@@ -26,11 +30,11 @@ export default class Messages extends Component {
 
   /* set up the wock for message */
   componentDidMount() {
-    const wock = io.connect(sweetHome.websocketUrl);
+    const wock = io(sweetHome.websocketUrl);
     wock.on('message', this.handleMessage.bind(this));
   }
 
-  handleMessage(msg) {
+  handleMessage(msg: any) {git
     const messages = this.state.messages.concat(msg.message);
     console.log("got message." + messages);
     this.setState({messages: messages});

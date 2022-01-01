@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 import PressPlay from "./PressPlay";
-import socketio from "socket.io-client";
+import {io} from "socket.io-client";
 import cloneDeep from "lodash/cloneDeep";
 import Typography from '@material-ui/core/Typography';
 import MaterialTable from "material-table";
@@ -125,7 +125,7 @@ export default class Triage extends React.Component {
   }
 
   componentDidMount() {
-    const loadWock = socketio.connect(sweetHome.websocketUrl);
+    const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("triageupdate", this.onTriageUpdate.bind(this));
     this.fetchTriage();
   }
