@@ -34,7 +34,7 @@ export default class Messages extends Component<any, MessagesStateType> {
     wock.on('message', this.handleMessage.bind(this));
   }
 
-  handleMessage(msg: any) {git
+  handleMessage(msg: any) {
     const messages = this.state.messages.concat(msg.message);
     console.log("got message." + messages);
     this.setState({messages: messages});
