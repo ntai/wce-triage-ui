@@ -71,7 +71,7 @@ export default function WipeOption({title, wipeOption, wipeOptionChanged, wipeOp
         <Select
           labelId="wipe-option-select-label"
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
-          value={wipeOption?.value}
+          value={wipeOption?.value||"nowipe"}
           style={{fontSize: 12, textAlign: "left"}}
           children={wipeOptions.map( item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}

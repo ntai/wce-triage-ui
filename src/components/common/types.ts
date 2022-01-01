@@ -98,3 +98,38 @@ export type ImageMetaType = {
     cmdline: object;
     index: number;
 }
+
+export type CPUInfoType = {
+    benchmarks?: {
+        [benchmark_name: string]: { baseline: number, score: number }
+    };
+    machine?: string;
+    board?: string;
+    name: string;
+    description: string;
+    config: string;
+    memory_size?: string;
+    n_processors?: number;
+    n_physical_cores?: number;
+    n_logical_cores?: number;
+    rating: string;
+}
+
+export type ComponentTriageType = {
+    component: string;
+    device?: string;
+    device_type?: string;
+    message?: string;
+    result: boolean;
+}
+
+export type TriageResultType = {
+    components: ComponentTriageType[];
+}
+
+export type TriageUpdateType = {
+    component: string;
+    device: string;
+    result: boolean;
+    message: string;
+}

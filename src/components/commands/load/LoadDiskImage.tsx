@@ -65,7 +65,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
 
       /* The restore types */
       restoreTypes: [],
-      restoreType: undefined,
+      restoreType: '',
 
       /* target disks */
       targetDisks: {},

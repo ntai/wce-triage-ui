@@ -43,6 +43,10 @@ const useTreeItemStyles = makeStyles((theme) => ({
       fontWeight: theme.typography.fontWeightRegular,
     },
  */
+    fontWeight: "bold",
+    '$expanded > &': {
+      fontWeight: "normal",
+    },
   },
   group: {
     marginLeft: 0,
@@ -85,8 +89,8 @@ type StyledTreeItemProps = {
   labelText: string;
   labelIcon: JSX.Element;
   selected?: boolean;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
   nodeId: string
 }
 
@@ -372,10 +376,6 @@ function CatalogList(props: {
     });
   }
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-
-  }
-
   return (<div>
     {
       catalogTypes.map(function (catalog) {
@@ -383,10 +383,8 @@ function CatalogList(props: {
         const catalog_id = catalog.id;
         return (
           <StyledTreeItem
-              handleChange={handleChange}
               nodeId={catalog.id} labelText={catalog.name} labelIcon={<Label />}
               onClick={(_) => onCatalogClick(catalog_id)}
-              value={catalog.id}
           >
             {fileList(catalog.id)}
            </StyledTreeItem>
@@ -452,7 +450,7 @@ export default function DiskImageTreeView(
       let catind: CatalogIndexType = {};
 
       if (catalogTypes) {
-        var cat;
+        let cat;
         for (cat of catalogTypes)
           catind[cat.id] = [];
       }
@@ -570,7 +568,7 @@ export default function DiskImageTreeView(
         setExpandedCategories(expandedCategories.filter(id => catalog_id !== id));
       }
       else {
-        var newExpandedCategories = expandedCategories.map(id => id);
+        const newExpandedCategories = expandedCategories.map(id => id);
         newExpandedCategories.push(catalog_id);
         setExpandedCategories(newExpandedCategories);
       }

@@ -19,8 +19,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import LoopIcon from '@material-ui/icons/Loop';
 import StopIcon from '@material-ui/icons/Stop';
-import {Tooltip} from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+import {ComponentTriageType, CPUInfoType, TriageResultType, TriageUpdateType} from "../../common/types";
 
+// cssstyle 3.0.10 bug
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(0, 0),
@@ -31,21 +33,30 @@ const useStyles = makeStyles(theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: "bold"
   },
 }));
 
 
-function CpuInfo(props) {
+function CpuInfo(props: {
+  onMount: (cpu_info: CPUInfoType) => void
+}) {
   const [loading, setLoading] = React.useState(true);
-  const [cpu_info, set_cpu_info] = React.useState(undefined);
+  const [cpu_info, set_cpu_info] = React.useState<CPUInfoType>(
+      {name: "Unknown", description: "", config: "", rating: "?"}
+  );
 
   React.useEffect(() => {
-    fetch(sweetHome.backendUrl + '/dispatch/cpu_info.json').then(rep => rep.json()).then(res => {
-      set_cpu_info(res.cpu_info);
-      props.onMount(res.cpu_info);
-      setLoading(false);
-    });
+    fetch(sweetHome.backendUrl + '/dispatch/cpu_info.json').then(rep => rep.json())
+        .then(res => {
+          const cpu_info: CPUInfoType = res.cpu_info as any;
+          set_cpu_info(cpu_info);
+          props.onMount(cpu_info);
+        })
+        .catch( err => {
+          set_cpu_info({name: "Failed to communicate", description: err, config: "Unknown", rating: "?"});
+        })
+        .finally(() => setLoading(false));
   });
 
   if (loading) {
@@ -53,19 +64,20 @@ function CpuInfo(props) {
   }
   else {
     return (
-      <Typography variant={"subtitle"}>
+      <Typography variant={"subtitle1"}>
         {cpu_info.name +  " " + cpu_info.description + " " + cpu_info.config}
       </Typography>
     )
   }
 }
 
-function CpuRating(props) {
-  const classes = useStyles();
-  const [cpu_info, set_cpu_info] = React.useState(undefined);
 
-  var summary = "CPU Rating: Expand to see. It may take a couple of minutes.";
-  const mounted = (info) => (set_cpu_info(info));
+function CpuRating() {
+  const classes = useStyles();
+  const [cpu_info, set_cpu_info] = React.useState<CPUInfoType|undefined>(undefined);
+
+  let summary = "CPU Rating: Expand to see. It may take a couple of minutes.";
+  const mounted = (info: CPUInfoType) => (set_cpu_info(info));
 
   if (cpu_info) {
     summary = "CPU Rating: " + cpu_info.rating;
@@ -93,8 +105,19 @@ function CpuRating(props) {
 }
 
 
-export default class Triage extends React.Component {
-  constructor(props) {
+type TriageStateType = {
+  triageResult: ComponentTriageType[];
+  loading: boolean;
+  show_cpu_info: boolean;
+  cpu_info?: CPUInfoType;
+  cpu_info_loading: boolean;
+  soundPlaying: boolean;
+  fontSize: number;
+  opticals: ComponentTriageType[];
+}
+
+export default class Triage extends React.Component<any,TriageStateType> {
+  constructor(props:any) {
     super(props);
 
     this.state = {
@@ -108,13 +131,12 @@ export default class Triage extends React.Component {
       opticals: []
     };
 
-
     this.fetchTriage = this.fetchTriage.bind(this);
   }
 
   fetchTriage() {
     this.setState({loading: true, triageResult: []});
-    fetch(sweetHome.backendUrl + '/dispatch/triage.json').then(rep => rep.json()).then(res => {
+    fetch(sweetHome.backendUrl + '/dispatch/triage.json').then(rep => rep.json()).then((res: TriageResultType) => {
       // Now just get the rows of triage results
       this.setState({
         triageResult: res.components,
@@ -129,7 +151,7 @@ export default class Triage extends React.Component {
     this.fetchTriage();
   }
 
-  setFontSize(fontSize) {
+  setFontSize(fontSize:number) {
     this.setState({fontSize: fontSize});
   }
 
@@ -167,14 +189,16 @@ export default class Triage extends React.Component {
     });
   }
 
+/*
   onBenchmark() {
     this.fetchCpuInfo();
     this.setState({show_cpu_info: true});
   }
+ */
 
-  onTriageUpdate(update) {
+  onTriageUpdate(update:TriageUpdateType) {
     console.log(update);
-    let rows = JSON.parse(JSON.stringify(this.state.triageResult));
+    let rows: ComponentTriageType[] = JSON.parse(JSON.stringify(this.state.triageResult));
     let row;
     let updated;
 
@@ -182,7 +206,7 @@ export default class Triage extends React.Component {
       if (row.component === update.component) {
         if (row.device === update.device) {
           row.result = update.result;
-          row.details = update.message;
+          row.message = update.message;
           updated = row;
           break;
         }
@@ -245,7 +269,6 @@ export default class Triage extends React.Component {
             data={data}
             style={{borderRadius: 0, borderWidth: 0, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 5, paddingBottom: 5 }}
             isLoading={this.state.loading}
-            onFetchData={this.fetchTriage}
             options={ {paging: false, sorting: false, draggable: false,
               toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
               rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3, },
@@ -267,9 +290,9 @@ export default class Triage extends React.Component {
                       color: row.result ? '#1fff2e' : '#ff2e00',
                       transition: 'all .3s ease'
                     }}>
-                      {row.value ? '\u25cf' : '\u25a0' }
+                      {row.result ? '\u25cf' : '\u25a0' }
                     </span>
-                              {row.result ? ' Pass' : ' Fail'}
+                    {row.result ? ' Pass' : ' Fail'}
                   </span>
                 )
               },

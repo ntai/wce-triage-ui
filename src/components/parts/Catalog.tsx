@@ -43,7 +43,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
         setCatalogTypesLoading(false);
         setCatalogTypes(cats);
         catalogTypesChanged(cats);
-        console.log("Setting catalog types\n" + cats);
+        console.log("Setting catalog types\n" + cats.map( (cat) => JSON.stringify(cat)).join("\n"));
     }).finally(() => {
         setCatalogTypesLoading(false);
     });
@@ -65,7 +65,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
           labelId="wipe-option-select-label"
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
           key={catalogType}
-          value={catalogType}
+          value={catalogType || ''}
           style={{fontSize: 14, textAlign: "left"}}
           children={catalogTypes.map(item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
