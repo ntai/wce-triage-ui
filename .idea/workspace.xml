@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="Another round of typescriptifying. happy new year.">
+    <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="A few more clean-ups and a bug in the image file tree view is fixed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/triage/Triage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/triage/Triage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/common/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -369,7 +365,8 @@
       <workItem from="1640795585121" duration="22051000" />
       <workItem from="1640883581886" duration="21366000" />
       <workItem from="1640971987017" duration="35014000" />
-      <workItem from="1641055563191" duration="7582000" />
+      <workItem from="1641055563191" duration="11566000" />
+      <workItem from="1641671704195" duration="854000" />
     </task>
     <task id="LOCAL-00001" summary="Fix a bug - disks are a lit of DiskType.">
       <created>1640991465710</created>
@@ -392,7 +389,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641055617988</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="A few more clean-ups and a bug in the image file tree view is fixed.">
+      <created>1641064619153</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1641064619153</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -490,7 +494,8 @@
     <MESSAGE value="Fix a bug - disks are a lit of DiskType." />
     <MESSAGE value="typo - remove &quot;gitgit&quot;. :(" />
     <MESSAGE value="Another round of typescriptifying. happy new year." />
-    <option name="LAST_COMMIT_MESSAGE" value="Another round of typescriptifying. happy new year." />
+    <MESSAGE value="A few more clean-ups and a bug in the image file tree view is fixed." />
+    <option name="LAST_COMMIT_MESSAGE" value="A few more clean-ups and a bug in the image file tree view is fixed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
