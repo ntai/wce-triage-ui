@@ -1,7 +1,7 @@
 import React from "react";
 import "../commands.css";
-import { Button } from '@material-ui/core'
-import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 
 
 // stub to run optical test

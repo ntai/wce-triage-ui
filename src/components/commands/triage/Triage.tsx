@@ -2,24 +2,24 @@ import React from "react";
 //
 import {sweetHome} from '../../../looseend/home'
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 
 import PressPlay from "./PressPlay";
 import {io} from "socket.io-client";
-import Typography from '@material-ui/core/Typography';
-import MaterialTable from "material-table";
+import Typography from '@mui/material/Typography';
+// import MaterialTable from "material-table";
 import "../commands.css";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import LoopIcon from '@material-ui/icons/Loop';
-import StopIcon from '@material-ui/icons/Stop';
-import Tooltip from "@material-ui/core/Tooltip";
+import CircularProgress from '@mui/material/CircularProgress';
+import ExpansionPanel from '@mui/material/ExpansionPanel';
+import ExpansionPanelSummary from '@mui/material/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@mui/material/ExpansionPanelDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import LoopIcon from '@mui/icons-material/Loop';
+import StopIcon from '@mui/icons-material/Stop';
+import Tooltip from "@mui/material/Tooltip";
 import {ComponentTriageType, CPUInfoType, TriageResultType, TriageUpdateType} from "../../common/types";
 
 // cssstyle 3.0.10 bug

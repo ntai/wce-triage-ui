@@ -1,14 +1,14 @@
 import React from "react";
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid'
 //
 import {sweetHome} from '../../../looseend/home';
 import Disks from "../../parts/Disks";
 import "../commands.css";
 import {io} from "socket.io-client";
-import DeleteIcon from '@material-ui/icons/Delete';
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CancelIcon from "@material-ui/icons/Cancel";
+import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from "@mui/icons-material/Refresh";
+import CancelIcon from "@mui/icons-material/Cancel";
 import ErrorMessageModal from "../../ErrorMessageDialog";
 import {DeviceSelectionType, DiskType, RunReportType} from "../../common/types";
 

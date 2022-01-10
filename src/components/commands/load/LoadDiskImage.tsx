@@ -5,14 +5,14 @@ import RunnerProgress from "../../parts/RunnerProgress";
 import Disks from "../../parts/Disks";
 import Catalog from "../../parts/Catalog";
 import WipeOption from "../../parts/WipeOption";
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import DiskImageSelector, {SourceType, ToDiskSources} from '../diskimage/DiskImageSelector';
 import "../commands.css";
-import BuildIcon from '@material-ui/icons/Build';
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CancelIcon from "@material-ui/icons/Cancel";
+import BuildIcon from '@mui/icons-material/Build';
+import RefreshIcon from "@mui/icons-material/Refresh";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {ItemType, DiskType, RunReportType, DiskImageType, DeviceSelectionType} from "../../common/types";
 
 

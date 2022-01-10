@@ -5,9 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="A few more clean-ups and a bug in the image file tree view is fixed.">
+      <change afterPath="$PROJECT_DIR$/src/components/common/idiom.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Commands.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Commands.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Messages.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Messages.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageSelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/save/SaveDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/save/SaveDiskImage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/triage/PressPlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/triage/PressPlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/triage/Triage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/triage/Triage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/wipe/WipeDisk.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/wipe/WipeDisk.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/common/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/DiskDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/DiskDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/OperationProgressBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/OperationProgressBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/TriageTableTheme.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/TriageTableTheme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/settings/TriageAppSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/TriageAppSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +58,7 @@
       <list>
         <option value="CSS File" />
         <option value="tsconfig.json" />
+        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
       </list>
     </option>
@@ -366,7 +389,8 @@
       <workItem from="1640883581886" duration="21366000" />
       <workItem from="1640971987017" duration="35014000" />
       <workItem from="1641055563191" duration="11566000" />
-      <workItem from="1641671704195" duration="854000" />
+      <workItem from="1641671704195" duration="14962000" />
+      <workItem from="1641750910375" duration="13041000" />
     </task>
     <task id="LOCAL-00001" summary="Fix a bug - disks are a lit of DiskType.">
       <created>1640991465710</created>
@@ -396,7 +420,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641064619153</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="A few more clean-ups and a bug in the image file tree view is fixed.">
+      <created>1641672896190</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1641672896190</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">

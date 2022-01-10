@@ -1,28 +1,28 @@
 import React from 'react';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import DiskImageTreeView, {DiskImageOperationType} from "./DiskImageTreeView";
-import Grid from "@material-ui/core/Grid";
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import Grid from "@mui/material/Grid";
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import Disks from "../../parts/Disks";
 import {io} from "socket.io-client";
 import {sweetHome} from "../../../looseend/home";
-import Button from "@material-ui/core/Button";
-import BuildIcon from '@material-ui/icons/Build';
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Menu, {MenuProps} from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Button from "@mui/material/Button";
+import BuildIcon from '@mui/icons-material/Build';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import Menu, {MenuProps} from '@mui/material/Menu';
+import MenuItem, {MenuItemProps} from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
 import RunnerProgress from "../../parts/RunnerProgress";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 import {DeviceSelectionType, DiskImageType, DiskType, RunReportType} from "../../common/types";
+import {Theme, alpha} from "@mui/material/styles";
+import {makeStyles, styled} from "@mui/styles";
 
-
-const appbarStyles = makeStyles( theme => ({
+const appbarStyles = makeStyles( (theme:Theme) => ({
   root: {
     height: 46,
     minHeight: 46,
@@ -33,31 +33,7 @@ const appbarStyles = makeStyles( theme => ({
   commandButton: {
     marginRight: theme.spacing(2),
   },
-}));
-
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props:MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles(theme => ({
-  root: {
+  popupMenu: {
     '&:focus': {
       backgroundColor: theme.palette.common.white,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
@@ -65,7 +41,49 @@ const StyledMenuItem = withStyles(theme => ({
       },
     },
   },
-}))(MenuItem);
+}));
+
+
+const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme}: {theme: Theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+        theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+    boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+    '& .MuiMenu-list': {
+      padding: '4px 0',
+    },
+    '& .MuiMenuItem-root': {
+      '& .MuiSvgIcon-root': {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      '&:active': {
+        backgroundColor: alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity,
+        ),
+      },
+    },
+  },
+}));
 
 interface OpMenuProps {
   expandAllCatsCB: (sel: boolean) => void;
@@ -77,7 +95,6 @@ function OpMenu({ expandAllCatsCB, selectAllFilesCB} : OpMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement|null>(null);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const currentTarget = event.currentTarget;
     if (event?.currentTarget)
       setAnchorEl(event.currentTarget);
   };
@@ -86,17 +103,17 @@ function OpMenu({ expandAllCatsCB, selectAllFilesCB} : OpMenuProps) {
     setAnchorEl(null);
   };
 
-  const allCagetories = (select: boolean) => {
+  const allCategories = (select: boolean) => {
     setAnchorEl(null);
     expandAllCatsCB(select);
   };
 
   const handleCollapseCategories = () => {
-    allCagetories(false);
+    allCategories(false);
   };
 
   const handleExpandCategories = () => {
-    allCagetories(true);
+    allCategories(true);
   };
 
   const selectAllFiles = (select: boolean) => {
@@ -130,18 +147,18 @@ function OpMenu({ expandAllCatsCB, selectAllFilesCB} : OpMenuProps) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem onClick={handleExpandCategories}>
+        <MenuItem onClick={handleExpandCategories}>
           <ListItemText primary="Expand all categories" />
-        </StyledMenuItem>
-        <StyledMenuItem onClick={handleCollapseCategories}>
+        </MenuItem>
+        <MenuItem onClick={handleCollapseCategories}>
           <ListItemText primary="Collapse all categories" />
-        </StyledMenuItem>
-        <StyledMenuItem onClick={selectAll}>
+        </MenuItem>
+        <MenuItem onClick={selectAll}>
           <ListItemText primary="Select all" />
-        </StyledMenuItem>
-        <StyledMenuItem onClick={deselectAll}>
+        </MenuItem>
+        <MenuItem onClick={deselectAll}>
           <ListItemText primary="Deselect all" />
-        </StyledMenuItem>
+        </MenuItem>
       </StyledMenu>
     </div>
   );
@@ -255,7 +272,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
 
     let url = sweetHome.backendUrl + "/dispatch/sync?deviceNames=";
     let sep = "";
-    var targetDisk;
+    let targetDisk;
     for (targetDisk of targetDiskList) {
       url = url + sep + targetDisk;
       sep = ",";
@@ -279,9 +296,9 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
       return undefined;
     }
 
-    var url = sweetHome.backendUrl + "/dispatch/clean?deviceNames=";
-    var sep = "";
-    var targetDisk;
+    let url = sweetHome.backendUrl + "/dispatch/clean?deviceNames=";
+    let sep = "";
+    let targetDisk;
     for (targetDisk of targetDiskList) {
       url = url + sep + targetDisk;
       sep = ",";

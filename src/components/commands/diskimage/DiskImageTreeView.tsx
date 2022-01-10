@@ -1,28 +1,30 @@
 import React from 'react';
-import { makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import {sweetHome} from "../../../looseend/home";
-import TreeView from '@material-ui/lab/TreeView';
-import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
-import Label from '@material-ui/icons/Label';
-import Checkbox from "@material-ui/core/Checkbox";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import CancelIcon from "@material-ui/icons/Cancel";
-import KeyboardIcon from "@material-ui/icons/Keyboard";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import DeleteIcon from '@material-ui/icons/Delete';
+import TreeView from '@mui/lab/TreeView';
+import TreeItem, {TreeItemProps} from '@mui/lab/TreeItem';
+import Label from '@mui/icons-material/Label';
+import Checkbox from "@mui/material/Checkbox";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import CancelIcon from "@mui/icons-material/Cancel";
+import KeyboardIcon from "@mui/icons-material/Keyboard";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {DeviceSelectionType, ImageMetaType} from "../../common/types";
 import {SourceType, ToDiskSources} from "./DiskImageSelector";
+//import {Theme, alpha} from "@mui/material/styles";
+import {makeStyles} from "@mui/styles";
+
 
 const useTreeItemStyles = makeStyles((theme) => ({
   root: {

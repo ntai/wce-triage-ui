@@ -1,10 +1,22 @@
 import React from 'react';
 import {sweetHome} from "../../looseend/home";
-import MaterialTable from "material-table";
 import {tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import '../commands/commands.css';
 import {TaskInfo, RunReportType} from "../common/types";
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableaRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 type RunnerPropsType = {
   runningStatus: undefined | RunReportType;
@@ -18,6 +30,103 @@ type RunnerStateType = {
   tasksLoading: boolean;
   fontSize: number;
 }
+
+/* TaskInfo = {
+ *     step: "" | number;
+ *     taskCategory: string;
+ *     taskProgress: number;
+ *     taskEstimate: number;
+ *     taskElapse: number;
+ *     taskStatus: TaskStatusType;
+ *     taskMessage: null | string;
+ *     taskExplain: string;
+ *     taskVerdict?: string[];
+ * }
+ */
+
+/*
+* Task details
+*/
+function TaskDetails({task}: {task: TaskInfo}) {
+    // This is a bug in type description. iconProps must exist.
+    // @ts-ignore
+    if (task.taskVerdict) {
+      return (
+          <div className="preformat"
+               style={{fontSize: 12, textAlign: 'left', backgroundColor: '#eeeeee', padding: 2}}>
+            {task.taskExplain}
+            {task.taskVerdict.map(elem => <p>{elem}</p>)}
+          </div>
+      )
+    } else {
+      return (
+          <div className="preformat">
+            {task.taskExplain}
+          </div>
+      )
+    }
+}
+
+
+function  TaskRow(task: TaskInfo) {
+  const [open, setOpen] = React.useState(false);
+
+  // Task status that shows the status with color
+  const taskStatus = (<span>
+    <span style={{
+      color: task.taskStatus === 'waiting' ? value_to_color(0)
+          : task.taskStatus === 'running' ?  value_to_color(1)
+              : task.taskStatus === 'done' ? value_to_color(100)
+                  : task.taskStatus === 'fail' ? value_to_color(999)
+                      : '#404040',
+      transition: 'all .3s ease'
+    }}>
+      &#x25cf;
+    </span>
+    {
+      task.taskStatus === 'waiting' ? 'Holding'
+          : task.taskStatus === 'running' ? `In progress`
+              : task.taskStatus === 'done' ? `Completed`
+                  : task.taskStatus === 'fail' ? `Failed`
+                      : 'Bug'
+    }
+  </span>);
+
+  return (
+      <React.Fragment>
+        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+          <TableCell>
+            <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+
+          <TableCell component="th" scope="row">{task.taskCategory}</TableCell>
+          <TableCell align="right">{task.taskEstimate}</TableCell>
+          <TableCell align="right">{task.taskElapse}</TableCell>
+          <TableCell align="right">{taskStatus}</TableCell>
+          <TableCell><OperationProgressBar value={task.taskProgress} /></TableCell>
+          <TableCell>{task.taskMessage}</TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <TaskDetails task={task}/>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+  );
+}
+
+
 
 export default class RunnerProgress extends React.Component<RunnerPropsType, RunnerStateType> {
   constructor(props: any) {
@@ -98,8 +207,86 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
     if (tasks === undefined)
         return null;
 
-    return (
-      <div>
+    const columns = [
+      {
+        title: "Step",
+        field: "taskCategory",
+        cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
+        headerStyle: { width: 300, },
+      },
+      {
+        title: "Estimate",
+        field: "taskEstimate",
+        cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
+        headerStyle: {
+          minWidth: 80,
+          maxWidth: 120
+        },
+      },
+      {
+        title: "Elapsed",
+        field: "taskElapse",
+        cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
+        headerStyle: {
+          minWidth: 80,
+          maxWidth: 120
+        },
+      },
+      {
+        title: 'Status',
+        cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
+        headerStyle: {
+          minWidth: 120,
+          maxWidth: 160
+        },
+        render: row => (
+            <span>
+                  <span style={{
+                    color: row.taskStatus === 'waiting' ? value_to_color(0)
+                        : row.taskStatus === 'running' ?  value_to_color(1)
+                            : row.taskStatus === 'done' ? value_to_color(100)
+                                : row.taskStatus === 'fail' ? value_to_color(999)
+                                    : '#404040',
+                    transition: 'all .3s ease'
+                  }}>
+              &#x25cf;
+            </span> {
+              row.taskStatus === 'waiting' ? 'Holding'
+                  : row.taskStatus === 'running' ? `In progress`
+                      : row.taskStatus === 'done' ? `Completed`
+                          : row.taskStatus === 'fail' ? `Failed`
+                              : 'Bug'
+            }
+            </span>
+        )
+      },
+      {
+        title: 'Progress',
+        cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
+        headerStyle: {
+          minWidth: 120,
+          maxWidth: 160
+        },
+        // field: 'taskProgress', // field is not used but makes things clear
+        render: row => (
+            <div>
+              <OperationProgressBar value={row.taskProgress} />
+            </div>
+        )
+      },
+      {
+        title: "Description",
+        cellStyle: {fontSize: fontSize,  width: 350, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
+        headerStyle: {
+          width: 350,
+        },
+        field: "taskMessage",
+        // style: {textAlign: "left"},
+      }
+    ];
+
+
+    /*
         <MaterialTable
           icons={tableIcons}
           margin="dense"
@@ -223,7 +410,24 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
           ]
          }
          />
-      </div>
+  */
+
+    return (
+      <React.Fragment>
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                {
+                  columns.map( (column)  => (<TableCell style={column.headerStyle}>{column.title}</TableCell>))
+                }
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {}
+            </TableBody>
+        </TableContainer>
+      </React.Fragment>
     );
   }
 }

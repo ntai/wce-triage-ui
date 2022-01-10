@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import Commands from './components/Commands';
 import './App.css';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import {sweetHome} from "./looseend/home";
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 import wcelogo from './wcelogo.svg';
 
 /*
@@ -37,50 +37,43 @@ type AppState = {
     backendVersion: string;
 };
 
-class App extends React.Component {
-    state: AppState = {
-        frontendVersion: "",
-        backendVersion: ""
-    };
+export default function App()
+{
+    const [state, setState] = React.useState<AppState>(
+        { frontendVersion: "",
+            backendVersion: ""});
 
-    constructor(props: any) {
-        super(props);
-    }
-
-    componentDidMount() {
+    React.useEffect( ()  => {
         fetch(sweetHome.backendUrl + "/version.json")
             .then(res => res.json())
             .then(result => {
                 console.log(result);
-                this.setState({
+                setState({
                     backendVersion: result.version.backend,
                     frontendVersion: result.version.frontend
                 })
             });
-    }
+    }, []);
 
-    render() {
-        return (
-            <div className="App bg-white">
-                <CssBaseline/>
-                <Container maxWidth={false}>
-                    <Grid container item xs={12}>
-                        <Grid container item xs={6}>
-                            <img src={wcelogo} className="App-logo" alt="wcelogo"/>
-                        </Grid>
-                        <Grid item>
-                            <Typography>WCE Triage {this.state.frontendVersion}/{this.state.backendVersion}</Typography>
-                        </Grid>
+    return (
+        <div className="App bg-white">
+            <CssBaseline/>
+
+            <Container maxWidth={false}>
+                <Grid container item xs={12}>
+                    <Grid container item xs={6}>
+                        <img src={wcelogo} className="App-logo" alt="wcelogo"/>
                     </Grid>
-
-                    <Grid item xs={12}>
-                        <Commands/>
+                    <Grid item>
+                        <Typography>WCE Triage {state.frontendVersion}/{state.backendVersion}</Typography>
                     </Grid>
+                </Grid>
 
-                </Container>
-            </div>
-        );
-    }
+                <Grid item xs={12}>
+                    <Commands/>
+                </Grid>
+
+            </Container>
+        </div>
+    );
 }
-
-export default App;

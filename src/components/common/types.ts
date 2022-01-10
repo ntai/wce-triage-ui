@@ -38,7 +38,7 @@ export type TaskStatusType = "waiting" | "running" | "done" | "fail";
 
 export type TaskInfo = {
     step: "" | number;
-    taskCategory: string;
+    taskCategory: string; // task.description
     taskProgress: number;
     taskEstimate: number;
     taskElapse: number;

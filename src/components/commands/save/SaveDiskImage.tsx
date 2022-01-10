@@ -4,13 +4,13 @@ import {io} from "socket.io-client";
 import RunnerProgress from "../../parts/RunnerProgress";
 import Disks from "../../parts/Disks";
 import Catalog from "../../parts/Catalog";
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import SaveIcon from '@material-ui/icons/Save';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid'
+import SaveIcon from '@mui/icons-material/Save';
 
 import "../commands.css";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CancelIcon from "@material-ui/icons/Cancel";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {ItemType, RunReportType, DiskType, DeviceSelectionType} from "../../common/types";
 
 
