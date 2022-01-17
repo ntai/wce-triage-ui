@@ -196,7 +196,7 @@ export default function Mui5Table<RowType>(props : Mui5TableProps<RowType>)
 
         if (onSelectionChange) {
             const selectedRows = newSelections.filter( (selected, rowIndex) => selected).keySeq().map( (_, rowIndex) => rows[rowIndex]).toArray();
-            onSelectionChange(selectedRows, selected ? rows[rowIndex] : undefined);
+            onSelectionChange(selectedRows, rowIndex !== undefined && rowIndex >= 0 && rowIndex < rows.length ? rows[rowIndex]: undefined);
         }
     }
 
