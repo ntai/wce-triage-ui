@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="A few more clean-ups and a bug in the image file tree view is fixed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/Disks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Disks.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -374,6 +375,7 @@
       <workItem from="1641750910375" duration="13190000" />
       <workItem from="1642271661288" duration="21203000" />
       <workItem from="1642355233523" duration="20161000" />
+      <workItem from="1642455498270" duration="8123000" />
     </task>
     <task id="LOCAL-00001" summary="Fix a bug - disks are a lit of DiskType.">
       <created>1640991465710</created>
