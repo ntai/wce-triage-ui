@@ -22,11 +22,11 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {DeviceSelectionType, ImageMetaType} from "../../common/types";
 import {SourceType, ToDiskSources} from "./DiskImageSelector";
-//import {Theme, alpha} from "@mui/material/styles";
+import {Theme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 
 
-const useTreeItemStyles = makeStyles((theme) => ({
+const useTreeItemStyles = makeStyles((theme: Theme) => ({
   root: {
     color: theme.palette.text.secondary,
     '&:focus > $content': {

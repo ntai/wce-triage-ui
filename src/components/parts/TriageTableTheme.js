@@ -1,6 +1,5 @@
 import React from 'react';
-import { createTheme as createMuiTheme} from '@mui/styles';
-
+import { createTheme as createMuiTheme} from '@mui/material/styles';
 import AddBox from '@mui/icons-material/AddBox';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Check from '@mui/icons-material/Check';

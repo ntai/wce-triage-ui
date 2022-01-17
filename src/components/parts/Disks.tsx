@@ -1,8 +1,7 @@
 import React from "react";
 import {sweetHome} from '../../looseend/home';
 import "../commands/commands.css";
-import MaterialTable from "material-table";
-import {tableIcons} from "./TriageTableTheme";
+import Mui5Table from "./Mui5Table";
 import OperationProgressBar from './OperationProgressBar';
 import DiskDetails from "./DiskDetails";
 import {DeviceSelectionType, DiskType, ItemType, RunReportType, WipeType} from "../common/types";
@@ -187,10 +186,10 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
     }
   }
 
-  setNewSelection(newSelection: DiskType[], clicked?: DiskType) {
-    let selection: DeviceSelectionType<DiskType> = {};
-    let disk: DiskType;
-    for (disk of newSelection) {
+  setNewSelection(disks: DiskType[], clicked?: DiskType) {
+    const selection: DeviceSelectionType<DiskType> = {};
+
+    for (let disk of disks) {
       selection[disk.deviceName] = disk;
     }
     this.props.diskSelectionChanged(selection, clicked);
@@ -209,15 +208,14 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
     const { disks, diskStatusLoading } = this.state;
 
     return (
-      <div>
-        <MaterialTable
-          icons={tableIcons}
+      <React.Fragment>
+        <Mui5Table<DiskType>
           style={ {marginTop: 1, marginBottom: 1, marginLeft: 0, marginRight: 0} }
           onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
             {
               title: "Disk",
-              field: "deviceName",
+              render: (row, index) => row.deviceName,
               cellStyle: {
                 backgroundColor: '#eeeeee',
                 width: 120,
@@ -230,41 +228,30 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
             },
             {
               title: "Mounted",
-              field: "mounted",
-              cellStyle: { width: 30, maxWidth: 30,
-                paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                maxWidth: 75,
-              },
-              render: row => ( <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={this.state.mounted[row.deviceName] === true ? true : false}
-                  onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
-                />
-              )
+              render: (row, index) => (<input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={this.state.mounted[row.deviceName] === true ? true : false}
+                      onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
+                  />),
+              cellStyle: { width: 30, maxWidth: 30, paddingTop: 2, paddingBottom: 2,},
+              headerStyle: {maxWidth: 75,},
             },
             {
               title: "Bus",
-              field: "bus",
-              cellStyle: { width: 40, maxWidth: 40,
-                paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                maxWidth: 40,
-              },
+              render: (row, index) => row.bus,
+              cellStyle: { width: 40, maxWidth: 40,  paddingTop: 2, paddingBottom: 2,  },
+              headerStyle: { maxWidth: 40, },
             },
             {
               title: "Model",
-              field: "model",
-              cellStyle: { width: 300, maxWidth: 300,
-                paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                width: 300,
-              },
+              render: (row, index) => row.model,
+              cellStyle: { width: 300, maxWidth: 300, paddingTop: 2, paddingBottom: 2,  },
+              headerStyle: {width: 300,},
             },
             {
               title: "Estimate",
-              field: "runEstiamte",
+              render: (row, index) => `${row.runEstimate}`,
               cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
                 paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
@@ -273,7 +260,7 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
             },
             {
               title: "Elapsed",
-              field: "runTime",
+              render: (row, index) => `${row.runTime}`,
               cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
                 paddingTop: 2, paddingBottom: 2,   },
               headerStyle: {
@@ -282,9 +269,8 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
             },
             {
               title: "Status",
-              field: "runMessage",
-              cellStyle: { minWidth: 200,
-                paddingTop: 2, paddingBottom: 2,  },
+              render: (row, index) => row.runMessage,
+              cellStyle: { minWidth: 200, paddingTop: 2, paddingBottom: 2,  },
               headerStyle: {
                 minWidth: 200,
               },
@@ -293,37 +279,30 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
               title: 'Progress',
               cellStyle: { minWidth: 120,
                 paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                minWidth: 120,
-                maxWidth: 200
-              },
-              field: 'progress',
-              render: row => (
-                <div>
-                  <OperationProgressBar value={row.progress} />
-                </div>
-              )
+              headerStyle: {minWidth: 120, maxWidth: 200},
+              render: (row, index) => (<OperationProgressBar value={row.progress} />)
             }
             ] }
-          data={disks}
+          rows={disks}
           isLoading={diskStatusLoading} // Display the loading overlay when we need it
           options={{
             selection: true,
-            // @ts-ignore
-            selectionProps: (rowData) => ({disabled: rowData.mounted, checked: rowData.target ? true : false }),
-            // @ts-ignore
-            rowStyle: (rowData) => ({backgroundColor: rowData.tableData.checked ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2,}),
+            selectionProps: (rowData, index) => ({disabled: rowData.mounted, checked: rowData.target ? true : false }),
+            rowStyle: (rowData, index) => ({backgroundColor: rowData.target ? '#37b15933' : '', paddingTop: 2, paddingBottom: 2,}),
             paging: false,
             draggable: false,
             toolbar: false,
             search: false,
             showTitle: false,
-            detailPanelColumnAlignment: "left",
-            padding: "dense",
+            detailPanelColumnAlignment: "left"
           }}
-          detailPanel={rowData => <DiskDetails disk={rowData} />}
+          detailPanel={[
+            {
+              render: (row, index) => (<DiskDetails disk={row} />)
+            }
+          ]}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

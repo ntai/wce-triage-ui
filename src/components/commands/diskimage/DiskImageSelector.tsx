@@ -3,10 +3,11 @@ import { createStyles, makeStyles } from '@mui/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 import {ItemType, DiskImageType} from "../../common/types";
+import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(0),
@@ -43,7 +44,7 @@ export default function DiskImageSelector( { setSource, sources, source } : {
 } ) {
   const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<{value: any}>) => {
+  const handleChange = (event: SelectChangeEvent) => {
       const value = event.target.value;
       setSource(sources.find( (src) => {return src.value === value;}));
   };
@@ -56,7 +57,7 @@ export default function DiskImageSelector( { setSource, sources, source } : {
           labelId="source-select-label"
           value={source?.value || ''}
           style={{fontSize: 13, textAlign: "left"}}
-          children={sources.map( item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
+          children={sources.map( item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />
       </FormControl>

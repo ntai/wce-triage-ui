@@ -5,10 +5,11 @@ import { createStyles, makeStyles } from '@mui/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 import {ItemType} from "../common/types";
+import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(0),
@@ -57,11 +58,14 @@ export default function WipeOption({title, wipeOption, wipeOptionChanged, wipeOp
     fetchWipeOptions();
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     if (!event) return;
     if (!event.target) return;
     // setWipeOption(event.target.value);
-    if (wipeOptionChanged) wipeOptionChanged(event.target.value);
+    if (wipeOptionChanged) {
+      const newOption = wipeOptions.find( (option) => option.value === event.target.value);
+      wipeOptionChanged(newOption);
+    }
   };
 
   return (
@@ -73,7 +77,7 @@ export default function WipeOption({title, wipeOption, wipeOptionChanged, wipeOp
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
           value={wipeOption?.value||"nowipe"}
           style={{fontSize: 12, textAlign: "left"}}
-          children={wipeOptions.map( item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
+          children={wipeOptions.map( item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />
       </FormControl>

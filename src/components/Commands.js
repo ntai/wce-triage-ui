@@ -62,10 +62,16 @@ export default class Commands extends React.Component {
     const selectedTab = this.state.selectedTab;
 
     return (
-      <div>
-        <div style={{ padding: 0 }}>
+      <React.Fragment>
+        <Box style={{ padding: 0 }}>
           <AppBar position="static">
-            <Tabs value={selectedTab} onChange={this.handleChange} aria-label="WCE Triage SPAs">
+            <Tabs
+              value={selectedTab}
+              onChange={this.handleChange}
+              aria-label="WCE Triage SPAs"
+              textColor="inherit"
+              variant="fullWidth"
+            >
               <Tab label="Triage" {...a11yProps(0)} />
               <Tab label="Load Disk Image" {...a11yProps(1)} />
               <Tab label="Create Disk Image" {...a11yProps(2)} />
@@ -93,9 +99,9 @@ export default class Commands extends React.Component {
             <TriageAppSettings/>
           </Tab>
 */}
-        </div>
+        </Box>
         <Messages/>
-      </div>
+      </React.Fragment>
     );
   }
 }

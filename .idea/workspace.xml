@@ -5,31 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="A few more clean-ups and a bug in the image file tree view is fixed.">
-      <change afterPath="$PROJECT_DIR$/src/components/common/idiom.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/parts/Mui5TableITheme.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Commands.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Commands.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ErrorMessageDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ErrorMessageDialog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Messages.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Messages.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageSelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageTreeView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/save/SaveDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/save/SaveDiskImage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/triage/PressPlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/triage/PressPlay.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/commands/triage/Triage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/triage/Triage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/commands/wipe/WipeDisk.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/wipe/WipeDisk.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/common/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Catalog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/DiskDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/DiskDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/Disks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Disks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/OperationProgressBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/OperationProgressBar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/TriageTableTheme.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/TriageTableTheme.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/WipeOption.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/TriageAppSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/TriageAppSettings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +54,8 @@
       <list>
         <option value="CSS File" />
         <option value="tsconfig.json" />
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
     <option name="SCHEME" value="Project" />
@@ -134,6 +130,10 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/node_modules/@mui/material/Select/Select.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@mui/material/Select/SelectInput.d.ts" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -307,7 +307,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -390,7 +390,9 @@
       <workItem from="1640971987017" duration="35014000" />
       <workItem from="1641055563191" duration="11566000" />
       <workItem from="1641671704195" duration="14962000" />
-      <workItem from="1641750910375" duration="13041000" />
+      <workItem from="1641750910375" duration="13190000" />
+      <workItem from="1642271661288" duration="21203000" />
+      <workItem from="1642355233523" duration="18675000" />
     </task>
     <task id="LOCAL-00001" summary="Fix a bug - disks are a lit of DiskType.">
       <created>1640991465710</created>
@@ -533,23 +535,28 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/parts/Catalog.tsx</url>
-          <line>56</line>
+          <line>57</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/parts/Catalog.tsx</url>
-          <line>37</line>
+          <line>38</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/parts/Catalog.tsx</url>
-          <line>33</line>
+          <line>34</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx</url>
-          <line>177</line>
+          <line>176</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/parts/OperationProgressBar.js</url>
+          <line>9</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

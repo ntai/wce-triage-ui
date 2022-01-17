@@ -4,19 +4,7 @@ import {tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import '../commands/commands.css';
 import {TaskInfo, RunReportType} from "../common/types";
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableaRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Mui5Table from "./Mui5Table";
 
 type RunnerPropsType = {
   runningStatus: undefined | RunReportType;
@@ -66,66 +54,6 @@ function TaskDetails({task}: {task: TaskInfo}) {
       )
     }
 }
-
-
-function  TaskRow(task: TaskInfo) {
-  const [open, setOpen] = React.useState(false);
-
-  // Task status that shows the status with color
-  const taskStatus = (<span>
-    <span style={{
-      color: task.taskStatus === 'waiting' ? value_to_color(0)
-          : task.taskStatus === 'running' ?  value_to_color(1)
-              : task.taskStatus === 'done' ? value_to_color(100)
-                  : task.taskStatus === 'fail' ? value_to_color(999)
-                      : '#404040',
-      transition: 'all .3s ease'
-    }}>
-      &#x25cf;
-    </span>
-    {
-      task.taskStatus === 'waiting' ? 'Holding'
-          : task.taskStatus === 'running' ? `In progress`
-              : task.taskStatus === 'done' ? `Completed`
-                  : task.taskStatus === 'fail' ? `Failed`
-                      : 'Bug'
-    }
-  </span>);
-
-  return (
-      <React.Fragment>
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-          <TableCell>
-            <IconButton
-                aria-label="expand row"
-                size="small"
-                onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
-
-          <TableCell component="th" scope="row">{task.taskCategory}</TableCell>
-          <TableCell align="right">{task.taskEstimate}</TableCell>
-          <TableCell align="right">{task.taskElapse}</TableCell>
-          <TableCell align="right">{taskStatus}</TableCell>
-          <TableCell><OperationProgressBar value={task.taskProgress} /></TableCell>
-          <TableCell>{task.taskMessage}</TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <TaskDetails task={task}/>
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </React.Fragment>
-  );
-}
-
 
 
 export default class RunnerProgress extends React.Component<RunnerPropsType, RunnerStateType> {
@@ -207,100 +135,21 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
     if (tasks === undefined)
         return null;
 
-    const columns = [
-      {
-        title: "Step",
-        field: "taskCategory",
-        cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
-        headerStyle: { width: 300, },
-      },
-      {
-        title: "Estimate",
-        field: "taskEstimate",
-        cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
-        headerStyle: {
-          minWidth: 80,
-          maxWidth: 120
-        },
-      },
-      {
-        title: "Elapsed",
-        field: "taskElapse",
-        cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
-        headerStyle: {
-          minWidth: 80,
-          maxWidth: 120
-        },
-      },
-      {
-        title: 'Status',
-        cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-        headerStyle: {
-          minWidth: 120,
-          maxWidth: 160
-        },
-        render: row => (
-            <span>
-                  <span style={{
-                    color: row.taskStatus === 'waiting' ? value_to_color(0)
-                        : row.taskStatus === 'running' ?  value_to_color(1)
-                            : row.taskStatus === 'done' ? value_to_color(100)
-                                : row.taskStatus === 'fail' ? value_to_color(999)
-                                    : '#404040',
-                    transition: 'all .3s ease'
-                  }}>
-              &#x25cf;
-            </span> {
-              row.taskStatus === 'waiting' ? 'Holding'
-                  : row.taskStatus === 'running' ? `In progress`
-                      : row.taskStatus === 'done' ? `Completed`
-                          : row.taskStatus === 'fail' ? `Failed`
-                              : 'Bug'
-            }
-            </span>
-        )
-      },
-      {
-        title: 'Progress',
-        cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-        headerStyle: {
-          minWidth: 120,
-          maxWidth: 160
-        },
-        // field: 'taskProgress', // field is not used but makes things clear
-        render: row => (
-            <div>
-              <OperationProgressBar value={row.taskProgress} />
-            </div>
-        )
-      },
-      {
-        title: "Description",
-        cellStyle: {fontSize: fontSize,  width: 350, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-        headerStyle: {
-          width: 350,
-        },
-        field: "taskMessage",
-        // style: {textAlign: "left"},
-      }
-    ];
-
-
-    /*
-        <MaterialTable
+    return (
+        <Mui5Table<TaskInfo>
           icons={tableIcons}
           margin="dense"
           style={ {marginTop: 1, marginBottom: 1, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
-              field: "taskCategory",
+              render: (row, rowIndex) => row.taskCategory,
               cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               headerStyle: { width: 300, },
             },
             {
               title: "Estimate",
-              field: "taskEstimate",
+              render: (row, _) => `${row.taskEstimate}`,
               cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
               headerStyle: {
                 minWidth: 80,
@@ -309,7 +158,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
             },
             {
               title: "Elapsed",
-              field: "taskElapse",
+              render: (row, _) => `${row.taskElapse}`,
               cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
               headerStyle: {
                 minWidth: 80,
@@ -323,7 +172,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
                 minWidth: 120,
                 maxWidth: 160
               },
-              render: row => (
+              render: (row, _) => (
                 <span>
                   <span style={{
                     color: row.taskStatus === 'waiting' ? value_to_color(0)
@@ -351,12 +200,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
                 minWidth: 120,
                 maxWidth: 160
               },
-              // field: 'taskProgress', // field is not used but makes things clear
-              render: row => (
-                <div>
-                  <OperationProgressBar value={row.taskProgress} />
-                </div>
-              )
+              render: (row, _) => (<OperationProgressBar value={row.taskProgress} />)
             },
             {
               title: "Description",
@@ -364,8 +208,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
               headerStyle: {
                 width: 350,
               },
-              field: "taskMessage",
-              // style: {textAlign: "left"},
+              render: (row, _) => (<OperationProgressBar value={row.taskMessage} />)
             }
           ]}
           data={tasks}
@@ -379,7 +222,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
               search: false,
               showTitle: false,
               detailPanelColumnAlignment: "left",
-              padding: "dense",
+              size: "small",
               rowStyle: rowData => { return { backgroundColor: value_to_bgcolor(rowData.taskProgress), paddingTop: 0, paddingBottom: 0, paddingLeft: 8, paddingRight: 8 } },
               headerStyle: { backgroundColor: "#333333", color: "white", borderSpacing: 1 }
             }
@@ -409,25 +252,6 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
           },
           ]
          }
-         />
-  */
-
-    return (
-      <React.Fragment>
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                {
-                  columns.map( (column)  => (<TableCell style={column.headerStyle}>{column.title}</TableCell>))
-                }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {}
-            </TableBody>
-        </TableContainer>
-      </React.Fragment>
-    );
+        />);
   }
 }

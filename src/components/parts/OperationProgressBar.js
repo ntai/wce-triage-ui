@@ -1,6 +1,7 @@
 import React from 'react';
-import { lighten, makeStyles, withStyles } from '@mui/styles';
+import { makeStyles, withStyles } from '@mui/styles';
 import LinearProgress from '@mui/material/LinearProgress';
+import { lighten } from '@mui/material/styles';
 
 const OperationProgress = withStyles({
   root: {

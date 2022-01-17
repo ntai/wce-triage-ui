@@ -1,11 +1,12 @@
 import React from "react";
 import {sweetHome} from '../../looseend/home';
 import "../commands/commands.css";
-import { createStyles, makeStyles, Theme } from '@mui/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 import {ImageMetaType, ItemType} from "../common/types";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +54,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
     fetchCatalogTypes();
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     catalogTypeChanged(event.target.value);
   };
 
@@ -67,7 +68,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
           key={catalogType}
           value={catalogType || ''}
           style={{fontSize: 14, textAlign: "left"}}
-          children={catalogTypes.map(item => <MenuItem value={item.value}>{item.label}</MenuItem>)}
+          children={catalogTypes.map(item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
         />
       </FormControl>

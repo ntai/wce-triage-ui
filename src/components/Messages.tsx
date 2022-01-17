@@ -16,10 +16,6 @@ export default class Messages extends Component<any, MessagesStateType> {
     }
   }
 
-  componentWillMount() {
-    this.fetchMessages();
-  }
-
   /* Initial message loading */
   fetchMessages() {
     // Request the data however you want.
@@ -32,6 +28,7 @@ export default class Messages extends Component<any, MessagesStateType> {
   componentDidMount() {
     const wock = io(sweetHome.websocketUrl);
     wock.on('message', this.handleMessage.bind(this));
+    this.fetchMessages();
   }
 
   handleMessage(msg: any) {

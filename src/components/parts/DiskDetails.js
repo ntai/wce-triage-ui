@@ -1,5 +1,6 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import NumberFormat from 'react-number-format';
 import Paper from '@mui/material/Paper';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',

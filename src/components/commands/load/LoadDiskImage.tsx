@@ -82,7 +82,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     this.did_reset = this.did_reset.bind(this);
   }
 
-  // FIXME: clicked needs a real type here.
+
   diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
     if (!clicked)
       return;
@@ -134,7 +134,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
       return;
     console.log("selected restoreType: " + restoreTypeID);
 
-    var subset : SourceType[] = [];
+    let subset : SourceType[] = [];
     if (this.state.sources) {
       subset = this.state.sources.filter(source => source.restoreType === restoreTypeID);
       if (subset.length > 1) {
@@ -142,8 +142,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
       }
     }
 
-    var source = undefined;
-
+    let source = undefined;
     if (subset.length > 0) {
       source = subset[0];
     }
@@ -177,7 +176,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     }
 
     // time to make donuts
-    var wipe = "";
+    let wipe = "";
     if (this.state.wipeOption !== undefined) {
       wipe = "&wipe=" + this.state.wipeOption.value;
       console.log(this.state.wipeOption)
@@ -186,10 +185,9 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     console.log(targetDiskList);
 
     if (targetDiskList.length > 1) {
-      var url = sweetHome.backendUrl + "/dispatch/load?deviceNames=";
-      var sep = "";
-      var targetDisk;
-      for (targetDisk of targetDiskList) {
+      let url = sweetHome.backendUrl + "/dispatch/load?deviceNames=";
+      let sep = "";
+      for (let targetDisk of targetDiskList) {
         url = url + sep + targetDisk;
         sep = ",";
       }
@@ -266,31 +264,33 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     const restoringUrl = this.getRestoringUrl();
 
     return (
-      <div>
+      <React.Fragment>
         <Grid container spacing={0} >
           <Grid item xs={1}>
               <Button startIcon={<BuildIcon />} variant="contained" color="secondary" onClick={() => this.onLoad()} disabled={restoringUrl === undefined}>Load</Button>
           </Grid>
+
           <Grid item xs={2}>
               <WipeOption title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}/>
           </Grid>
-            <Grid item xs={4}>
-              <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
-            </Grid>
 
-            <Grid item xs={2}>
-              <Catalog title={"Restore type"}
-                       catalogType={restoreType}
-                       catalogTypeChanged={this.setRestoreType}
-                       catalogTypesChanged={this.setRestoreTypes} />
-            </Grid>
-            <Grid item xs={2}>
-              <ButtonGroup>
-                <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
-                <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
-              </ButtonGroup>
-            </Grid>
+          <Grid item xs={4}>
+            <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
+          </Grid>
 
+          <Grid item xs={2}>
+            <Catalog title={"Restore type"}
+                     catalogType={restoreType}
+                     catalogTypeChanged={this.setRestoreType}
+                     catalogTypesChanged={this.setRestoreTypes} />
+          </Grid>
+
+          <Grid item xs={2}>
+            <ButtonGroup>
+              <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+              <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!diskRestoring}>Abort</Button>
+            </ButtonGroup>
+          </Grid>
           <Grid item xs={12} >
             <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
@@ -298,7 +298,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
             <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
           </Grid>
         </Grid>
-      </div>
+      </React.Fragment>
     );
   }
 }

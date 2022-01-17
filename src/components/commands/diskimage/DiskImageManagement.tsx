@@ -14,13 +14,13 @@ import Button from "@mui/material/Button";
 import BuildIcon from '@mui/icons-material/Build';
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Menu, {MenuProps} from '@mui/material/Menu';
-import MenuItem, {MenuItemProps} from '@mui/material/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import RunnerProgress from "../../parts/RunnerProgress";
 import Tooltip from '@mui/material/Tooltip';
-import {DeviceSelectionType, DiskImageType, DiskType, RunReportType} from "../../common/types";
-import {Theme, alpha} from "@mui/material/styles";
+import {DeviceSelectionType, DiskType, RunReportType} from "../../common/types";
 import {makeStyles, styled} from "@mui/styles";
+import {Theme, alpha} from "@mui/material/styles";
 
 const appbarStyles = makeStyles( (theme:Theme) => ({
   root: {
@@ -279,7 +279,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     }
     url = url + "&sources=";
     let imageFile;
-    let imageFileList = "";
+    // let imageFileList = "";
     sep = "";
     for (imageFile of imageFiles) {
       url = url + sep + imageFile;

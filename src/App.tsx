@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import {sweetHome} from "./looseend/home";
 import CssBaseline from '@mui/material/CssBaseline';
 import wcelogo from './wcelogo.svg';
+import { ThemeProvider } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 
 /*
 const styles = StyleSheet.create({
@@ -37,6 +39,8 @@ type AppState = {
     backendVersion: string;
 };
 
+const muiTheme = createTheme();
+
 export default function App()
 {
     const [state, setState] = React.useState<AppState>(
@@ -58,22 +62,22 @@ export default function App()
     return (
         <div className="App bg-white">
             <CssBaseline/>
-
-            <Container maxWidth={false}>
-                <Grid container item xs={12}>
-                    <Grid container item xs={6}>
-                        <img src={wcelogo} className="App-logo" alt="wcelogo"/>
+            <ThemeProvider theme={muiTheme}>
+                <Container maxWidth={false}>
+                    <Grid container item xs={12}>
+                        <Grid container item xs={6}>
+                            <img src={wcelogo} className="App-logo" alt="wcelogo"/>
+                        </Grid>
+                        <Grid item>
+                            <Typography>WCE Triage {state.frontendVersion}/{state.backendVersion}</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Typography>WCE Triage {state.frontendVersion}/{state.backendVersion}</Typography>
+
+                    <Grid item xs={12}>
+                        <Commands/>
                     </Grid>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Commands/>
-                </Grid>
-
-            </Container>
+                </Container>
+            </ThemeProvider>
         </div>
     );
 }

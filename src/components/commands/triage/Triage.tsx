@@ -5,25 +5,25 @@ import {sweetHome} from '../../../looseend/home'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
-
 import PressPlay from "./PressPlay";
 import {io} from "socket.io-client";
 import Typography from '@mui/material/Typography';
-// import MaterialTable from "material-table";
 import "../commands.css";
 import CircularProgress from '@mui/material/CircularProgress';
-import ExpansionPanel from '@mui/material/ExpansionPanel';
-import ExpansionPanelSummary from '@mui/material/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@mui/material/ExpansionPanelDetails';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import LoopIcon from '@mui/icons-material/Loop';
 import StopIcon from '@mui/icons-material/Stop';
 import Tooltip from "@mui/material/Tooltip";
 import {ComponentTriageType, CPUInfoType, TriageResultType, TriageUpdateType} from "../../common/types";
+import Mui5Table from "../../parts/Mui5Table";
+import {Theme} from "@mui/material/styles";
 
 // cssstyle 3.0.10 bug
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(0, 0),
     textAlign: 'left',
@@ -85,8 +85,8 @@ function CpuRating() {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel TransitionProps={{ unmountOnExit: true }}>
-      <ExpansionPanelSummary
+      <Accordion TransitionProps={{ unmountOnExit: true }}>
+      <AccordionSummary
       expandIcon={<ExpandMoreIcon/>}
       aria-controls="panel1a-content"
       id="panel1a-header"
@@ -94,12 +94,12 @@ function CpuRating() {
         <Typography variant="body2">
           {summary}
         </Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      </AccordionSummary>
+      <AccordionDetails>
          <CpuInfo onMount={mounted} />
-      </ExpansionPanelDetails>
+      </AccordionDetails>
 
-      </ExpansionPanel>
+      </Accordion>
     </div>
   );
 }
@@ -265,40 +265,35 @@ export default class Triage extends React.Component<any,TriageStateType> {
         </Grid>
 
         <Grid item xs={12}>
-          <MaterialTable
-            data={data}
+          <Mui5Table<ComponentTriageType>
+            rows={data}
             style={{borderRadius: 0, borderWidth: 0, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 5, paddingBottom: 5 }}
             isLoading={this.state.loading}
-            options={ {paging: false, sorting: false, draggable: false,
-              toolbar: false, search: false, showTitle: false, detailPanelType: "single", detailPanelColumnAlignment: "left",
-              rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3, },
+            options={ {
+              rowStyle: { backgroundColor: "white", fontSize: this.state.fontSize, paddingTop: 2, paddingBottom: 2, },
               }}
             columns={ [
               {
-                "title": "Component",
-                "field": "component",
+                title: "Component",
+                render: (row) => row.component,
                 cellStyle: { width: "100", textAlign: "right", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 }
               },
               {
                 "title": "Result",
-                "field": "result",
-                cellStyle: { "minWidth": 10 + this.state.fontSize * 5, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 },
-                render: row => (
-                  // circle with color
-                  <span>
-                    <span style={{
-                      color: row.result ? '#1fff2e' : '#ff2e00',
-                      transition: 'all .3s ease'
-                    }}>
-                      {row.result ? '\u25cf' : '\u25a0' }
-                    </span>
-                    {row.result ? ' Pass' : ' Fail'}
+                render: (row) => (<span>
+                  <span style={{
+                    color: row.result ? '#1fff2e' : '#ff2e00',
+                    transition: 'all .3s ease'
+                  }}>
+                    {row.result ? '\u25cf' : '\u25a0' }
                   </span>
-                )
+                  {row.result ? ' Pass' : ' Fail'}
+                </span>),
+                cellStyle: { "minWidth": 10 + this.state.fontSize * 5, textAlign: "left", fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 },
               },
               {
                 "title": "Details",
-                "field": "message",
+                render: (row) => row.message,
                 cellStyle: { fontSize: this.state.fontSize, paddingTop: 3, paddingBottom: 3 }
             } ] } />
         </Grid>
