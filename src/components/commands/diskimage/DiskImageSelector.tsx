@@ -59,6 +59,7 @@ export default function DiskImageSelector( { setSource, sources, source } : {
           style={{fontSize: 13, textAlign: "left"}}
           children={sources.map( item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
+          variant={"standard"} sx={{m: 1}}
         />
       </FormControl>
 

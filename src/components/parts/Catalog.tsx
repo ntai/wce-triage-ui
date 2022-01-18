@@ -70,6 +70,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
           style={{fontSize: 14, textAlign: "left"}}
           children={catalogTypes.map(item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
+          variant={"standard"} sx={{m: 1}}
         />
       </FormControl>
 

@@ -39,7 +39,15 @@ type AppState = {
     backendVersion: string;
 };
 
-const muiTheme = createTheme();
+const muiTheme = createTheme({
+    components: {
+        MuiSelect: {
+            styleOverrides: {
+                select: { paddingTop: "6px", paddingBottom: "6px"},
+            }
+        }
+    }
+});
 
 export default function App()
 {

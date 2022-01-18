@@ -13,15 +13,13 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(0),
-      minWidth: 120,
+      minWidth: 120
     },
     selectEmpty: {
       marginTop: theme.spacing(0),
     },
   }),
 );
-
-
 
 
 //  title={"Wipe"} wipeOption={wipeOption} wipeOptionChanged={this.selectWipe.bind(this)} wipeOptionsChanged={this.setWipeOptions.bind(this)}
@@ -70,15 +68,17 @@ export default function WipeOption({title, wipeOption, wipeOptionChanged, wipeOp
 
   return (
     <div>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="wipe-option-select-label">{title}</InputLabel>
+      <FormControl className={classes.formControl} >
+        <InputLabel id="wipe-option-select-label" >{title}</InputLabel>
         <Select
           labelId="wipe-option-select-label"
           // handing down undefined doesn't change the selection. Dummy value '' sets it.
           value={wipeOption?.value||"nowipe"}
-          style={{fontSize: 12, textAlign: "left"}}
+          style={{fontSize: 14, textAlign: "left"}}
           children={wipeOptions.map( item => <MenuItem value={item.value} key={item.value}>{item.label}</MenuItem>)}
           onChange={handleChange}
+          variant="standard"
+          sx={{m: 1}}
         />
       </FormControl>
 
