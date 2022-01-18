@@ -22,10 +22,10 @@ type SelMap = Immutable.Map<number, boolean>;
 // type MaybeRowData<RowType> = RowType | Promise<RowType>;
 type MaybeRowData<RowType> = RowType;
 
-const selectionPropsDefaults: object = {
-    size: "small",
-    style: {width: "24px", padding: "6px"}
-};
+const selectionPropsDefaults: object = {size: "small" };
+
+const selectionCellStyleDefaults: CSSProperties = {width: "24px", padding: "6px"};
+
 
 const detailPanelPropsDefaults: object = {
     size: "small",
@@ -159,7 +159,6 @@ function Mui5DetailPanelToggle({panelToggles, setPanelToggles, rowIndex, panelIn
 }
 
 
-
 function Mui5TableSelectionCell({selections, onSelectionChange, rowIndex, selectionProps}: {
     selections: SelMap,
     rowIndex: number,
@@ -172,10 +171,12 @@ function Mui5TableSelectionCell({selections, onSelectionChange, rowIndex, select
     }
 
     return (
-        <TableCell {...selectionProps}>
+        <TableCell style={selectionCellStyleDefaults}>
             <IconButton
                 aria-label="select this row"
                 onClick={toggleSelection}
+                size="small"
+                {...selectionProps}
             >
                 {selections.get(rowIndex, false) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>}
             </IconButton>
@@ -196,10 +197,11 @@ function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
     }
 
     return (
-        <TableCell {...selectionProps}>
+        <TableCell style={selectionCellStyleDefaults}>
             <IconButton
                 aria-label="selection header"
                 onClick={toggleSelection}
+                {...selectionProps}
             >
                 {nRows === nSelections ? <CheckBoxIcon/> : ((nSelections === 0) ? <CheckBoxOutlineBlankIcon/> :
                     <IndeterminateCheckBoxIcon/>)}
