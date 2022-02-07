@@ -28,6 +28,7 @@ yarn-error.log*
 # Tared up file for upload
 wce-triage-ui.tgz
 
+.idea/workspace.xml
 .idea/*
 
 foo
