@@ -162,6 +162,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
   }
 
   onRunnerUpdate(update: RunReportType) {
+    console.log(update);
     this.setState({runningStatus: update, diskRestoring: update.device !== ''});
   }
 
