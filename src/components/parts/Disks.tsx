@@ -6,6 +6,7 @@ import OperationProgressBar from './OperationProgressBar';
 import DiskDetails from "./DiskDetails";
 import {DeviceSelectionType, DiskType, ItemType, RunReportType, WipeType} from "../common/types";
 import UsbIcon from '@mui/icons-material/Usb';
+import Box from "@mui/material/Box";
 
 type DisksPropsType = {
   diskSelectionChanged: (selected: DeviceSelectionType<DiskType>, clicked?: DiskType) => void;
@@ -210,21 +211,14 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
     return (
       <React.Fragment>
         <Mui5Table<DiskType>
-          style={ {marginTop: 1, marginBottom: 1, marginLeft: 0, marginRight: 0} }
+          style={ {marginTop: 0, marginBottom: 1, marginLeft: 0, marginRight: 0} }
           onSelectionChange={this.setNewSelection.bind(this)}
           columns={[
             {
               title: "Disk",
               render: (row, index) => row.deviceName,
-              cellStyle: {
-                backgroundColor: '#eeeeee',
-                width: 120,
-                maxWidth: 120,
-                paddingTop: 2, paddingBottom: 2, 
-              },
-              headerStyle: {
-                backgroundColor: '#eeeeee',
-              }
+              cellStyle: { backgroundColor: '#eeeeee'},
+              headerStyle: {backgroundColor: '#eeeeee'}
             },
             {
               title: "Mounted",
@@ -234,52 +228,43 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                       checked={this.state.mounted[row.deviceName] === true ? true : false}
                       onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
                   />),
-              cellStyle: { width: 30, maxWidth: 30, paddingTop: 2, paddingBottom: 2,},
-              headerStyle: {maxWidth: 75,},
+              cellStyle: { width: 120, alignSelf: "center", verticalAlign: "middle"},
+              headerStyle: {},
             },
             {
               title: "Bus",
               render: (row, index) => row.bus === "usb" ? (<UsbIcon>USB</UsbIcon>) : "ATA",
-              cellStyle: { width: 40, maxWidth: 40,  paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: { maxWidth: 40, },
+              cellStyle: { width: 70, textAlign: "center" },
+              headerStyle: {textAlign: "center"},
             },
             {
               title: "Model",
               render: (row, index) => row.model,
-              cellStyle: { width: 300, maxWidth: 300, paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {width: 300,},
+              cellStyle: { width: 300},
+              headerStyle: {},
             },
             {
               title: "Estimate",
               render: (row, index) => `${row.runEstimate}`,
-              cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
-                paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                maxWidth: 80,
-              },
+              cellStyle: { width: 130, textAlign: 'right'  },
+              headerStyle: {textAlign: 'right' },
             },
             {
               title: "Elapsed",
               render: (row, index) => `${row.runTime}`,
-              cellStyle: { width: 80, textAlign: 'center', maxWidth: 80,
-                paddingTop: 2, paddingBottom: 2,   },
-              headerStyle: {
-                maxWidth: 80,
-              },
+              cellStyle: { width: 130, textAlign: 'right' },
+              headerStyle: {textAlign: 'right' },
+
             },
             {
               title: "Status",
               render: (row, index) => row.runMessage,
-              cellStyle: { minWidth: 200, paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {
-                minWidth: 200,
-              },
+              cellStyle: { minWidth: 200 },
             },
             {
               title: 'Progress',
-              cellStyle: { minWidth: 120,
+              cellStyle: { minWidth: 200,
                 paddingTop: 2, paddingBottom: 2,  },
-              headerStyle: {minWidth: 120, maxWidth: 200},
               render: (row, index) => (<OperationProgressBar value={row.progress} />)
             }
             ] }

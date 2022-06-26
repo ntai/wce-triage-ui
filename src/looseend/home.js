@@ -15,10 +15,10 @@ export const sweetHome = (function() {
     // For deployment, backendUrl is same as baseUrl. Just a hack for now
 
     backendUrl: is_dev ?
-      'http://localhost:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+      'http://localhost:8400' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
 
     websocketUrl: is_dev ?
-      'ws://localhost:8312' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
+      'ws://localhost:8400' : urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
   };
 })();
 

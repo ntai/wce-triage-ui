@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import {sweetHome} from "../../looseend/home";
 import {tableIcons, value_to_bgcolor, value_to_color} from "./TriageTableTheme";
 import OperationProgressBar from './OperationProgressBar';
 import '../commands/commands.css';
 import {TaskInfo, RunReportType} from "../common/types";
 import Mui5Table from "./Mui5Table";
+import {Divider} from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 type RunnerPropsType = {
   runningStatus: undefined | RunReportType;
@@ -139,43 +141,44 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
     if (tasks === undefined)
         return null;
 
+    function columnHeaderStyle(style: React.CSSProperties) {
+      return Object.assign<React.CSSProperties,React.CSSProperties,React.CSSProperties>({}, {color: "white", alignContent: "center"}, style);
+    }
+
+    function columnCellStyle(style: React.CSSProperties) {
+      return Object.assign<React.CSSProperties,React.CSSProperties,React.CSSProperties>( {}, {paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8}, style);
+    }
+
+
     return (
+        <React.Fragment>
         <Mui5Table<TaskInfo>
           icons={tableIcons}
           margin="dense"
-          style={ {marginTop: 1, marginBottom: 1, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
+          style={ {marginTop: 30, marginBottom: 1, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
               render: (row, rowIndex) => row.taskCategory,
-              cellStyle: {fontSize: fontSize, textAlign: "right", minWidth: 300, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
-              headerStyle: { width: 300, },
+              cellStyle: columnCellStyle({fontSize: fontSize, textAlign: "right", minWidth: 300, maxWidth: 450}),
+              headerStyle: columnHeaderStyle({textAlign: "right"}),
             },
             {
               title: "Estimate",
               render: (row, _) => `${row.taskEstimate}`,
-              cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8,},
-              headerStyle: {
-                minWidth: 80,
-                maxWidth: 120
-              },
+              cellStyle: columnCellStyle({fontSize: fontSize,  width: 120, textAlign: "center"}),
+              headerStyle: columnHeaderStyle({}),
             },
             {
               title: "Elapsed",
               render: (row, _) => `${row.taskElapse}`,
-              cellStyle: {fontSize: fontSize,  minWidth: 80, textAlign: "center", paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8},
-              headerStyle: {
-                minWidth: 80,
-                maxWidth: 120
-              },
+              cellStyle: columnCellStyle({fontSize: fontSize,  width: 120, textAlign: "center"}),
+              headerStyle: columnHeaderStyle({}),
             },
             {
               title: 'Status',
-              cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-              headerStyle: {
-                minWidth: 120,
-                maxWidth: 160
-              },
+              cellStyle: columnCellStyle({fontSize: fontSize, width: 140 }),
+              headerStyle: columnHeaderStyle({}),
               render: (row, _) => (
                 <span>
                   <span style={{
@@ -199,23 +202,18 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
             },
             {
               title: 'Progress',
-              cellStyle: {fontSize: fontSize,  minWidth: 120, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-              headerStyle: {
-                minWidth: 120,
-                maxWidth: 160
-              },
+              cellStyle: columnCellStyle({fontSize: fontSize,  minWidth: 120, maxWidth: 300}),
+              headerStyle: columnHeaderStyle({}),
               render: (row, _) => (<OperationProgressBar value={row.taskProgress} />)
             },
             {
               title: "Description",
-              cellStyle: {fontSize: fontSize,  width: 350, paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8 },
-              headerStyle: {
-                width: 350,
-              },
-              render: (row, _) => (<OperationProgressBar value={row.taskMessage} />)
+              cellStyle: columnCellStyle({fontSize: fontSize,  minWidth: 350, maxWidth: 400}),
+              headerStyle: columnHeaderStyle({}),
+              render: (row, _) => (<Typography sx={{fontSize: "0.8rem"}}>{row.taskMessage}</Typography>)
             }
           ]}
-          data={tasks}
+          rows={tasks}
           isLoading={tasksLoading} // Display the loading overlay when we need it
           options={
             {
@@ -256,6 +254,8 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
           },
           ]
          }
-        />);
+        />
+        </React.Fragment>
+    );
   }
 }

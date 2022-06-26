@@ -22,15 +22,11 @@ type SelMap = Immutable.Map<number, boolean>;
 // type MaybeRowData<RowType> = RowType | Promise<RowType>;
 type MaybeRowData<RowType> = RowType;
 
-const selectionPropsDefaults: object = {size: "small" };
+const selectionPropsDefaults: object = {size: "small"};
+const detailPanelPropsDefaults: object = {size: "small",};
 
-const selectionCellStyleDefaults: CSSProperties = {width: "24px", padding: "6px"};
-
-
-const detailPanelPropsDefaults: object = {
-    size: "small",
-    style: {width: "24px", padding: "6px"}
-};
+const selectionCellStyleDefaults: React.CSSProperties = {padding: "4px", width: "38px"};
+const detailsToggleCellStyleDefaults: React.CSSProperties = {padding: "4px", width: "38px"};
 
 
 export type Mui5TableColumn<RowType> = {
@@ -76,7 +72,7 @@ export interface Mui5TableProps<RowType> {
 }
 
 
-function Mui5HeaderCell<RowType>({column, index}: { column: Mui5TableColumn<RowType>, index: number }) {
+function Mui5HeaderCell<RowType>({column, index:_}: { column: Mui5TableColumn<RowType>, index: number }) {
     return (
         <TableCell style={column.headerStyle}>
             {column.title}
@@ -96,18 +92,22 @@ function Mui5Cell<RowType>({
 }
 
 
+
 /**
  * A cell for the detail toggle column. Usually
- */
 function ComputeDetailHeaderCell<RowType>(props: Mui5TableProps<RowType>) {
     const {detailPanel} = props;
 
     if (detailPanel) {
         return detailPanel.map((panel) =>
-            (<TableCell {...detailPanelPropsDefaults}>{panel.title}</TableCell>));
+            (<TableCell {...detailPanelPropsDefaults}
+                        sx={detailsToggleCellStyleDefaults}>
+                <Box sx={{width: "32px", height: "32px", padding: "0"}}>{panel?.title || ''} </Box>
+            </TableCell>));
     }
     return null;
 }
+ */
 
 function getPanelToggle(panelToggles: Immutable.Map<number, Immutable.List<boolean>>, rowIndex: number, panelIndex: number): boolean {
     const currentSelection: Immutable.List<boolean> | undefined = panelToggles.get(rowIndex);
@@ -132,6 +132,9 @@ function setPanelToggle(value: boolean, panelToggles: Immutable.Map<number, Immu
     return undefined;
 }
 
+/*
+ * Detail panel toggle
+ */
 function Mui5DetailPanelToggle({panelToggles, setPanelToggles, rowIndex, panelIndex}: {
     panelToggles: Immutable.Map<number, Immutable.List<boolean>>,
     setPanelToggles: (_: Immutable.Map<number, Immutable.List<boolean>>) => void,
@@ -146,15 +149,11 @@ function Mui5DetailPanelToggle({panelToggles, setPanelToggles, rowIndex, panelIn
     }
 
     return (
-        <TableCell {...detailPanelPropsDefaults}>
-            <IconButton
-                aria-label="expand row"
-                size="small"
-                onClick={toggleOpen}
-            >
-                {getPanelToggle(panelToggles, rowIndex, panelIndex) ? <KeyboardArrowDownIcon/> :
-                    <KeyboardArrowUpIcon/>}
-            </IconButton>
+        <TableCell {...detailPanelPropsDefaults} sx={detailsToggleCellStyleDefaults} >
+                <IconButton aria-label="expand row" size="small" onClick={toggleOpen} style={{padding: "2px"}}>
+                    {getPanelToggle(panelToggles, rowIndex, panelIndex) ? <KeyboardArrowDownIcon /> :
+                        <KeyboardArrowUpIcon  />}
+                </IconButton>
         </TableCell>);
 }
 
@@ -172,14 +171,14 @@ function Mui5TableSelectionCell({selections, onSelectionChange, rowIndex, select
 
     return (
         <TableCell style={selectionCellStyleDefaults}>
-            <IconButton
-                aria-label="select this row"
-                onClick={toggleSelection}
-                size="small"
-                {...selectionProps}
-            >
-                {selections.get(rowIndex, false) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>}
-            </IconButton>
+                <IconButton
+                    aria-label="select this row"
+                    onClick={toggleSelection}
+                    size="small"
+                    {...selectionProps}
+                >
+                    {selections.get(rowIndex, false) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>}
+                </IconButton>
         </TableCell>);
 }
 
@@ -198,17 +197,16 @@ function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
 
     return (
         <TableCell style={selectionCellStyleDefaults}>
-            <IconButton
-                aria-label="selection header"
-                onClick={toggleSelection}
-                {...selectionProps}
-            >
-                {nRows === nSelections ? <CheckBoxIcon/> : ((nSelections === 0) ? <CheckBoxOutlineBlankIcon/> :
-                    <IndeterminateCheckBoxIcon/>)}
-            </IconButton>
+                <IconButton
+                    aria-label="selection header"
+                    onClick={toggleSelection}
+                    {...selectionProps}
+                >
+                    {nRows === nSelections ? <CheckBoxIcon/> : ((nSelections === 0) ? <CheckBoxOutlineBlankIcon/> :
+                        <IndeterminateCheckBoxIcon/>)}
+                </IconButton>
         </TableCell>);
 }
-
 
 
 
@@ -217,11 +215,17 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
     const [panelToggles, setPanelToggles] = React.useState(Immutable.Map<number, Immutable.List<boolean>>());
 
     const {rows, columns, options, detailPanel, style, onSelectionChange} = props;
-    if (rows === undefined) {
+
+    if (rows === undefined || rows === null) {
         console.log("table - no rows")
         return null;
     }
-    const detailHeaderColumn = detailPanel ? ComputeDetailHeaderCell(props) : null;
+    if (!Array.isArray(rows)) {
+        console.log("table - rows is not array")
+        console.log(rows)
+        return null;
+    }
+    const detailHeaderColumn = detailPanel ? (<TableCell />) : null;
     const {headerStyle} = Object.assign({}, {}, options);
     const selectionHeaderColumn = options?.selection ? ComputeSelectionHeaderCell(options,
         selections.filter((value) => value).size,
@@ -268,9 +272,9 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
         <React.Fragment>
 
             <TableContainer component={Paper}>
-                <Table size={tableSize} aria-label="collapsible table" style={style}>
+                <Table size={tableSize} aria-label="unnamed table" style={style}>
                     <TableHead style={headerStyle}>
-                        <TableRow key={"table-header"}>
+                        <TableRow key={"table-header"} sx={{ '& > *': { borderBottom: 'unset' } }}>
                             {selectionHeaderColumn}
                             {detailHeaderColumn}
                             {
@@ -280,7 +284,11 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row, rowIndex) => {
+                        { rows.map((row, rowIndex) => {
+                            if (row === null || row === undefined) {
+                                console.warn(`row[${rowIndex}] is null or undefined.`);
+                                return null;
+                            }
                             const selectionProps = Object.assign({}, selectionPropsDefaults,
                                 options?.selectionProps ? (options.selectionProps instanceof Function ? options.selectionProps(row, rowIndex) : options.selectionProps) : {});
                             return (
