@@ -17,7 +17,6 @@ import TableRow from '@mui/material/TableRow';
 // import Typography from '@mui/material/Typography';
 import Immutable from 'immutable';
 
-type SelMap = Immutable.Map<number, boolean>;
 
 // type MaybeRowData<RowType> = RowType | Promise<RowType>;
 type MaybeRowData<RowType> = RowType;
@@ -68,7 +67,9 @@ export interface Mui5TableProps<RowType> {
     detailPanel?: Mui5TableDetailPanel<RowType>[],
     isLoading?: boolean,
     style?: CSSProperties,
-    onSelectionChange?: (someSelectedRows: RowType[], row?: RowType) => void,
+    onSelectionChange?: (rowIndex: number|"all", selected: boolean) => void,
+    isSelected?: (rowIndex: number, row: RowType) => boolean,
+    totalSelections?: () => number,
 }
 
 
@@ -158,15 +159,15 @@ function Mui5DetailPanelToggle({panelToggles, setPanelToggles, rowIndex, panelIn
 }
 
 
-function Mui5TableSelectionCell({selections, onSelectionChange, rowIndex, selectionProps}: {
-    selections: SelMap,
+function Mui5TableSelectionCell({isSelected, onSelectionChange, rowIndex, selectionProps}: {
+    isSelected: (rowIndex: number) => boolean,
     rowIndex: number,
     onSelectionChange: (rowIndex: number, selected: boolean) => void,
     selectionProps?: object,
 }) {
     function toggleSelection() {
-        const currentSelection = !selections.get(rowIndex, false);
-        onSelectionChange(rowIndex, currentSelection);
+        const newSelection = !isSelected(rowIndex);
+        onSelectionChange(rowIndex, newSelection);
     }
 
     return (
@@ -177,14 +178,15 @@ function Mui5TableSelectionCell({selections, onSelectionChange, rowIndex, select
                     size="small"
                     {...selectionProps}
                 >
-                    {selections.get(rowIndex, false) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>}
+                    {isSelected(rowIndex) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>}
                 </IconButton>
         </TableCell>);
 }
 
 
 function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
-                                             nSelections: number, nRows: number,
+                                             nSelections: number,
+                                             nRows: number,
                                              selectionCB: (nSelections: number, nRows: number) => void,
                                              selectionProps?: object) {
     if (!options?.selection) {
@@ -211,10 +213,13 @@ function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
 
 
 export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
-    const [selections, setSelections] = React.useState(Immutable.Map<number, boolean>());
     const [panelToggles, setPanelToggles] = React.useState(Immutable.Map<number, Immutable.List<boolean>>());
 
-    const {rows, columns, options, detailPanel, style, onSelectionChange} = props;
+    const {rows, columns, options, detailPanel, style, onSelectionChange, isSelected, totalSelections} = props;
+
+    function rowIsSelected(rowIndex: number) : boolean {
+        return isSelected ? isSelected(rowIndex, rows[rowIndex]) : false;
+    }
 
     if (rows === undefined || rows === null) {
         console.log("table - no rows")
@@ -227,44 +232,29 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
     }
     const detailHeaderColumn = detailPanel ? (<TableCell />) : null;
     const {headerStyle} = Object.assign({}, {}, options);
-    const selectionHeaderColumn = options?.selection ? ComputeSelectionHeaderCell(options,
-        selections.filter((value) => value).size,
-        rows.length, onRowsSelectionCB, selectionPropsDefaults) : null;
+    const selectionHeaderColumn = options?.selection ? ComputeSelectionHeaderCell(
+        options,
+        totalSelections ? totalSelections() : 0,
+        rows.length,
+        onRowsSelectionCB,
+        selectionPropsDefaults) : null;
     const tableSize = options?.size ? (options.size === "small" ? "small" : "medium") : "small";
 
     function onRowSelectionChange(rowIndex: number, selected: boolean) {
-        const newSelections: Immutable.Map<number, boolean> = selections.set(rowIndex, selected);
-        setSelections(newSelections);
-
         if (onSelectionChange) {
-            const selectedRows = newSelections.filter((selected) => selected).keySeq().map((rowIndex) => rows[rowIndex]).toArray();
-            onSelectionChange(selectedRows, rowIndex !== undefined && rowIndex >= 0 && rowIndex < rows.length ? rows[rowIndex] : undefined);
+            onSelectionChange(rowIndex, selected);
         }
     }
 
     function onRowsSelectionCB(nSelections: number, nRows: number) {
+        if (!onSelectionChange)
+            return;
+
         if (nRows > 0) {
-            if (nSelections < nRows) {
-                let allSelection = Immutable.Map<number, boolean>();
-                for (let i = 0; i < nRows; i++) {
-                    allSelection = allSelection.set(i, true);
-                }
-                setSelections(allSelection);
-                if (onSelectionChange)
-                    onSelectionChange(rows, undefined);
-            } else {
-                const noSelection = selections.clear();
-                setSelections(noSelection);
-                if (onSelectionChange)
-                    onSelectionChange([], undefined);
-            }
+            // There are some rows.
+            onSelectionChange("all", nSelections !== nRows);
         } else {
-            const noSelection = selections.clear();
-            if (selections !== noSelection) {
-                setSelections(noSelection);
-                if (onSelectionChange)
-                    onSelectionChange([], undefined);
-            }
+            onSelectionChange("all", false);
         }
     }
 
@@ -291,11 +281,12 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
                             }
                             const selectionProps = Object.assign({}, selectionPropsDefaults,
                                 options?.selectionProps ? (options.selectionProps instanceof Function ? options.selectionProps(row, rowIndex) : options.selectionProps) : {});
+
                             return (
                                 <React.Fragment>
                                     <TableRow key={`table-row-${rowIndex}`}>
                                         {(options?.selection) ? Mui5TableSelectionCell({
-                                            selections,
+                                            isSelected: rowIsSelected,
                                             onSelectionChange: onRowSelectionChange,
                                             rowIndex,
                                             selectionProps,

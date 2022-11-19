@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="02129b3d-c7c9-445f-be88-7dee1be5a540" name="Default Changelist" comment="A few more clean-ups and a bug in the image file tree view is fixed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/diskimage/DiskImageManagement.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/commands/load/LoadDiskImage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/Disks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Disks.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/Mui5Table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parts/RunnerProgress.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/looseend/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/looseend/home.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -252,12 +253,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/ntai/sand/cworg/cwmui",
+    "last_opened_file_path": "/home/ntai/sand/wce-triage-ui",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "ts.external.directory.path": "/home/ntai/sand/wce-triage-ui/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -350,6 +352,7 @@
       <workItem from="1645477219369" duration="2493000" />
       <workItem from="1648330989019" duration="3685000" />
       <workItem from="1650735790317" duration="1819000" />
+      <workItem from="1668874795182" duration="11859000" />
     </task>
     <task id="LOCAL-00001" summary="Fix a bug - disks are a lit of DiskType.">
       <created>1640991465710</created>

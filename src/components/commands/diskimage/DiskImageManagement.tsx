@@ -97,7 +97,7 @@ function OpMenu({ expandAllCatsCB, selectAllFilesCB} : OpMenuProps) {
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     if (event?.currentTarget)
       setAnchorEl(event.currentTarget);
-  };
+  }
 
   const handleClose = () => {
     setAnchorEl(null);

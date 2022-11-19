@@ -84,8 +84,11 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
 
 
   diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
-    if (!clicked)
+    if (!clicked) {
+      this.setState( {targetDisks: selectedDisks});
       return;
+    }
+
     let newSelection = Object.assign( {}, this.state.targetDisks);
 
     if (this.state.targetDisks[clicked.deviceName]) {

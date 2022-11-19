@@ -8,8 +8,7 @@ export const sweetHome = (function() {
     href,
     urlObj,
     getQueryStringValue: (key) => {
-      let value = ((urlObj && urlObj.search) && urlObj.searchParams.get(key)) || null;
-      return value;
+      return ((urlObj && urlObj.search) && urlObj.searchParams.get(key)) || null;
     },
     baseUrl: urlObj.protocol + '//' + urlObj.hostname + ':' + urlObj.port,
     // For deployment, backendUrl is same as baseUrl. Just a hack for now
