@@ -371,7 +371,8 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
           <Grid item xs={8}>
             <Box border={2} borderColor="grey.500" borderRadius={4}>
               <Typography>Destination Disks</Typography>
-              <Disks running={isRunning} selected={targetDisks} runningStatus={runningStatus} resetting={resetting}
+              <Disks maxSelected={100}
+                     running={isRunning} selected={targetDisks} runningStatus={runningStatus} resetting={resetting}
                      did_reset={this.did_reset.bind(this)} diskSelectionChanged={this.diskSelectionChanged.bind(this)}/>
             </Box>
           </Grid>

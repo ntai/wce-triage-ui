@@ -12,18 +12,20 @@ import TableRow from '@mui/material/TableRow';
 import NumberFormat from 'react-number-format';
 import Paper from '@mui/material/Paper';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    padding: 6,
+    padding: 0,
   },
   paper: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: 6,
+    padding: 1,
+    background: "#FFF"
   },
   table: {
-    minWidth: 650,
+    width: 800,
+    background: "#F0F8FF"
   },
 }));
 

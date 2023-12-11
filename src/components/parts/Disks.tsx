@@ -13,6 +13,7 @@ type DisksPropsType = {
     running: boolean;
     resetting: boolean;
     did_reset: () => void;
+    maxSelected: number;
     selected: DeviceSelectionType<DiskType>;
     runningStatus?: RunReportType;
 };
@@ -70,7 +71,7 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
         this.setState({diskStatusLoading: true});
         // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-        fetch(sweetHome.backendUrl + "/dispatch/disks.json")
+        fetch(sweetHome.backendUrl + "/dispatch/disks")
             .then(reply => reply.json())
             .then(res => {
                 // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
@@ -95,7 +96,7 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
         this.setState({wipeOptionsLoading: true});
         // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-        fetch(sweetHome.backendUrl + "/dispatch/wipe-types.json")
+        fetch(sweetHome.backendUrl + "/dispatch/wipe-types")
             .then(reply => reply.json())
             .then(res => {
                 const wipeOptions = res.wipeTypes.map((rt: WipeType) => ({label: rt.name, value: rt.id}));
@@ -193,11 +194,15 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
 
         if (rowIndex === "all") {
             for (let disk of disks) {
-                disk.target = selected ? 1 : 0;
+                if (!disk.mounted)
+                    disk.target = selected ? 1 : 0;
+                else
+                    disk.target = 0;
             }
         } else {
             selectedDisk = disks[rowIndex];
-            selectedDisk.target = selected ? 1 : 0;
+            if (!selectedDisk.mounted)
+                selectedDisk.target = selected ? 1 : 0;
         }
         const selections: DeviceSelectionType<DiskType> = {};
         for (let disk of disks) {
@@ -215,6 +220,9 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
         return this.state.disks.reduce((count, disk) => disk.target ? count + 1 : count, 0);
     }
 
+    totalSelectables(): number {
+        return Math.min(this.props.maxSelected, this.state.disks.reduce((count, disk) => disk.mounted ? count: count+1, 0));
+    }
 
     requestUnmountDisk(deviceName: string, mountState: boolean) {
         // Request the data however you want.  Here, we'll use our mocked service we created earlier
@@ -235,12 +243,13 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                     onSelectionChange={this.setNewSelection.bind(this)}
                     isSelected={this.isRowSelected.bind(this)}
                     totalSelections={this.totalSelected.bind(this)}
+                    nSelectables={this.totalSelectables.bind(this)}
                     columns={[
                         {
                             title: "Disk",
                             render: (row, index) => row.deviceName,
                             cellStyle: {backgroundColor: '#eeeeee'},
-                            headerStyle: {backgroundColor: '#eeeeee'}
+                            headerStyle: {backgroundColor: '#eeeeee', width: 200}
                         },
                         {
                             title: "Mounted",
@@ -281,12 +290,12 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                         {
                             title: "Status",
                             render: (row, index) => row.runMessage,
-                            cellStyle: {minWidth: 200},
+                            cellStyle: {width: 440},
                         },
                         {
                             title: 'Progress',
                             cellStyle: {
-                                minWidth: 200,
+                                minWidth: 160,
                                 paddingTop: 2, paddingBottom: 2,
                             },
                             render: (row, index) => (<OperationProgressBar value={row.progress}/>)
@@ -314,7 +323,9 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                     }}
                     detailPanel={[
                         {
-                            render: (row, index) => (<DiskDetails disk={row}/>)
+                            render: (row, index) => (<DiskDetails disk={row}
+
+                            />),
                         }
                     ]}
                 />

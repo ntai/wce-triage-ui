@@ -148,7 +148,7 @@ export default class WipeDisk extends React.Component<any, WipeDiskStateType> {
               <Button startIcon={<RefreshIcon />} variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
           </Grid>
           <Grid item xs={12}>
-            <Disks runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} running={diskWiping}/>
+            <Disks maxSelected={100} runningStatus={runningStatus} selected={targetDisks} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged} running={diskWiping}/>
           </Grid>
 	    </Grid>
       </div>

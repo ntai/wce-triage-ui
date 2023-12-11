@@ -296,7 +296,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
             </ButtonGroup>
           </Grid>
           <Grid item xs={12} >
-            <Disks running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+            <Disks maxSelected={100} running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
           <Grid item xs={12} >
             <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />

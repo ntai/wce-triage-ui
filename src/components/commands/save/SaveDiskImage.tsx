@@ -140,7 +140,7 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
           </Grid>
 
           <Grid item xs={12}>
-            <Disks running={makingImage} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
+            <Disks running={makingImage} maxSelected={1} selected={selectedDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
 
           <Grid item xs={12}>

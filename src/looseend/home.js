@@ -1,8 +1,9 @@
+import {number} from "prop-types";
 
 export const sweetHome = (function() {
   const href = document.location.href;
   const urlObj = new URL(href);
-  const is_dev = urlObj.port === "3000";
+  const is_dev =  Number(urlObj.port) < 4000;
 
   return {
     href,

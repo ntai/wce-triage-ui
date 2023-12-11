@@ -70,6 +70,7 @@ export interface Mui5TableProps<RowType> {
     onSelectionChange?: (rowIndex: number|"all", selected: boolean) => void,
     isSelected?: (rowIndex: number, row: RowType) => boolean,
     totalSelections?: () => number,
+    nSelectables?: () => number,
 }
 
 
@@ -186,15 +187,16 @@ function Mui5TableSelectionCell({isSelected, onSelectionChange, rowIndex, select
 
 function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
                                              nSelections: number,
+                                             nSelectables: number,
                                              nRows: number,
-                                             selectionCB: (nSelections: number, nRows: number) => void,
+                                             selectionCB: (nSelections: number, nSelectables: number, nRows: number) => void,
                                              selectionProps?: object) {
     if (!options?.selection) {
         return null;
     }
 
     function toggleSelection() {
-        selectionCB(nSelections, nRows);
+        selectionCB(nSelections, nSelectables, nRows);
     }
 
     return (
@@ -204,7 +206,7 @@ function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
                     onClick={toggleSelection}
                     {...selectionProps}
                 >
-                    {nRows === nSelections ? <CheckBoxIcon/> : ((nSelections === 0) ? <CheckBoxOutlineBlankIcon/> :
+                    {nSelectables === nSelections ? <CheckBoxIcon/> : ((nSelections === 0) ? <CheckBoxOutlineBlankIcon/> :
                         <IndeterminateCheckBoxIcon/>)}
                 </IconButton>
         </TableCell>);
@@ -215,7 +217,7 @@ function ComputeSelectionHeaderCell<RowType>(options: Mui5TableOptions<RowType>,
 export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
     const [panelToggles, setPanelToggles] = React.useState(Immutable.Map<number, Immutable.List<boolean>>());
 
-    const {rows, columns, options, detailPanel, style, onSelectionChange, isSelected, totalSelections} = props;
+    const {rows, columns, options, detailPanel, style, onSelectionChange, isSelected, totalSelections, nSelectables} = props;
 
     function rowIsSelected(rowIndex: number) : boolean {
         return isSelected ? isSelected(rowIndex, rows[rowIndex]) : false;
@@ -235,6 +237,7 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
     const selectionHeaderColumn = options?.selection ? ComputeSelectionHeaderCell(
         options,
         totalSelections ? totalSelections() : 0,
+        nSelectables ? nSelectables() : rows.length,
         rows.length,
         onRowsSelectionCB,
         selectionPropsDefaults) : null;
@@ -313,14 +316,12 @@ export default function Mui5Table<RowType>(props: Mui5TableProps<RowType>) {
 
                                                 return (
                                                     <TableRow sx={rowStyle} key={`table-row-detail-${rowIndex}`}>
-                                                        <TableCell style={{paddingBottom: 0, paddingTop: 0}}
+                                                        <TableCell style={{padding: 0}}
                                                                    colSpan={6}>
                                                             <Collapse
                                                                 in={getPanelToggle(panelToggles, rowIndex, panelIndex)}
                                                                 timeout="auto" unmountOnExit>
-                                                                <Box sx={{margin: 1}}>
-                                                                    {rendered}
-                                                                </Box>
+                                                                {rendered}
                                                             </Collapse>
                                                         </TableCell>
                                                     </TableRow>
