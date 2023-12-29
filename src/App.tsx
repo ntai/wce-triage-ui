@@ -56,13 +56,19 @@ export default function App()
             backendVersion: ""});
 
     React.useEffect( ()  => {
-        fetch(sweetHome.backendUrl + "/version.json")
+        fetch(sweetHome.backendUrl + "/version")
             .then(res => res.json())
             .then(result => {
                 console.log(result);
                 setState({
                     backendVersion: result.version.backend,
                     frontendVersion: result.version.frontend
+                })
+            })
+            .catch((reason) => {
+                setState({
+                    backendVersion: "Incompatible version. Backend version is too old.",
+                    frontendVersion: "Incompatible version. Backend version is too old."
                 })
             });
     }, []);

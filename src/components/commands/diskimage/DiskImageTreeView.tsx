@@ -429,7 +429,7 @@ export default function DiskImageTreeView(
   function fetchSources() {
     setSourcesLoading(true);
 
-    fetch(sweetHome.backendUrl + "/dispatch/disk-images.json").then( rep => rep.json()).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/disk-images").then( rep => rep.json()).then(res => {
       const srcs = ToDiskSources(res.sources as any, 10000);
       setSources(srcs);
       setSourcesLoading(false);
@@ -438,7 +438,7 @@ export default function DiskImageTreeView(
 
   function fetchCatalogTypes() {
     setCatalogTypesLoading(true);
-    fetch(sweetHome.backendUrl + "/dispatch/restore-types.json").then(rep => rep.json()).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/restore-types").then(rep => rep.json()).then(res => {
       const restoreTypes = res.restoreTypes as ImageMetaType[];
       // const cats: ItemType[] = restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
       setCatalogTypes(restoreTypes);

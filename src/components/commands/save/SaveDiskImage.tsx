@@ -144,7 +144,7 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
           </Grid>
 
           <Grid item xs={12}>
-          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status.json"}/>
+          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status"}/>
           </Grid>
 
         </Grid>

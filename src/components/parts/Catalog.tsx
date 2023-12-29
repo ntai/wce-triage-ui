@@ -38,7 +38,7 @@ export default function Catalog( {title, catalogType, catalogTypeChanged, catalo
   function fetchCatalogTypes() {
     setCatalogTypesLoading(true);
 
-    fetch(sweetHome.backendUrl + "/dispatch/restore-types.json").then(reply => reply.json()).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/restore-types").then(reply => reply.json()).then(res => {
         const restoreTypes = res.restoreTypes as ImageMetaType[];
         const cats: ItemType[] = restoreTypes.map(rt => ({label: rt.name, value: rt.id}));
         setCatalogTypesLoading(false);

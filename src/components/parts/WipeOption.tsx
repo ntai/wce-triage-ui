@@ -39,7 +39,7 @@ export default function WipeOption({title, wipeOption, wipeOptionChanged, wipeOp
   function fetchWipeOptions() {
     setWipeOptionsLoading(true);
 
-    fetch(sweetHome.backendUrl + "/dispatch/wipe-types.json").then(rep => rep.json()).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/wipe-types").then(rep => rep.json()).then(res => {
       console.log(res.wipeTypes);
       const wipeTypes : {name: string, id: string}[] = res.wipeTypes as any;
       const wipeOptions = wipeTypes.map(rt => ({label: rt.name, value: rt.id}));

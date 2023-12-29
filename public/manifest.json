@@ -1,7 +1,7 @@
 {
     "short_name": "WCE Triage UI",
     "name": "WCE Triage Kiosk user interface by React.js",
-    "version": "0.401.20220101",
+    "version": "0.600.20231227",
     "icons": [
         {
             "src": "favicon.ico",

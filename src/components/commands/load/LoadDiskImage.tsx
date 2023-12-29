@@ -244,7 +244,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
     this.setState({ sourcesLoading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-    fetch(sweetHome.backendUrl + "/dispatch/disk-images.json").then(reply => reply.json()).then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/disk-images").then(reply => reply.json()).then(res => {
       const srcs = ToDiskSources(res.sources as any);
       let src = undefined;
       let restoreType: string|undefined = undefined;
@@ -299,7 +299,7 @@ export default class LoadDiskImage extends React.Component<any,LoadDiskImageStat
             <Disks maxSelected={100} running={diskRestoring} selected={targetDisks} runningStatus={runningStatus} resetting={resetting} did_reset={this.did_reset} diskSelectionChanged={this.diskSelectionChanged.bind(this)} />
           </Grid>
           <Grid item xs={12} >
-            <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status.json"} />
+            <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status"} />
           </Grid>
         </Grid>
       </React.Fragment>

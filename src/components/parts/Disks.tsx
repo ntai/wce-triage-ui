@@ -7,6 +7,7 @@ import DiskDetails from "./DiskDetails";
 import {DeviceSelectionType, DiskType, ItemType, RunReportType, WipeType} from "../common/types";
 import UsbIcon from '@mui/icons-material/Usb';
 import Box from "@mui/material/Box";
+import {Socket, io} from "socket.io-client";
 
 type DisksPropsType = {
     diskSelectionChanged: (selected: DeviceSelectionType<DiskType>, clicked?: DiskType) => void;
@@ -108,6 +109,8 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
     componentDidMount() {
         this.fetchWipeOptions();
         this.fetchDisks();
+        const wock:Socket = io(sweetHome.websocketUrl);
+        wock.on("disks", this.onDiskUpdate.bind(this));
     }
 
     onReset() {
@@ -126,6 +129,11 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
         });
         this.fetchDisks();
         this.props.did_reset();
+    }
+
+    onDiskUpdate() {
+        console.log("disk event!")
+        this.onReset();
     }
 
     componentDidUpdate() {
