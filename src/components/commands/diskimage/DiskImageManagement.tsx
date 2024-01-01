@@ -21,6 +21,10 @@ import Tooltip from '@mui/material/Tooltip';
 import {DeviceSelectionType, DiskType, RunReportType} from "../../common/types";
 import {makeStyles, styled} from "@mui/styles";
 import {Theme, alpha} from "@mui/material/styles";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import CancelIcon from "@mui/icons-material/Cancel";
+import {SafetyDivider} from "@mui/icons-material";
 
 const appbarStyles = makeStyles( (theme:Theme) => ({
   root: {
@@ -181,9 +185,6 @@ function DiskImageMenubar(props : DiskImageMenubarProps & OpMenuProps) {
             color={"secondary"}>
       <Toolbar variant="dense">
         <OpMenu {...props} />
-        <Tooltip title="Sync disk images to disk">
-          <Button aria-label="sync" disabled={!syncImageEnabled} startIcon={<BuildIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => syncImages()} >Sync Images</Button>
-        </Tooltip>
         <Tooltip title="Delete disk images from disk">
           <Button aria-label="delete" startIcon={<DeleteForeverIcon />} className={myAppbar.commandButton} color="inherit" onClick={() => deleteImages()} disabled={!deleteImageEnabled}>Delete Images</Button>
         </Tooltip>
@@ -320,6 +321,20 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     }
   }
 
+  abortSyncImages() {
+    const url = sweetHome.backendUrl + "/dispatch/stop-sync";
+
+    console.log(url);
+    if (url) {
+      console.log(url);
+      fetch(url, {"method":"POST"}).then(_ => {
+        this.setState({
+          isRunning: false
+        });
+      });
+    }
+  }
+
   deleteImages() {
     const url = this.getDeleteImageUrl();
     console.log(url);
@@ -333,7 +348,9 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     }
   }
 
-  onRunnerUpdate(update: RunReportType) {this.setState({runningStatus: update, isRunning: update.device !== ''});}
+  onRunnerUpdate(update: RunReportType) {
+    this.setState({runningStatus: update, isRunning: update.device !== ''});
+  }
 
   onReset() {
     this.setState({
@@ -352,7 +369,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     return (
       <div style={{ padding: 0 }}>
         <Grid container spacing={1}>
-          <Grid container item xs={12}>
+          <Grid container item xs={4}>
             <DiskImageMenubar syncImageEnabled={syncImageEnabled}
                               deleteImageEnabled={deleteImageEnabled}
                               syncImages={this.syncImages.bind(this)}
@@ -360,6 +377,21 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
                               expandAllCatsCB={this.expandCats.bind(this)}
                               selectAllFilesCB={this.selectAll.bind(this)} />
           </Grid>
+
+          <Grid item xs={8}>
+            <ButtonGroup>
+              <Tooltip title="Sync disk images to disk">
+                <Button aria-label="sync" disabled={!syncImageEnabled} startIcon={<BuildIcon />} variant="contained" color="primary" onClick={() => this.syncImages()}>Sync Images</Button>
+              </Tooltip>
+            </ButtonGroup>
+
+            <SafetyDivider/>
+            <ButtonGroup>
+              <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+              <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.abortSyncImages()} disabled={!isRunning}>Abort</Button>
+            </ButtonGroup>
+          </Grid>
+
           <Grid item xs={4}>
             <Box border={2} borderColor="grey.500"  borderRadius={4}>
               <Typography>Disk Images</Typography>

@@ -12,6 +12,7 @@ import "../commands.css";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {ItemType, RunReportType, DiskType, DeviceSelectionType} from "../../common/types";
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 
 type SaveDiskImageStateType = {
@@ -124,19 +125,19 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
     return (
       <div>
         <Grid container>
-          <Grid item xs={1}>
-            <Button size="small" startIcon={<SaveIcon />} variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
-          </Grid>
-
           <Grid item xs={5}>
             <Catalog title={"Disk image type"} catalogType={this.state.imageType} catalogTypeChanged={this.setImageType} catalogTypesChanged={this.setImageTypes}/>
           </Grid>
 
           <Grid item xs={1}>
-            <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+            <Button size="small" startIcon={<SaveIcon />} variant="contained" color="primary" onClick={() => this.onSave()} disabled={imagingUrl === undefined}>Save</Button>
           </Grid>
-          <Grid item xs={1}>
-            <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+
+          <Grid item xs={2}>
+            <ButtonGroup>
+              <Button startIcon={<RefreshIcon />} size="small" variant="contained" color="primary" onClick={() => this.onReset()}>Reset</Button>
+              <Button startIcon={<CancelIcon />} size="small" variant="contained" color="secondary" onClick={() => this.onAbort()} disabled={!makingImage}>Abort</Button>
+            </ButtonGroup>
           </Grid>
 
           <Grid item xs={12}>

@@ -256,8 +256,8 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                         {
                             title: "Disk",
                             render: (row, index) => row.deviceName,
-                            cellStyle: {backgroundColor: '#eeeeee'},
-                            headerStyle: {backgroundColor: '#eeeeee', width: 200}
+                            cellStyle: {backgroundColor: '#eeeeee', width: 150, fontSize: 'small'},
+                            headerStyle: {backgroundColor: '#eeeeee'}
                         },
                         {
                             title: "Mounted",
@@ -267,7 +267,7 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                                 checked={this.state.mounted[row.deviceName] === true ? true : false}
                                 onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
                             />),
-                            cellStyle: {width: 120, alignSelf: "center", verticalAlign: "middle"},
+                            cellStyle: {width: 100, alignSelf: "center", verticalAlign: "middle"},
                             headerStyle: {},
                         },
                         {
@@ -279,19 +279,19 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                         {
                             title: "Model",
                             render: (row, index) => row.model,
-                            cellStyle: {width: 300},
+                            cellStyle: {width: 280},
                             headerStyle: {},
                         },
                         {
                             title: "Estimate",
                             render: (row, index) => `${row.runEstimate}`,
-                            cellStyle: {width: 130, textAlign: 'right'},
+                            cellStyle: {width: 110, textAlign: 'right', fontSize: 'small'},
                             headerStyle: {textAlign: 'right'},
                         },
                         {
                             title: "Elapsed",
                             render: (row, index) => `${row.runTime}`,
-                            cellStyle: {width: 130, textAlign: 'right'},
+                            cellStyle: {width: 110, textAlign: 'right', fontSize: 'small'},
                             headerStyle: {textAlign: 'right'},
 
                         },

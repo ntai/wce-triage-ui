@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import {sweetHome} from "./looseend/home";
 import CssBaseline from '@mui/material/CssBaseline';
 import wcelogo from './wcelogo.svg';
-import { ThemeProvider } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {blue, green, grey, red} from "@mui/material/colors";
 
 /*
 const styles = StyleSheet.create({
@@ -40,14 +40,18 @@ type AppState = {
 };
 
 const muiTheme = createTheme({
+    palette: {
+        secondary: red,
+    },
     components: {
         MuiSelect: {
             styleOverrides: {
                 select: { paddingTop: "6px", paddingBottom: "6px"},
             }
         }
-    }
+    },
 });
+
 
 export default function App()
 {

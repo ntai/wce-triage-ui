@@ -37,7 +37,8 @@ export function ToDiskSources( diskImages: DiskImageType[], start?: number) : So
 
 // <DiskImageSelector setSource={this.setSource.bind(this)} sources={subsetSources} source={source} />
 
-export default function DiskImageSelector( { setSource, sources, source } : {
+export default function DiskImageSelector( { restoreType, setSource, sources, source } : {
+    restoreType?: string,
     setSource: (source?: SourceType) => void,
     sources: SourceType[],
     source?: SourceType
@@ -54,6 +55,7 @@ export default function DiskImageSelector( { setSource, sources, source } : {
       <FormControl className={classes.formControl}>
         <InputLabel id="source-select-label">Disk Image Source</InputLabel>
         <Select
+          disabled={!restoreType}
           labelId="source-select-label"
           value={source?.value || ''}
           style={{fontSize: 13, textAlign: "left"}}
