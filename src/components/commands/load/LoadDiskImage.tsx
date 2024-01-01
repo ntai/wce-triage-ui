@@ -14,6 +14,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {ItemType, DiskType, RunReportType, DiskImageType, DeviceSelectionType} from "../../common/types";
+import {isProcessRunning} from "../../common/backend";
 
 
 type LoadDiskImageStateType = {
@@ -37,7 +38,6 @@ type LoadDiskImageStateType = {
     /* target disks */
     targetDisks: DeviceSelectionType<DiskType>;
 
-    diskRestoring: boolean;
     runningStatus?: RunReportType;
 
     resetting: boolean;
@@ -70,7 +70,6 @@ export default class LoadDiskImage extends React.Component<any, LoadDiskImageSta
             /* target disks */
             targetDisks: {},
 
-            diskRestoring: false,
             runningStatus: undefined,
 
             resetting: false
@@ -160,13 +159,14 @@ export default class LoadDiskImage extends React.Component<any, LoadDiskImageSta
 
     componentDidMount() {
         this.fetchSources();
+        this.fetchDiskLoadStatus();
         const wock: Socket = io(sweetHome.websocketUrl);
         wock.on("loadimage", this.onRunnerUpdate.bind(this));
     }
 
     onRunnerUpdate(update: RunReportType) {
         console.log(update);
-        this.setState({runningStatus: update, diskRestoring: update.device !== ''});
+        this.setState({runningStatus: update});
     }
 
     getRestoringUrl() {
@@ -221,21 +221,30 @@ export default class LoadDiskImage extends React.Component<any, LoadDiskImageSta
         fetch(restoringUrl, {"method": "POST"})
             .then(_ => {
                 // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-                this.setState({diskRestoring: true});
+                // this.setState({diskRestoring: true});
             })
             .catch(_ => {
-                this.setState({diskRestoring: false});
+                // this.setState({diskRestoring: false});
             });
     }
+
+    fetchDiskLoadStatus() {
+        const url =  sweetHome.backendUrl + "/dispatch/load/status";
+        fetch(url).then(
+            (res) => {
+                res.json().then(
+                    (status) => this.setState({runningStatus: status})
+                )
+            });
+    }
+
 
     onAbort() {
         fetch(sweetHome.backendUrl + "/dispatch/stop-load", {
             "method": "POST"
         })
             .then(_ => {
-                this.setState({
-                    diskRestoring: false,
-                });
+                this.fetchDiskLoadStatus();
             });
     }
 
@@ -271,12 +280,12 @@ export default class LoadDiskImage extends React.Component<any, LoadDiskImageSta
             source,
             wipeOption,
             restoreType,
-            diskRestoring,
             resetting,
             runningStatus,
             targetDisks
         } = this.state;
         const restoringUrl = this.getRestoringUrl();
+        const diskRestoring = isProcessRunning(runningStatus?.runStatus);
 
         return (
             <React.Fragment>

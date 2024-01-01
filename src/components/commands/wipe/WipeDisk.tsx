@@ -11,11 +11,11 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ErrorMessageModal from "../../ErrorMessageDialog";
 import {DeviceSelectionType, DiskType, RunReportType} from "../../common/types";
+import {isProcessRunning} from "../../common/backend";
 
 type WipeDiskStateType = {
   /* target disks */
   targetDisks: DeviceSelectionType<DiskType>;
-  diskWiping: boolean;
   runningStatus?: RunReportType;
 
   /* Error message modal dialog */
@@ -32,7 +32,6 @@ export default class WipeDisk extends React.Component<any, WipeDiskStateType> {
     this.state = {
       /* target disks */
       targetDisks: {},
-      diskWiping: false,
 
       /* Error message modal dialog */
       modaling: false,
@@ -51,8 +50,14 @@ export default class WipeDisk extends React.Component<any, WipeDiskStateType> {
     loadWock.on("zerowipe", this.onRunnerUpdate.bind(this));
   }
 
+  fetchWipeStatus() {
+    fetch(sweetHome.backendUrl + "/dispatch/wipe/status").then(res => {
+      res.json().then(status => this.onRunnerUpdate(status));
+    });
+  }
+
   onRunnerUpdate(update: RunReportType) {
-    this.setState({runningStatus: update, diskWiping: update.device !== ''});
+    this.setState({runningStatus: update});
   }
 
   diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
@@ -117,23 +122,22 @@ export default class WipeDisk extends React.Component<any, WipeDiskStateType> {
     console.log(wipeUrl);
     fetch(wipeUrl, {"method":"POST"}).then(_ => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({diskWiping: true});
+      this.fetchWipeStatus();
     });
   }
 
 
   onAbort() {
     fetch(sweetHome.backendUrl + "/dispatch/stop-wipe", {"method":"POST"}).then(_ => {
-      this.setState({
-        diskWiping: false,
-      });
+      this.fetchWipeStatus();
     });
   }
 
 
   render() {
-    const { resetting, diskWiping, targetDisks, runningStatus } = this.state;
+    const { resetting, targetDisks, runningStatus } = this.state;
     const wipeUrl = this.getWipeUrl();
+    const diskWiping = isProcessRunning(runningStatus?.runStatus);
 
     return (
       <div>

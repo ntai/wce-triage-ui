@@ -13,13 +13,13 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {ItemType, RunReportType, DiskType, DeviceSelectionType} from "../../common/types";
 import ButtonGroup from '@mui/material/ButtonGroup';
+import {isProcessRunning} from "../../common/backend";
 
 
 type SaveDiskImageStateType = {
   imageTypes: ItemType[];
   imageType?: string;
 
-  makingImage: boolean;
   sourceDisk?: string;
   runningStatus?: RunReportType;
 
@@ -38,7 +38,6 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
       imageTypes: [],
       imageType: undefined,
 
-      makingImage: false,
       sourceDisk: undefined,
       runningStatus: undefined,
       
@@ -58,7 +57,13 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
   }
 
   onRunnerUpdate(update: RunReportType) {
-    this.setState({runningStatus: update, makingImage: true})
+    this.setState({runningStatus: update})
+  }
+
+  fetchSavingStatus() {
+    fetch(sweetHome.backendUrl + "/dispatch/disk-save-status").then(res => {
+      res.json().then(status => this.onRunnerUpdate(status));
+    });
   }
 
   setImageType(selected?: string) {
@@ -92,12 +97,13 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
 
     fetch(savingUrl, {"method":"POST"}).then(_ => {
       // Now just get the rows of disks to your React Table (and update anything else like total pages or loading)
-      this.setState({ makingImage: true });
+      this.fetchSavingStatus();
     });
   }
 
   onReset() {
     this.setState( {resetting: true, selectedDisks: {}});
+    this.fetchSavingStatus();
   }
 
   diskSelectionChanged(selectedDisks: DeviceSelectionType<DiskType>, clicked?: DiskType) {
@@ -112,15 +118,14 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
 
   onAbort() {
     fetch(sweetHome.backendUrl + "/dispatch/stop-save", {"method":"POST"}).then(res => {
-      this.setState({
-        makingImage: false,
-      });
+      this.fetchSavingStatus();
     });
   }
 
   render() {
-    const { runningStatus, makingImage, resetting, selectedDisks } = this.state;
+    const { runningStatus, resetting, selectedDisks } = this.state;
     const imagingUrl = this.getImagingUrl();
+    const makingImage = isProcessRunning(runningStatus?.runStatus);
 
     return (
       <div>

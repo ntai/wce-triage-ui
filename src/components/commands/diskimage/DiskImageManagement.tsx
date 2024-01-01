@@ -25,6 +25,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {SafetyDivider} from "@mui/icons-material";
+import {isProcessRunning} from "../../common/backend";
 
 const appbarStyles = makeStyles( (theme:Theme) => ({
   root: {
@@ -200,7 +201,6 @@ type DiskImageManagementStateType = {
   /* target disks */
   targetDisks: DeviceSelectionType<DiskType>;
 
-  isRunning: boolean;
   runningStatus?: RunReportType;
 
   resetting: boolean;
@@ -219,7 +219,6 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
       /* target disks */
       targetDisks: {},
 
-      isRunning: false,
       runningStatus: undefined,
 
       resetting: false,
@@ -257,6 +256,12 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
   componentDidMount() {
     const loadWock = io(sweetHome.websocketUrl);
     loadWock.on("diskimage", this.onRunnerUpdate.bind(this));
+  }
+
+  fetchSyncStatus() {
+    fetch(sweetHome.backendUrl + "/dispatch/sync/status").then(res => {
+      res.json().then(status => this.onRunnerUpdate(status));
+    });
   }
 
   getSyncImageUrl() {
@@ -314,23 +319,19 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     if (url) {
       console.log(url);
       fetch(url, {"method":"POST"}).then(_ => {
-        this.setState({
-          isRunning: true
-        });
+        this.fetchSyncStatus();
       });
     }
   }
 
   abortSyncImages() {
-    const url = sweetHome.backendUrl + "/dispatch/stop-sync";
+    const url = sweetHome.backendUrl + "/dispatch/sync/stop";
 
     console.log(url);
     if (url) {
       console.log(url);
       fetch(url, {"method":"POST"}).then(_ => {
-        this.setState({
-          isRunning: false
-        });
+        this.fetchSyncStatus();
       });
     }
   }
@@ -341,15 +342,13 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
     if (url) {
       console.log(url);
       fetch(url, {"method":"POST"}).then(_ => {
-        this.setState({
-          isRunning: true
-        });
+        this.fetchSyncStatus();
       });
     }
   }
 
   onRunnerUpdate(update: RunReportType) {
-    this.setState({runningStatus: update, isRunning: update.device !== ''});
+    this.setState({runningStatus: update});
   }
 
   onReset() {
@@ -362,9 +361,10 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
   }
 
   render() {
-    const {isRunning, resetting, runningStatus, targetDisks} = this.state;
+    const {resetting, runningStatus, targetDisks} = this.state;
     const syncImageEnabled = this.getSyncImageUrl() !== undefined;
     const deleteImageEnabled = this.getDeleteImageUrl() !== undefined;
+    const isRunning = isProcessRunning(runningStatus?.runStatus);
 
     return (
       <div style={{ padding: 0 }}>
