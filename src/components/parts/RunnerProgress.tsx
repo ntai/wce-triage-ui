@@ -118,7 +118,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
     this.setState({ tasksLoading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
 
-    fetch(sweetHome.backendUrl + this.props.statuspath) // "/dispatch/disk-load-status"
+    fetch(sweetHome.backendUrl + this.props.statuspath) // "/dispatch/load/status"
         .then(reply => reply.json())
         .then(res => {
           // Now just get the rows of data to your React Table (and update anything else like total pages or loading)

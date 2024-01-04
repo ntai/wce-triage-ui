@@ -410,7 +410,7 @@ export default class DiskImageManagement extends React.Component<any, DiskImageM
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/sync-status"}  />
+          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/sync/status"}  />
         </Grid>
       </div>
     );

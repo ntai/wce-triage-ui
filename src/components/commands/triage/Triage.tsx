@@ -47,7 +47,7 @@ function CpuInfo(props: {
   );
 
   React.useEffect(() => {
-    fetch(sweetHome.backendUrl + '/dispatch/cpu_info.json').then(rep => rep.json())
+    fetch(sweetHome.backendUrl + '/dispatch/cpu_info').then(rep => rep.json())
         .then(res => {
           const cpu_info: CPUInfoType = res.cpu_info as any;
           set_cpu_info(cpu_info);
@@ -136,7 +136,7 @@ export default class Triage extends React.Component<any,TriageStateType> {
 
   fetchTriage() {
     this.setState({loading: true, triageResult: []});
-    fetch(sweetHome.backendUrl + '/dispatch/triage.json').then(rep => rep.json()).then((res: TriageResultType) => {
+    fetch(sweetHome.backendUrl + '/dispatch/triage').then(rep => rep.json()).then((res: TriageResultType) => {
       // Now just get the rows of triage results
       this.setState({
         triageResult: res.components,

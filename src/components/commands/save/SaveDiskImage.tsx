@@ -61,7 +61,7 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
   }
 
   fetchSavingStatus() {
-    fetch(sweetHome.backendUrl + "/dispatch/disk-save-status").then(res => {
+    fetch(sweetHome.backendUrl + "/dispatch/save/status").then(res => {
       res.json().then(status => this.onRunnerUpdate(status));
     });
   }
@@ -150,7 +150,7 @@ export default class SaveDiskImage extends React.Component<any,SaveDiskImageStat
           </Grid>
 
           <Grid item xs={12}>
-          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-save-status"}/>
+          <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/save/status"}/>
           </Grid>
 
         </Grid>

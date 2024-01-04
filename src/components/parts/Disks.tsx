@@ -1,4 +1,4 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {sweetHome} from '../../looseend/home';
 import "../commands/commands.css";
 import Mui5Table from "./Mui5Table";
@@ -243,11 +243,13 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
 
     render() {
         const {disks, diskStatusLoading} = this.state;
+        const commonCellProps: CSSProperties = {padding: "4px"};
 
         return (
             <React.Fragment>
                 <Mui5Table<DiskType>
-                    style={{marginTop: 0, marginBottom: 1, marginLeft: 0, marginRight: 0}}
+                    style={{marginTop: 0, marginBottom: 1, marginLeft: 0, marginRight: 0,
+                    paddingLeft: 6, paddingRight: 6}}
                     onSelectionChange={this.setNewSelection.bind(this)}
                     isSelected={this.isRowSelected.bind(this)}
                     totalSelections={this.totalSelected.bind(this)}
@@ -256,8 +258,8 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                         {
                             title: "Disk",
                             render: (row, index) => row.deviceName,
-                            cellStyle: {backgroundColor: '#eeeeee', width: 150, fontSize: 'small'},
-                            headerStyle: {backgroundColor: '#eeeeee'}
+                            cellStyle: {backgroundColor: '#eeeeee', width: 150, fontSize: 'small', ...commonCellProps},
+                            headerStyle: {backgroundColor: '#eeeeee', ...commonCellProps}
                         },
                         {
                             title: "Mounted",
@@ -267,45 +269,48 @@ export default class Disks extends React.Component<DisksPropsType, DisksStateTyp
                                 checked={this.state.mounted[row.deviceName] === true ? true : false}
                                 onChange={() => this.requestUnmountDisk(row.deviceName, this.state.mounted[row.deviceName])}
                             />),
-                            cellStyle: {width: 100, alignSelf: "center", verticalAlign: "middle"},
-                            headerStyle: {},
+                            cellStyle: {width: 80, alignSelf: "center", verticalAlign: "middle", ...commonCellProps},
+                            headerStyle: {...commonCellProps},
                         },
                         {
                             title: "Bus",
                             render: (row, index) => row.bus === "usb" ? (<UsbIcon>USB</UsbIcon>) : "ATA",
-                            cellStyle: {width: 70, textAlign: "center"},
-                            headerStyle: {textAlign: "center"},
+                            cellStyle: {width: 70, textAlign: "center", fontSize: 'small', ...commonCellProps},
+                            headerStyle: {textAlign: "center", ...commonCellProps},
                         },
                         {
                             title: "Model",
                             render: (row, index) => row.model,
-                            cellStyle: {width: 280},
-                            headerStyle: {},
+                            cellStyle: {width: 280, fontSize: 'small', ...commonCellProps},
+                            headerStyle: {...commonCellProps},
                         },
                         {
                             title: "Estimate",
                             render: (row, index) => `${row.runEstimate}`,
-                            cellStyle: {width: 110, textAlign: 'right', fontSize: 'small'},
-                            headerStyle: {textAlign: 'right'},
+                            cellStyle: {width: 90, textAlign: 'right', fontSize: 'small', ...commonCellProps},
+                            headerStyle: {textAlign: 'right', ...commonCellProps},
                         },
                         {
                             title: "Elapsed",
                             render: (row, index) => `${row.runTime}`,
-                            cellStyle: {width: 110, textAlign: 'right', fontSize: 'small'},
-                            headerStyle: {textAlign: 'right'},
+                            cellStyle: {width: 90, textAlign: 'right', fontSize: 'small', ...commonCellProps},
+                            headerStyle: {textAlign: 'right', ...commonCellProps},
 
                         },
                         {
                             title: "Status",
                             render: (row, index) => row.runMessage,
-                            cellStyle: {width: 440},
+                            cellStyle: {width: 440, ...commonCellProps},
+                            headerStyle: {...commonCellProps},
                         },
                         {
                             title: 'Progress',
                             cellStyle: {
                                 minWidth: 160,
                                 paddingTop: 2, paddingBottom: 2,
+                                ...commonCellProps,
                             },
+                            headerStyle: {...commonCellProps},
                             render: (row, index) => (<OperationProgressBar value={row.progress}/>)
                         }
                     ]}

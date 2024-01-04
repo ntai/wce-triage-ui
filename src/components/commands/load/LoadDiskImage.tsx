@@ -327,7 +327,7 @@ export default class LoadDiskImage extends React.Component<any, LoadDiskImageSta
                                diskSelectionChanged={this.diskSelectionChanged.bind(this)}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/disk-load-status"}/>
+                        <RunnerProgress runningStatus={runningStatus} statuspath={"/dispatch/load/status"}/>
                     </Grid>
                 </Grid>
             </React.Fragment>
