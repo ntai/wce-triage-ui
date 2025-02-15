@@ -100,7 +100,6 @@ export default class Commands extends React.Component {
           </Tab>
 */}
         </Box>
-        <Messages/>
       </React.Fragment>
     );
   }

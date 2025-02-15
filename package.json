@@ -1,6 +1,6 @@
 {
   "name": "wce-triage-ui",
-  "version": "0.611.20250209",
+  "version": "0.612.20250214",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
