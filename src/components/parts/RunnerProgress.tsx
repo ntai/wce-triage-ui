@@ -149,13 +149,12 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
       return Object.assign<React.CSSProperties,React.CSSProperties,React.CSSProperties>( {}, {paddingTop: 1, paddingBottom: 1, paddingLeft: 8, paddingRight: 8}, style);
     }
 
-
     return (
         <React.Fragment>
         <Mui5Table<TaskInfo>
           icons={tableIcons}
           margin="dense"
-          style={ {marginTop: 30, marginBottom: 1, minWidth: 750, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
+          style={ {marginTop: 30, marginBottom: 1, minWidth: 760, fontSize: 13, borderRadius: 0, borderWidth: 0, textAlign: "left"} }
           columns={[
             {
               title: "Step",
@@ -202,7 +201,7 @@ export default class RunnerProgress extends React.Component<RunnerPropsType, Run
             },
             {
               title: 'Progress',
-              cellStyle: columnCellStyle({fontSize: fontSize,  minWidth: 120, maxWidth: 300}),
+              cellStyle: columnCellStyle({fontSize: fontSize,  width: 140}),
               headerStyle: columnHeaderStyle({}),
               render: (row, _) => (<OperationProgressBar value={row.taskProgress} />)
             },
